@@ -26,7 +26,7 @@
 #include "HeightAnalyser.h"
 
 static const float g_JointThickness = 8.0f;
-static const float g_TrackedBoneThickness = 12.0f;
+static const float g_TrackedBoneThickness = 14.0f;
 static const float g_InferredBoneThickness = 1.0f;
 HeightAnalyser hA;
 
