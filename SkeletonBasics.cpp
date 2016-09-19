@@ -31,7 +31,7 @@ static const float g_InferredBoneThickness = 1.0f;
 HeightAnalyser hA;
 
 /// <summary>
-/// Entry point for the application
+/// Entry point for the application //
 /// </summary>
 /// <param name="hInstance">handle to the application instance</param>
 /// <param name="hPrevInstance">always 0</param>
