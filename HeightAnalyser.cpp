@@ -29,7 +29,7 @@ double HeightAnalyser::computePersonHeight(const NUI_SKELETON_DATA & skeleton)
 double HeightAnalyser::computeProportion(const NUI_SKELETON_DATA & skeleton)
 {
 
-	Vector4 head, neck, spine, waist, hipLeft, kneeLeft, ankleLeft;
+	Vector4 neck, spine, kneeLeft, ankleLeft;
 
 	neck = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SHOULDER_CENTER];
 	spine = skeleton.SkeletonPositions[NUI_SKELETON_POSITION_SPINE];
