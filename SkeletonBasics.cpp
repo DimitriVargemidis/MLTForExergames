@@ -253,8 +253,16 @@ LRESULT CALLBACK CSkeletonBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam
 		if (VS_VERSION_INFO == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
 			SendDlgItemMessage(m_hWnd, VS_VERSION_INFO, WM_SETTEXT, 0,(LPARAM) L"pressed");
-			refresh = TRUE;
+			//refresh = TRUE;
 		} 
+		if (IDC_measure_2 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+		{
+			//SendDlgItemMessage(m_hWnd, VS_VERSION_INFO, WM_SETTEXT, 0, (LPARAM)L"pressed");
+			refresh = TRUE;
+		}
+		
+
+
         break;
     }
 
@@ -429,7 +437,8 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 		{
 			//y_comp = Length(skel.SkeletonPositions[NUI_SKELETON_POSITION_HEAD], skel.SkeletonPositions[NUI_SKELETON_POSITION_KNEE_LEFT]);
 			//y_comp = hA.computePersonHeight(skel);
-			//refresh = FALSE;
+			ShowJointCoordinates(skel, 1);
+			refresh = FALSE;
 		}
 
 		
@@ -438,9 +447,9 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 
 		depth_temp = ((depth/ 100.0) + 5.133) / 0.81-10;
 
-		//y_comp = hA.computePersonHeight(skel);//-(-154.5*log(depth_temp)+861.83);
+		y_comp = hA.computePersonHeight(skel);//-(-154.5*log(depth_temp)+861.83);
 		//y_comp = hA.computePersonHeight(skel)-(-133.5*log(depth_temp)+744.63);
-		y_comp = hA.computeProportion(skel);
+		//y_comp = hA.computeProportion(skel);
 
 		//SetDlgItemInt(m_hWnd, IDC_X_t, (UINT32)screenPointX,TRUE);
 
@@ -451,9 +460,14 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 		*/
 
 		SetDlgItemInt(m_hWnd, IDC_X_t, (UINT32)(skel.SkeletonPositions[1].x*100.0), TRUE); 
-		SetDlgItemInt(m_hWnd, IDC_Y_coord, (UINT32)(skel.SkeletonPositions[1].y*100.0), TRUE);
+		//SetDlgItemInt(m_hWnd, IDC_Y_coord, (UINT32)(skel.SkeletonPositions[1].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_Y_coord, (UINT32)(skel.SkeletonPositions[1].x*100.0), TRUE);
 		SetDlgItemInt(m_hWnd, IDC_Z_coord, (UINT32)(skel.SkeletonPositions[1].z*100.0), TRUE);
 		SetDlgItemInt(m_hWnd, IDC_W_coord, (UINT32)(skel.SkeletonPositions[1].w*100.0), TRUE);
+
+
+		ShowJointCoordinates(skel,0);
+
 
     for (i = 0; i < NUI_SKELETON_POSITION_COUNT; ++i)
     {
@@ -472,7 +486,7 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 			still = skel.SkeletonPositions[i];
 			still.x = skel.SkeletonPositions[i].x - skel.SkeletonPositions[1].x+0.05;
 			still.y = skel.SkeletonPositions[i].y - skel.SkeletonPositions[1].y+0.28;
-			still.z = skel.SkeletonPositions[i].z; //- skel.SkeletonPositions[1].z+2.5;
+			still.z = skel.SkeletonPositions[i].z - skel.SkeletonPositions[1].z+2.5;
 			still.w = 1.0;
 			
 		}
@@ -644,4 +658,69 @@ void CSkeletonBasics::DiscardDirect2DResources( )
 void CSkeletonBasics::SetStatusMessage(WCHAR * szMessage)
 {
     SendDlgItemMessageW(m_hWnd, IDC_STATUS, WM_SETTEXT, 0, (LPARAM)szMessage);
+}
+
+/// <summary>
+/// Show the joint coordinates on the screen
+/// </summary>
+/// <param name="skel">skeleton of which the joints will be shown</param>
+void CSkeletonBasics::ShowJointCoordinates(const NUI_SKELETON_DATA & skel, int tab)
+{
+	if (tab == 0)
+	{
+		Vector4 still, joints[3];
+
+		for (int i = 0; i < 3; i++)
+		{
+			still.x = skel.SkeletonPositions[8 + i].x - skel.SkeletonPositions[1].x;
+			still.y = skel.SkeletonPositions[8 + i].y - skel.SkeletonPositions[1].y;
+			still.z = skel.SkeletonPositions[8 + i].z - skel.SkeletonPositions[1].z;
+			still.w = 1.0;
+			joints[i] = still;
+		}
+
+		//right shoulder
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_X, (UINT32)(joints[0].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_Y, (UINT32)(joints[0].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_Z, (UINT32)(joints[0].z*100.0), TRUE);
+
+		//right elbow
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_X, (UINT32)(joints[1].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_Y, (UINT32)(joints[1].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_Z, (UINT32)(joints[1].z*100.0), TRUE);
+
+		//right wrist
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_X, (UINT32)(joints[2].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_Y, (UINT32)(joints[2].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_Z, (UINT32)(joints[2].z*100.0), TRUE);
+	}
+	else if (tab == 1)
+	{
+		Vector4 still, joints[3];
+
+		for (int i = 0; i < 3; i++)
+		{
+			still.x = skel.SkeletonPositions[8 + i].x - skel.SkeletonPositions[1].x;
+			still.y = skel.SkeletonPositions[8 + i].y - skel.SkeletonPositions[1].y;
+			still.z = skel.SkeletonPositions[8 + i].z - skel.SkeletonPositions[1].z;
+			still.w = 1.0;
+			joints[i] = still;
+		}
+
+		//right shoulder
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_X2, (UINT32)(joints[0].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_Y2, (UINT32)(joints[0].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT1_Z2, (UINT32)(joints[0].z*100.0), TRUE);
+
+		//right elbow
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_X2, (UINT32)(joints[1].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_Y2, (UINT32)(joints[1].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT2_Z2, (UINT32)(joints[1].z*100.0), TRUE);
+
+		//right wrist
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_X2, (UINT32)(joints[2].x*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_Y2, (UINT32)(joints[2].y*100.0), TRUE);
+		SetDlgItemInt(m_hWnd, IDC_JOINT3_Z2, (UINT32)(joints[2].z*100.0), TRUE);
+	}
+
 }
