@@ -472,7 +472,7 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 			still = skel.SkeletonPositions[i];
 			still.x = skel.SkeletonPositions[i].x - skel.SkeletonPositions[1].x+0.05;
 			still.y = skel.SkeletonPositions[i].y - skel.SkeletonPositions[1].y+0.28;
-			still.z = skel.SkeletonPositions[i].z - skel.SkeletonPositions[1].z+2.5;
+			still.z = skel.SkeletonPositions[i].z; //- skel.SkeletonPositions[1].z+2.5;
 			still.w = 1.0;
 			
 		}

@@ -44,6 +44,7 @@ double HeightAnalyser::computeProportion(const NUI_SKELETON_DATA & skeleton)
 
 double HeightAnalyser::computeLengthBetweenPoints(Vector4 point1, Vector4 point2)
 {
+	
 	LONG x1, y1, x2, y2;
 	USHORT z1, z2;
 
@@ -62,6 +63,13 @@ double HeightAnalyser::computeLengthBetweenPoints(Vector4 point1, Vector4 point2
 		pow(x1 - x2, 2) +
 		pow(y1 - y2, 2) +
 		pow(Z1_temp - Z2_temp, 2));
+
+	/*
+	sqrt(
+		pow((point1.x - point2.x)*100, 2) +
+		pow((point1.y - point2.y)*100, 2) +
+		pow((point1.z - point1.z),2));
+		*/
 }
 
 double HeightAnalyser::computeSumOfLengthArray(double lengthArray[5])
