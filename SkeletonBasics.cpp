@@ -96,6 +96,10 @@ int CSkeletonBasics::Run(HINSTANCE hInstance, int nCmdShow)
     MSG       msg = {0};
     WNDCLASS  wc  = {0};
 
+	//SELFMADE initiate skeletonSnap
+
+	skeletonSnap.eTrackingState = NUI_SKELETON_NOT_TRACKED;
+
     // Dialog custom window class
     wc.style         = CS_HREDRAW | CS_VREDRAW;
     wc.cbWndExtra    = DLGWINDOWEXTRA;
@@ -360,14 +364,32 @@ void CSkeletonBasics::ProcessSkeleton()
     int width = rct.right;
     int height = rct.bottom;
 
+	//SELFMADE CODE
+	if (skeletonSnap.eTrackingState != NUI_SKELETON_NOT_TRACKED)
+	{
+		DrawSkeleton(skeletonSnap, width, height);
+	}
+	//END
+
     for (int i = 0 ; i < NUI_SKELETON_COUNT; ++i)
     {
         NUI_SKELETON_TRACKING_STATE trackingState = skeletonFrame.SkeletonData[i].eTrackingState;
 
+
+	
         if (NUI_SKELETON_TRACKED == trackingState)
         {
             // We're tracking the skeleton, draw it
             DrawSkeleton(skeletonFrame.SkeletonData[i], width, height);
+			//SELFMADE CODE
+			if (refresh == TRUE)
+			{
+				skeletonSnap = skeletonFrame.SkeletonData[i];
+				ShowJointCoordinates(skeletonSnap, 1);
+				DrawSkeleton(skeletonSnap, width, height);
+				refresh = FALSE;
+			}
+			//END
         }
         else if (NUI_SKELETON_POSITION_ONLY == trackingState)
         {
@@ -391,6 +413,10 @@ void CSkeletonBasics::ProcessSkeleton()
         hr = S_OK;
         DiscardDirect2DResources();
     }
+
+	
+
+	
 }
 
 
@@ -433,13 +459,7 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 		float screenPointX = static_cast<float>(x * windowWidth) / cScreenWidth;
 		float screenPointY = static_cast<float>(y * windowHeight) / cScreenHeight;
 		
-		if (refresh == TRUE)
-		{
-			//y_comp = Length(skel.SkeletonPositions[NUI_SKELETON_POSITION_HEAD], skel.SkeletonPositions[NUI_SKELETON_POSITION_KNEE_LEFT]);
-			//y_comp = hA.computePersonHeight(skel);
-			ShowJointCoordinates(skel, 1);
-			refresh = FALSE;
-		}
+	
 
 		
 

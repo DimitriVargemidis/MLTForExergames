@@ -92,8 +92,9 @@ private:
 
 	// selfmade parameters
 
-	bool refresh = TRUE;
-    
+	bool refresh = FALSE;
+	NUI_SKELETON_DATA skeletonSnap;
+
     /// <summary>
     /// Main processing function
     /// </summary>
