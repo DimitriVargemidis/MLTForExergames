@@ -87,10 +87,9 @@ double test(const int dimensions, double testData[]) {
 	double retval = svm_predict(model, testnode);
 	
 	svm_destroy_param(&param);
-	delete[] prob.y;
+	/*delete[] prob.y;
 	delete[] prob.x;
-	delete[] x_space;
 	delete[] testnode;
-
+	*/
 	return retval;
 }

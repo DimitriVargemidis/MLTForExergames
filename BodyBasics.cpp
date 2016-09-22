@@ -277,6 +277,7 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			{
 				//put here the train function
 				train(6, 9, SVMInputData, SVMLabels);
+				predict = true;
 			}
 
 			if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
@@ -457,19 +458,15 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 								ShowJointCoordinates(transformedJoints, 1);
 								start_1 = false;
 								start_2 = false;
-								refresh = false;
-									
-								
-
-								if (predict)
-								{
-									int pred = MakePrediction(transformedJoints);
-									SetDlgItemInt(m_hWnd, IDC_PREDICTION,pred, true);
-								}
-								
-								
+								refresh = false;	
+								SetDlgItemInt(m_hWnd, IDC_PREDICTION, 8, true);
 							}
 
+							if (predict)
+							{
+								int pred = MakePrediction(transformedJoints);
+								SetDlgItemInt(m_hWnd, IDC_PREDICTION,pred, true);
+							}
 							//END SELFMADE
 
 							//DrawBody(joints, jointPoints);
@@ -858,10 +855,10 @@ void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 		}
 	}
 
-	if (SVMInputDataIndex == 53)
+	if (SVMInputDataIndex == 54)
 	{
 		SetDlgItemText(m_hWnd, IDC_PREDICT_READY, (LPCWSTR)L"READY");
-		predict = true;
+		//predict = true;
 	}
 
 }
@@ -874,9 +871,9 @@ int CBodyBasics::MakePrediction(const Joint * joints)
 
 	for (int i = 0; i < 3; i++)
 	{
-		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.X;
-		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.Y;
-		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.Z;
+		SVMpredictInput[SVMpredictInputIndex + 0] = joints[9 + i].Position.X;
+		SVMpredictInput[SVMpredictInputIndex + 1] = joints[9 + i].Position.Y;
+		SVMpredictInput[SVMpredictInputIndex + 2] = joints[9 + i].Position.Z;
 		SVMpredictInputIndex = SVMpredictInputIndex + 3;
 	}
 

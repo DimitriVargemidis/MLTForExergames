@@ -92,7 +92,7 @@ private:
 	Joint*			savedJoints_2;
 
 			
-	double			SVMInputData[25];
+	double			SVMInputData[54];
 	int				SVMInputDataIndex = 0;
 
 	double			SVMLabels[6];
