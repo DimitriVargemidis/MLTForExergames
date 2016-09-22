@@ -8,6 +8,7 @@
 #include <strsafe.h>
 #include "resource.h"
 #include "BodyBasics.h"
+#include "svm_interface.h"
 
 static const float c_JointThickness = 3.0f;
 static const float c_TrackedBoneThickness = 6.0f;
@@ -267,7 +268,7 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
 		case WM_COMMAND:
 		
-			if (IDC_measure_2 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+			if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 			{
 				refresh = TRUE;
 			}
@@ -275,8 +276,18 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 			{
 				//put here the train function
+				train(6, 9, SVMInputData, SVMLabels);
+			}
+
+			if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+			{
+				SVMInputDataIndex = 0;
+				SVMLabelsIndex = 0;
+				predict = false;
+
 
 			}
+
 			break;
     }
 
@@ -401,17 +412,18 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
                                 //jointPoints[j] = BodyToScreen(joints[j].Position, width, height);
                             }
 
-							if (refresh || start_1 || start_2 || !predict)
+							if ((refresh || start_1 || start_2) && !predict)
 							{
-								
-								for (int j = 0; j < _countof(joints); ++j)
-								{
 									BOOL sc;
 									int label = GetDlgItemInt(m_hWnd, IDC_EDIT_LABEL,&sc,true);
 
+								
+								for (int j = 0; j < _countof(joints); ++j)
+								{
+							
 									if (sc || start_1 || start_2)
 									{
-									SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR)L"Measure");
+										SetDlgItemText(m_hWnd, IDC_measure_4, (LPCWSTR)L"Measure");
 
 										if (label == 1 || start_1)
 										{
@@ -425,21 +437,29 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 										}
 										else
 										{
-											SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR)L"label not 1 or 2");
+											SetDlgItemText(m_hWnd, IDC_measure_4, (LPCWSTR)L"label not 1 or 2");
 										}
 
 										
 									}
 									else
 									{
-										SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR) L"label incorrect");
+										SetDlgItemText(m_hWnd, IDC_measure_4, (LPCWSTR) L"label incorrect");
 									}
-									ShowJointCoordinates(transformedJoints, 1);
-									start_1 = false;
-									start_2 = false;
-									refresh = false;
-									
 								}
+									
+								if (!start_1 && !start_2)
+								{
+									AddDataToSVMInputData(transformedJoints, label);
+				
+								}
+
+								ShowJointCoordinates(transformedJoints, 1);
+								start_1 = false;
+								start_2 = false;
+								refresh = false;
+									
+								
 
 								if (predict)
 								{
@@ -823,16 +843,17 @@ void CBodyBasics::ShowJointCoordinates(const Joint * joints, int tab)
 
 void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 {
-	if (SVMLabelsIndex == 5)
+	if (SVMLabelsIndex < 6)
 	{
 		SVMLabels[SVMLabelsIndex] = label;
 		SVMLabelsIndex++;
+		SetDlgItemInt(m_hWnd, IDC_MEAS_COUNT, SVMLabelsIndex, true);
 
 		for (int i = 0; i < 3; i++)
 		{
-			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.X;
-			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.Y;
-			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.Z;
+			SVMInputData[SVMInputDataIndex + 0] = joints[9 + i].Position.X;
+			SVMInputData[SVMInputDataIndex + 1] = joints[9 + i].Position.Y;
+			SVMInputData[SVMInputDataIndex + 2] = joints[9 + i].Position.Z;
 			SVMInputDataIndex = SVMInputDataIndex + 3;
 		}
 	}
@@ -848,7 +869,8 @@ void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 int CBodyBasics::MakePrediction(const Joint * joints)
 {
 	double	SVMpredictInput[9];
-	int		SVMpredictInputIndex;
+	int		SVMpredictInputIndex = 0;
+	
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -858,7 +880,7 @@ int CBodyBasics::MakePrediction(const Joint * joints)
 		SVMpredictInputIndex = SVMpredictInputIndex + 3;
 	}
 
-	return 0; //put the test method from SVM here
+	return test(9,SVMpredictInput); //put the test method from SVM here
 }
 
 //END

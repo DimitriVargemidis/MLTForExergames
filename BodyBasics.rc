@@ -71,7 +71,7 @@ BEGIN
     LTEXT           "0",IDC_JOINT1_Z,425,20,50,15
     LTEXT           "0",IDC_JOINT2_Z,425,35,50,15
     LTEXT           "0",IDC_JOINT3_Z,425,50,50,15
-    PUSHBUTTON      "measure",IDC_measure_2,250,65,75,15
+    PUSHBUTTON      "RESET",IDC_measure_RESET,466,66,46,15
     LTEXT           "joints_record",IDC_TITLE2,250,85,50,15
     LTEXT           "X",IDC_X_TITLE2,325,85,50,15
     LTEXT           "Y",IDC_Y_TITLE2,375,85,50,15
@@ -93,6 +93,9 @@ BEGIN
     RTEXT           "prediction:",IDC_LBL_PREDICTION,250,160,75,15
     LTEXT           "NOT READY",IDC_PREDICT_READY,325,145,50,15
     LTEXT           "NONE",IDC_PREDICTION,325,160,50,15
+    RTEXT           "measure count:",IDC_LBL_MEAS_COUNT,375,65,57,15
+    LTEXT           "NONE",IDC_MEAS_COUNT,435,66,28,15
+    PUSHBUTTON      "measure",IDC_measure_4,250,65,75,15
 END
 
 

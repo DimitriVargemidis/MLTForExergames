@@ -18,10 +18,8 @@
 #define IDC_Z_coord2                    1021
 #define IDC_W_coord                     1021
 #define IDC_LIST1                       1022
-#define IDC_EDIT1                       1023
 #define IDC_EDIT_LABEL                  1023
-#define IDC_BUTTON2                     1024
-#define IDC_measure_2                   1024
+#define IDC_measure_RESET               1024
 #define IDC_TITLE                       1025
 #define IDC_X_TITLE                     1026
 #define IDC_Y_TITLE                     1027
@@ -59,6 +57,9 @@
 #define IDC_LBL_PREDICTION              1058
 #define IDC_PREDICT_READY               1059
 #define IDC_PREDICTION                  1060
+#define IDC_LBL_MEAS_COUNT              1061
+#define IDC_MEAS_COUNT                  1062
+#define IDC_measure_4                   1063
 
 // Next default values for new objects
 // 
