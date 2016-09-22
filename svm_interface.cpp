@@ -46,26 +46,26 @@ void train(const int problemSize, const int dimensions, double dataset[], double
 	prob.y = labels;
 
 	/*
+	//Rescale the dataset
 	for (int i = 0; i < prob.l; i++) {
-		double subset[dimensions];
+		double* subset = new double[dimensions];
 		for (int j = 0; j < dimensions; j++) {
 			subset[j] = dataset[i*dimensions+j];
 		}
-		double maximum = findMaximum();
+		double maximum = rescale();
 	}*/
-
 
 	svm_node** x = new svm_node*[prob.l];
 
 	for (int row = 0; row < prob.l; row++) {
-		svm_node* x_space = new svm_node[dimensions + 1];
+		svm_node* xRow = new svm_node[dimensions + 1];
 		for (int col = 0; col < dimensions; col++) {
-			x_space[col].index = col;
-			x_space[col].value = dataset[row*dimensions + col];
+			xRow[col].index = col;
+			xRow[col].value = dataset[row*dimensions + col];
 		}
-		x_space[dimensions].index = -1;  //Each row of properties should be terminated with a -1 according to the readme
-		x_space[dimensions].value = 0;	 //Value not important
-		x[row] = x_space;
+		xRow[dimensions].index = -1;  //Each row of properties should be terminated with a -1 according to the readme
+		xRow[dimensions].value = 0;	 //Value not important
+		x[row] = xRow;
 	}
 
 	prob.x = x;
