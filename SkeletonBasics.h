@@ -161,4 +161,12 @@ private:
 	/// </summary>
 	/// <param name="skel">skeleton of which the joints will be shown</param>
 	void					ShowJointCoordinates(const NUI_SKELETON_DATA & skel, int tab);
+
+
+	/// <summary>
+	/// Show the joint coordinates on the screen
+	/// </summary>
+	/// <param name="skel">skeleton of which the joints will be shown</param>
+	void					ShowJointCoordinates(const NUI_SKELETON_DATA & skel, int tab);
+
 };

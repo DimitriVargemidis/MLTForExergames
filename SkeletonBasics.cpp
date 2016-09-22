@@ -375,8 +375,6 @@ void CSkeletonBasics::ProcessSkeleton()
     {
         NUI_SKELETON_TRACKING_STATE trackingState = skeletonFrame.SkeletonData[i].eTrackingState;
 
-
-	
         if (NUI_SKELETON_TRACKED == trackingState)
         {
             // We're tracking the skeleton, draw it
@@ -463,11 +461,11 @@ void CSkeletonBasics::DrawSkeleton(const NUI_SKELETON_DATA & skel, int windowWid
 
 		
 
-		float depth_temp;
+		//float depth_temp;
 
-		depth_temp = ((depth/ 100.0) + 5.133) / 0.81-10;
+		//depth_temp = ((depth/ 100.0) + 5.133) / 0.81-10;
 
-		y_comp = hA.computePersonHeight(skel);//-(-154.5*log(depth_temp)+861.83);
+		//y_comp = hA.computePersonHeight(skel);//-(-154.5*log(depth_temp)+861.83);
 		//y_comp = hA.computePersonHeight(skel)-(-133.5*log(depth_temp)+744.63);
 		//y_comp = hA.computeProportion(skel);
 
