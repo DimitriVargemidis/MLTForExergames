@@ -1,0 +1,156 @@
+//------------------------------------------------------------------------------
+// <copyright file="BodyBasics.rc" company="Microsoft">
+//     Copyright (c) Microsoft Corporation.  All rights reserved.
+// </copyright>
+//------------------------------------------------------------------------------
+
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APP                 ICON                    "app.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+IDD_APP DIALOGEX 0, 0, 512, 275
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CONTROLPARENT | WS_EX_APPWINDOW
+CAPTION "Body Basics"
+CLASS "BodyBasicsAppDlgWndClass"
+FONT 16, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_VIDEOVIEW,"Static",SS_BLACKFRAME,0,0,250,225
+    LTEXT           "",IDC_STATUS,0,261,512,11,SS_SUNKEN,0
+	
+	RTEXT           "x :",IDC_STATUS_X,50,235,12,8
+    RTEXT           "y :",IDC_STATUS_Y,92,235,12,9
+    RTEXT           "z :",IDC_STATUS_Z,132,235,12,8
+    LTEXT           "Static",IDC_X_coord,65,247,19,8
+    LTEXT           "Static",IDC_Y_coord,105,235,19,9
+    LTEXT           "Static",IDC_Z_coord,145,235,19,8
+    LTEXT           "test",IDC_X_t,64,235,22,10,SS_SUNKEN,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Measure",VS_VERSION_INFO,2,235,33,9,BS_RIGHT
+    RTEXT           "w :",IDC_STATUS_Z2,175,234,12,8
+    LTEXT           "Static",IDC_W_coord,189,234,19,9
+    LTEXT           "joints",IDC_TITLE,250,5,75,15
+    LTEXT           "X",IDC_X_TITLE,325,5,50,15
+    LTEXT           "Y",IDC_Y_TITLE,375,5,50,15
+    LTEXT           "Z",IDC_Z_TITLE,425,5,50,15
+    LTEXT           "Right shoulder",IDC_JOINT1,250,20,75,15
+    LTEXT           "right elbow",IDC_JOINT2,250,35,75,15
+    LTEXT           "right wrist",IDC_JOINT3,250,50,75,15
+    LTEXT           "0",IDC_JOINT1_X,325,20,50,15
+    LTEXT           "0",IDC_JOINT2_X,325,35,50,15
+    LTEXT           "0",IDC_JOINT3_X,325,50,50,15
+    LTEXT           "0",IDC_JOINT1_Y,375,20,50,15
+    LTEXT           "0",IDC_JOINT2_Y,375,35,50,15
+    LTEXT           "0",IDC_JOINT3_Y,375,50,50,15
+    LTEXT           "0",IDC_JOINT1_Z,425,20,50,15
+    LTEXT           "0",IDC_JOINT2_Z,425,35,50,15
+    LTEXT           "0",IDC_JOINT3_Z,425,50,50,15
+    PUSHBUTTON      "measure",IDC_measure_2,250,65,75,15
+	
+    LTEXT           "joints_record",IDC_TITLE2,250,85,50,15
+    LTEXT           "X",IDC_X_TITLE2,325,85,50,15
+    LTEXT           "Y",IDC_Y_TITLE2,375,85,50,15
+    LTEXT           "Z",IDC_Z_TITLE2,425,85,50,15
+    LTEXT           "Right shoulder",IDC_JOINT4,250,100,50,15
+    LTEXT           "right elbow",IDC_JOINT5,250,115,50,15
+    LTEXT           "right wrist",IDC_JOINT6,250,130,50,15
+	LTEXT           "0",IDC_JOINT1_X2,325,100,50,15
+    LTEXT           "0",IDC_JOINT2_X2,325,115,50,15
+    LTEXT           "0",IDC_JOINT3_X2,325,130,50,15
+    LTEXT           "0",IDC_JOINT1_Y2,375,100,50,15
+    LTEXT           "0",IDC_JOINT2_Y2,375,115,50,15
+    LTEXT           "0",IDC_JOINT3_Y2,375,130,50,15
+    LTEXT           "0",IDC_JOINT1_Z2,425,100,50,15
+	LTEXT           "0",IDC_JOINT2_Z2,425,115,50,15
+    LTEXT           "0",IDC_JOINT3_Z2,425,130,50,15
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_APP, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 505
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
