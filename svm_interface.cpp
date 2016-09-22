@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <iostream>
 #include "svm_interface.h"
-#include "libsvm-3.21\svm.h"
 #define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 struct svm_parameter param;     // set by parse_command_line
