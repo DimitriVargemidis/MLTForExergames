@@ -1,9 +1,3 @@
-//------------------------------------------------------------------------------
-// <copyright file="Resource.h" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by BodyBasics.rc
@@ -12,7 +6,6 @@
 #define IDD_APP                         100
 #define IDC_VIDEOVIEW                   1000
 #define IDC_STATUS                      1001
-
 #define IDC_X_coord                     1013
 #define IDC_Y_coord                     1014
 #define IDC_Z_coord                     1015
@@ -26,6 +19,7 @@
 #define IDC_W_coord                     1021
 #define IDC_LIST1                       1022
 #define IDC_EDIT1                       1023
+#define IDC_EDIT_LABEL                  1023
 #define IDC_BUTTON2                     1024
 #define IDC_measure_2                   1024
 #define IDC_TITLE                       1025
@@ -60,6 +54,11 @@
 #define IDC_JOINT2_Z2                   1054
 #define IDC_JOINT3_Z2                   1055
 #define IDC_JOINT1_X2                   1056
+#define IDC_measure_3                   1057
+#define IDC_START_PREDICT               1057
+#define IDC_LBL_PREDICTION              1058
+#define IDC_PREDICT_READY               1059
+#define IDC_PREDICTION                  1060
 
 // Next default values for new objects
 // 

@@ -68,6 +68,10 @@ CBodyBasics::CBodyBasics() :
 	//initialising SELFMADE PARAMETERS
 	savedJointPoints = new D2D1_POINT_2F [25];
 	savedJoints = new Joint[25];
+
+	savedJointPoints_2 = new D2D1_POINT_2F[25];
+	savedJoints_2 = new Joint[25];
+	
 }
   
 
@@ -268,6 +272,11 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 				refresh = TRUE;
 			}
 
+			if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+			{
+				//put here the train function
+
+			}
 			break;
     }
 
@@ -392,18 +401,53 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
                                 //jointPoints[j] = BodyToScreen(joints[j].Position, width, height);
                             }
 
-							if (refresh)
+							if (refresh || start_1 || start_2 || !predict)
 							{
 								
 								for (int j = 0; j < _countof(joints); ++j)
 								{
-									
-									savedJointPoints[j] = jointPoints[j];
-									savedJoints[j] = transformedJoints[j];
+									BOOL sc;
+									int label = GetDlgItemInt(m_hWnd, IDC_EDIT_LABEL,&sc,true);
+
+									if (sc || start_1 || start_2)
+									{
+									SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR)L"Measure");
+
+										if (label == 1 || start_1)
+										{
+											savedJointPoints[j] = jointPoints[j];
+											savedJoints[j] = transformedJoints[j];				
+										}
+										else if (label == 2 || start_2)
+										{
+											savedJointPoints_2[j] = jointPoints[j];
+											savedJoints_2[j] = transformedJoints[j];
+										}
+										else
+										{
+											SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR)L"label not 1 or 2");
+										}
+
+										
+									}
+									else
+									{
+										SetDlgItemText(m_hWnd, IDC_measure_2, (LPCWSTR) L"label incorrect");
+									}
+									ShowJointCoordinates(transformedJoints, 1);
+									start_1 = false;
+									start_2 = false;
+									refresh = false;
 									
 								}
-								ShowJointCoordinates(savedJoints, 1);
-								refresh = false;
+
+								if (predict)
+								{
+									int pred = MakePrediction(transformedJoints);
+									SetDlgItemInt(m_hWnd, IDC_PREDICTION,pred, true);
+								}
+								
+								
 							}
 
 							//END SELFMADE
@@ -414,6 +458,7 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 							
 						    //SELFMADE CODE
 							DrawBody(savedJoints, savedJointPoints);
+							DrawBody(savedJoints_2, savedJointPoints_2);
 							//END
 
                             DrawHand(leftHandState, jointPoints[JointType_HandLeft]);
@@ -627,6 +672,16 @@ void CBodyBasics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoin
             m_pRenderTarget->FillEllipse(ellipse, m_pBrushJointTracked);
         }
     }
+
+	//SELFMADE CODE
+	//simple button 
+	D2D_RECT_F measureButton = D2D1::RectF(100, 0,200, 200);
+	m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
+	
+
+
+
+	//END SELFMADE
 }
 
 /// <summary>
@@ -764,6 +819,46 @@ void CBodyBasics::ShowJointCoordinates(const Joint * joints, int tab)
 		SetDlgItemInt(m_hWnd, IDC_JOINT3_Z2, (UINT32)((joints[11].Position.Z - 1.8)*100.0), TRUE);
 		
 	}
+}
+
+void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
+{
+	if (SVMLabelsIndex == 5)
+	{
+		SVMLabels[SVMLabelsIndex] = label;
+		SVMLabelsIndex++;
+
+		for (int i = 0; i < 3; i++)
+		{
+			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.X;
+			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.Y;
+			SVMInputData[SVMInputDataIndex + i] = joints[9 + i].Position.Z;
+			SVMInputDataIndex = SVMInputDataIndex + 3;
+		}
+	}
+
+	if (SVMInputDataIndex == 53)
+	{
+		SetDlgItemText(m_hWnd, IDC_PREDICT_READY, (LPCWSTR)L"READY");
+		predict = true;
+	}
+
+}
+
+int CBodyBasics::MakePrediction(const Joint * joints)
+{
+	double	SVMpredictInput[9];
+	int		SVMpredictInputIndex;
+
+	for (int i = 0; i < 3; i++)
+	{
+		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.X;
+		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.Y;
+		SVMInputData[SVMpredictInputIndex + i] = joints[9 + i].Position.Z;
+		SVMpredictInputIndex = SVMpredictInputIndex + 3;
+	}
+
+	return 0; //put the test method from SVM here
 }
 
 //END

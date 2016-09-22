@@ -80,9 +80,23 @@ private:
     ID2D1SolidColorBrush*   m_pBrushHandLasso;
 
 	//SELFMADE PARAMETERS
-	bool refresh = true;
-	D2D1_POINT_2F* savedJointPoints;
-	Joint* savedJoints;
+	bool refresh = false;
+	bool start_1 = true;
+	bool start_2 = true;
+	bool predict = false;
+
+	D2D1_POINT_2F*	savedJointPoints;
+	Joint*			savedJoints;
+
+	D2D1_POINT_2F*	savedJointPoints_2;
+	Joint*			savedJoints_2;
+
+			
+	double			SVMInputData[25];
+	int				SVMInputDataIndex = 0;
+
+	double			SVMLabels[6];
+	int				SVMLabelsIndex = 0;
 
 	//END
 
@@ -166,6 +180,19 @@ private:
 	/// <param name="tab">is 0 if current body data needs to be set, is 1 if saved body data needs to be set</param>
 	void CBodyBasics::ShowJointCoordinates(const Joint* joints, int tab);
 
+
+	/// <summary>
+	/// Adds de joint data of the right arm to the SVMInputData and the SVMLabel array
+	/// </summary>
+	/// <param name="joints">joint data array</param>
+	/// <param name="tab">label of the gesture to which the joint data belongs</param>
+	void CBodyBasics::AddDataToSVMInputData(const Joint* joints, int label);
+
+	/// <summary>
+	/// enters the joint data in to de predict function of the SVM, return the class in which it falls
+	/// </summary>
+	/// <param name="joints">joint data array</param>
+	int CBodyBasics::MakePrediction(const Joint* joints);
 	//END
 };
 
