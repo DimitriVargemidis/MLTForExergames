@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <iostream>
 #include "svm_interface.h"
-#define Malloc(type,n) (type *)malloc((n)*sizeof(type))
 
 struct svm_parameter param;     // set by parse_command_line
 struct svm_problem prob;        // set by read_problem
@@ -72,7 +71,7 @@ void train(const int problemSize, const int dimensions, double dataset[], double
 	prob.x = x;
 
 	//Train model
-	svm_model *model = svm_train(&prob, &param);
+	model = svm_train(&prob, &param);
 }
 
 double test(const int dimensions, double testData[]) {
