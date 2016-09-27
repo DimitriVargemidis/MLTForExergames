@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <iostream>
-#include "svm_interface.h"
+#include "SVMInterface.h"
 
 struct svm_parameter param;     // set by parse_command_line
 struct svm_problem prob;        // set by read_problem
