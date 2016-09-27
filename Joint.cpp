@@ -1,12 +1,12 @@
-#include "Joint.h"
+#include "joint.h"
 
 
 
-Joint::Joint()
+joint::joint()
 {
 }
 
 
-Joint::~Joint()
+joint::~joint()
 {
 }
