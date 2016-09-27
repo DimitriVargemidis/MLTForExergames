@@ -1,8 +1,8 @@
 #pragma once
-class Joint
+class joint
 {
 public:
-	Joint();
-	~Joint();
+	joint();
+	~joint();
 };
 

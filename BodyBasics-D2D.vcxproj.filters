@@ -8,10 +8,13 @@
     <ClCompile Include="libsvm-3.21\svm.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
-    <ClCompile Include="joint.cpp">
+    <ClCompile Include="SVMInterface.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
-    <ClCompile Include="SVMInterface.cpp">
+    <ClCompile Include="Model.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="joint.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +32,13 @@
     <ClInclude Include="resource.h">
       <Filter>UI_data</Filter>
     </ClInclude>
-    <ClInclude Include="joint.h">
+    <ClInclude Include="SVMInterface.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
-    <ClInclude Include="SVMInterface.h">
+    <ClInclude Include="Model.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="joint.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
   </ItemGroup>
