@@ -19,9 +19,10 @@ struct svm_node *x_space;
 //	@result	The problem instance of this object is initialized.
 void SVMInterface::train(const std::vector<Gesture> &gestures) {
 	setAllParameters();
-	setProblem(size(gestures), getLabels(gestures));
-}
 
+	//setProblem(size(gestures), getLabels(gestures));
+	model = svm_train(&prob, &param);
+}
 
 //Return the pointer that points to an array cointaining the labels of all
 //given gestures in the same order.
@@ -62,9 +63,10 @@ void SVMInterface::setAllParameters() {
 //	@param problemSize: The number of gestures used for computing the model
 //	@param labels: A vector containing the label of each gesture that was given to
 //					compute a model in the same order the gestures are given.
-void SVMInterface::setProblem(const int problemSize, double * labels) {
+void SVMInterface::setProblem(const int problemSize, double * labels, svm_node ** dataset) {
 	prob.l = problemSize;
 	prob.y = labels;
+	prob.x = dataset;
 }
 
 void train(const int problemSize, const int dimensions, double dataset[], double labels[]) {
@@ -100,16 +102,6 @@ void train(const int problemSize, const int dimensions, double dataset[], double
 
 	//Set the array containing the labels of all training data
 	prob.y = labels;
-
-	/*
-	//Rescale the dataset
-	for (int i = 0; i < prob.l; i++) {
-		double* subset = new double[dimensions];
-		for (int j = 0; j < dimensions; j++) {
-			subset[j] = dataset[i*dimensions+j];
-		}
-		double maximum = rescale();
-	}*/
 
 	svm_node** x = new svm_node*[prob.l];
 
