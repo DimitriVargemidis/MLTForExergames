@@ -11,11 +11,60 @@ struct svm_problem prob;        // set by read_problem
 struct svm_model *model;
 struct svm_node *x_space;
 
+//Train the SVM to learn gestures.
+//	@param	A vector containing all gesture objects that are to be used
+//			for computing a model for the SVM.
+//	@result The model instance of this object is initialized.
+//	@result	The parameter instance of this object is initialized.
+//	@result	The problem instance of this object is initialized.
 void SVMInterface::train(const std::vector<Gesture> &gestures) {
-	
-	for (Gesture gesture : gestures) {
-		double x = gesture.getLabel();
+	setAllParameters();
+	setProblem(size(gestures), getLabels(gestures));
+}
+
+
+//Return the pointer that points to an array cointaining the labels of all
+//given gestures in the same order.
+//	@param	A vector containing all gestures.
+//	@result	The pointer of an array containing all labels.
+double * SVMInterface::getLabels(const std::vector<Gesture> &gestures) {
+	double * labels;
+	labels = new double[size(gestures)];
+	Gesture gesture;
+	for (int index = 0; index < size(gestures); index++) {
+		gesture = gestures[index];
+		labels[index] = gesture.getLabel();
 	}
+	return labels;
+}
+
+//Set all parameters, used when computing a model.
+void SVMInterface::setAllParameters() {
+	param.svm_type = C_SVC;
+	param.kernel_type = RBF;
+	param.degree = 3;
+	param.gamma = 0.5;
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 100;
+	param.C = 1;
+	param.eps = 1e-3;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+}
+
+//Set the problem object of this object with a given problem size and a given
+//vector containing all labels.
+//	@param problemSize: The number of gestures used for computing the model
+//	@param labels: A vector containing the label of each gesture that was given to
+//					compute a model in the same order the gestures are given.
+void SVMInterface::setProblem(const int problemSize, double * labels) {
+	prob.l = problemSize;
+	prob.y = labels;
 }
 
 void train(const int problemSize, const int dimensions, double dataset[], double labels[]) {
