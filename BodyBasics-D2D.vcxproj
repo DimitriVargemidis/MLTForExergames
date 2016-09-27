@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BodyBasics.cpp" />
+    <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="libsvm-3.21\svm.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
   </ItemGroup>

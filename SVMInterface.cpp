@@ -11,6 +11,13 @@ struct svm_problem prob;        // set by read_problem
 struct svm_model *model;
 struct svm_node *x_space;
 
+void SVMInterface::train(const std::vector<Gesture>& gestures) {
+	double x;
+	for (const Gesture &gesture : gestures) {
+		x = gesture.getLabel();
+	}
+}
+
 void train(const int problemSize, const int dimensions, double dataset[], double labels[]) {
 	/*
 	==================
