@@ -7,6 +7,7 @@
 #pragma once
 
 #include "resource.h"
+#include "Model.h"
 
 class CBodyBasics
 {
@@ -78,6 +79,10 @@ private:
     ID2D1SolidColorBrush*   m_pBrushHandClosed;
     ID2D1SolidColorBrush*   m_pBrushHandOpen;
     ID2D1SolidColorBrush*   m_pBrushHandLasso;
+
+	//SELFMADE PARAMETERS meant to stay here
+	Model model;
+	
 
 	//SELFMADE PARAMETERS
 	bool refresh = false;

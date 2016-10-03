@@ -9,7 +9,7 @@
 #include "resource.h"
 #include "BodyBasics.h"
 #include "svm_interface.h"
-#include "Keypress.h"
+#include "Model.h"
 
 static const float c_JointThickness = 3.0f;
 static const float c_TrackedBoneThickness = 6.0f;
@@ -67,8 +67,12 @@ CBodyBasics::CBodyBasics() :
         m_fFreq = double(qpf.QuadPart);
     }
 
+	//SELFMADE parameters that are meant to stay
+	model = new Model;
+
+
 	//initialising SELFMADE PARAMETERS
-	savedJointPoints = new D2D1_POINT_2F [25];
+	savedJointPoints = new D2D1_POINT_2F [25SVMInterface::;
 	savedJoints = new Joint[25];
 
 	savedJointPoints_2 = new D2D1_POINT_2F[25];
@@ -467,11 +471,6 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 							{
 								int pred = MakePrediction(transformedJoints);
 								SetDlgItemInt(m_hWnd, IDC_PREDICTION,pred, true);
-								if (pred == 2)
-								{
-									pressSpace();
-									//Sleep(250);
-								}
 							}
 							//END SELFMADE
 
