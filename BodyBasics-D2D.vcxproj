@@ -20,11 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BodyBasics.cpp" />
-    <ClCompile Include="Gesture.cpp" />
-    <ClCompile Include="joint.cpp" />
     <ClCompile Include="libsvm-3.21\svm.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="SVMInterface.cpp" />
+    <ClCompile Include="svm_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
@@ -34,13 +31,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
-    <ClInclude Include="Gesture.h" />
-    <ClInclude Include="joint.h" />
     <ClInclude Include="libsvm-3.21\svm.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SVMInterface.h" />
+    <ClInclude Include="svm_interface.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E5E35A2-7A3B-4671-AD85-B39DC5D710C9}</ProjectGuid>
