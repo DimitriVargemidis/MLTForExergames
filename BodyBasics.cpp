@@ -9,6 +9,7 @@
 #include "resource.h"
 #include "BodyBasics.h"
 #include "svm_interface.h"
+#include "Keypress.h"
 
 static const float c_JointThickness = 3.0f;
 static const float c_TrackedBoneThickness = 6.0f;
@@ -466,6 +467,11 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 							{
 								int pred = MakePrediction(transformedJoints);
 								SetDlgItemInt(m_hWnd, IDC_PREDICTION,pred, true);
+								if (pred == 2)
+								{
+									pressSpace();
+									//Sleep(250);
+								}
 							}
 							//END SELFMADE
 

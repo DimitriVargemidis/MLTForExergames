@@ -22,6 +22,7 @@
 // is included below.
 #define WINVER 0x0500
 #include <windows.h>
+#include "Keypress.h"
 
 int pressSpace()
 {
@@ -39,6 +40,8 @@ int pressSpace()
 	ip.ki.wVk = 0x20; // virtual-key code for the "space" key
 	ip.ki.dwFlags = 0; // 0 for key press
 	SendInput(1, &ip, sizeof(INPUT));
+
+	Sleep(50);
 
 	// Release the "space" key
 	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
