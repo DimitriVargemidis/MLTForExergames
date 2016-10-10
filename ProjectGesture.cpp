@@ -1,12 +1,31 @@
 #include "ProjectGesture.h"
+#include <stdexcept>
 
 
-
-ProjectGesture::ProjectGesture()
-{
+ProjectGesture::ProjectGesture(const GestureClass & gestureClass, const double & label, const unsigned int & key) :
+	gestureClass{ gestureClass }, label{ label } {
+	setKey(key);
 }
 
+GestureClass ProjectGesture::getGestureClass() const {
+	return gestureClass;
+}
 
-ProjectGesture::~ProjectGesture()
-{
+void ProjectGesture::setLabel(const double & labelToSet) {
+	label = labelToSet;
+}
+
+double ProjectGesture::getLabel() const {
+	return label;
+}
+
+void ProjectGesture::setKey(const unsigned int & keyToSet) {
+	key = keyToSet;
+}
+
+unsigned int ProjectGesture::getKey() const {
+	if (key == 0) {
+		throw std::invalid_argument("Key 0x00 is not a valid key.");
+	}
+	return key;
 }

@@ -1,12 +1,14 @@
 #include "Project.h"
 
 
-
-Project::Project()
-{
+void Project::addProjectGesture(const ProjectGesture & projectGesture) {
+	projectGestures.push_back(projectGesture);
 }
 
+std::vector<ProjectGesture> Project::getProjectGestures() const {
+	return std::vector<ProjectGesture>();
+}
 
-Project::~Project()
-{
+void Project::clearProjectGestures() {
+	projectGestures.clear();
 }

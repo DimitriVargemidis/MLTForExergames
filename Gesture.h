@@ -1,11 +1,18 @@
-#pragma once
+#ifndef	GESTURE_H
+#define	GESTURE_H
 
-//Abstract class --> to do: add 'virtual' when children of this class are implemented
-class Gesture{
+#include "Kinect.h"
+#include <vector>
+
+class Gesture {
 private:
-	double label;
+	std::vector< std::vector<Joint> > joints;
+
 public:
-	double getLabel();
-	void setLabel();
-	
+	std::vector< std::vector<Joint> > getJoints() const;
+	void addFrame(const std::vector<Joint> & frameJoints);
+	bool isStaticGesture() const;
+	int getNumberOfJointsPerFrame() const;
 };
+
+#endif //GESTURE_H

@@ -1,8 +1,16 @@
-#pragma once
-class GestureClass
-{
+#ifndef GESTURECLASS_H
+#define GESTURECLASS_H
+
+#include "Gesture.h"
+#include <vector>
+
+class GestureClass {
+private:
+	std::vector<Gesture> gestures;
+
 public:
-	GestureClass();
-	~GestureClass();
+	void addGesture(const Gesture & gesture);
+	std::vector<Gesture> getGestures() const;
 };
 
+#endif //GESTURECLASS_H

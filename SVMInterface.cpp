@@ -93,3 +93,46 @@ double test(const int dimensions, double testData[]) {
 	*/
 	return retval;
 }
+
+void train(const std::vector<GestureClass> & gestureClasses) {
+	param.svm_type = C_SVC;
+	param.kernel_type = RBF;
+	param.degree = 3;
+	param.gamma = 0.5;
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 100;
+	param.C = 1;
+	param.eps = 1e-3;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+
+	prob.l = problemSize;
+	prob.y = labels;
+
+	svm_node** x = new svm_node*[prob.l];
+
+	for (int row = 0; row < prob.l; row++) {
+		svm_node* xRow = new svm_node[dimensions + 1];
+		for (int col = 0; col < dimensions; col++) {
+			xRow[col].index = col;
+			xRow[col].value = dataset[row*dimensions + col];
+		}
+		xRow[dimensions].index = -1;  //Each row of properties should be terminated with a -1 according to the readme
+		xRow[dimensions].value = 0;	 //Value not important
+		x[row] = xRow;
+	}
+
+	prob.x = x;
+
+	//Train model
+	model = svm_train(&prob, &param);
+}
+
+double test(const Gesture & gesture) {
+	return 0.0;
+}
