@@ -1,18 +1,18 @@
 #ifndef	GESTURE_H
 #define	GESTURE_H
 
-#include "Kinect.h"
+#include "Frame.h"
 #include <vector>
 
 class Gesture {
 private:
-	std::vector< std::vector<Joint> > joints;
+	std::vector<Frame> frames;
 
 public:
-	std::vector< std::vector<Joint> > getJoints() const;
-	void addFrame(const std::vector<Joint> & frameJoints);
+	std::vector<Frame> getFrames() const;
+	void addFrame(const Frame & frameToAdd);
+	int getNumberOfFrames() const;
 	bool isStaticGesture() const;
-	int getNumberOfJointsPerFrame() const;
 };
 
 #endif //GESTURE_H

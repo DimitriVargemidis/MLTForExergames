@@ -12,3 +12,11 @@ std::vector<ProjectGesture> Project::getProjectGestures() const {
 void Project::clearProjectGestures() {
 	projectGestures.clear();
 }
+
+void Project::setSVMModel(const svm_model & modelToSet) {
+	model = modelToSet;
+}
+
+svm_model Project::getSVMModel() const {
+	return model;
+}

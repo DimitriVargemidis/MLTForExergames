@@ -26,6 +26,7 @@
     <ClCompile Include="Body.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
+    <ClCompile Include="Frame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -57,6 +58,9 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Body.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
   </ItemGroup>

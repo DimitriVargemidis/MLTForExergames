@@ -20,12 +20,12 @@ double ProjectGesture::getLabel() const {
 }
 
 void ProjectGesture::setKey(const unsigned int & keyToSet) {
+	if (keyToSet == 0) {
+		throw std::invalid_argument("Key 0x00 is not a valid key.");
+	}
 	key = keyToSet;
 }
 
 unsigned int ProjectGesture::getKey() const {
-	if (key == 0) {
-		throw std::invalid_argument("Key 0x00 is not a valid key.");
-	}
 	return key;
 }

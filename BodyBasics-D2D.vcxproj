@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="BodyBasics.cpp" />
+    <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="GestureClass.cpp" />
     <ClCompile Include="libsvm-3.21\svm.cpp" />
@@ -38,6 +39,7 @@
   <ItemGroup>
     <ClInclude Include="Body.h" />
     <ClInclude Include="BodyBasics.h" />
+    <ClInclude Include="Frame.h" />
     <ClInclude Include="Gesture.h" />
     <ClInclude Include="GestureClass.h" />
     <ClInclude Include="libsvm-3.21\svm.h" />
