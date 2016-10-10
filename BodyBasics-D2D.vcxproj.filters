@@ -14,7 +14,16 @@
     <ClCompile Include="Model.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
-    <ClCompile Include="joint.cpp">
+    <ClCompile Include="Project.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectGesture.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureClass.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Body.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +47,16 @@
     <ClInclude Include="Model.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
-    <ClInclude Include="joint.h">
+    <ClInclude Include="Project.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectGesture.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureClass.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Body.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,11 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Body.cpp" />
     <ClCompile Include="BodyBasics.cpp" />
     <ClCompile Include="Gesture.cpp" />
-    <ClCompile Include="joint.cpp" />
+    <ClCompile Include="GestureClass.cpp" />
     <ClCompile Include="libsvm-3.21\svm.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="ProjectGesture.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,11 +36,14 @@
     <ResourceCompile Include="BodyBasics.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Body.h" />
     <ClInclude Include="BodyBasics.h" />
     <ClInclude Include="Gesture.h" />
-    <ClInclude Include="joint.h" />
+    <ClInclude Include="GestureClass.h" />
     <ClInclude Include="libsvm-3.21\svm.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Project.h" />
+    <ClInclude Include="ProjectGesture.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
