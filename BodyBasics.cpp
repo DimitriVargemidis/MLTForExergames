@@ -102,6 +102,7 @@ CBodyBasics::~CBodyBasics()
 //moved to UI
 
 //UI
+/*
 /// <summary>
 /// Creates the main window and begins processing
 /// </summary>
@@ -157,7 +158,7 @@ int CBodyBasics::Run(HINSTANCE hInstance, int nCmdShow)
 
     return static_cast<int>(msg.wParam);
 }
-
+*/
 //END MOVE TO UI
 
 //endinterface
@@ -202,7 +203,8 @@ void CBodyBasics::Update()
     SafeRelease(pBodyFrame);
 }
 
-//UI
+//MOVED TO UI
+/*
 /// <summary>
 /// Handles window messages, passes most to the class instance to handle
 /// </summary>
@@ -233,6 +235,8 @@ LRESULT CALLBACK CBodyBasics::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam,
     return 0;
 }
 
+
+
 //UI
 /// <summary>
 /// Handle windows messages for the class instance
@@ -253,15 +257,6 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
         {
             // Bind application window handle
             m_hWnd = hWnd;
-
-			//TO D2D_Graphics
-			/*
-
-            // Init Direct2D
-            D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
-
-			*/ 
-			//END TO D2D_Graphics
 
 			graphics.InitD2D();
 
@@ -309,7 +304,11 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
     return FALSE;
 }
 
-//endinterface
+*/
+//END MOVED TO UI
+
+
+//Main
 /// <summary>
 /// Initializes the default Kinect sensor
 /// </summary>
@@ -677,9 +676,12 @@ void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 
 }
 
+
 //model
+//needs to be changed! transformation happens already in SVMinterface, this needs to make a Frame object
 int CBodyBasics::MakePrediction(const Joint * joints)
 {
+	
 	double	SVMpredictInput[9];
 	int		SVMpredictInputIndex = int{ 0 };
 	int		result = int{ 0 };

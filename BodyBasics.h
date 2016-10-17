@@ -46,23 +46,30 @@ public:
     LRESULT CALLBACK        DlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	//moved to UI
-	
+	/*
     /// <summary>
     /// Creates the main window and begins processing
     /// </summary>
     /// <param name="hInstance"></param>
     /// <param name="nCmdShow"></param>
     int                     Run(HINSTANCE hInstance, int nCmdShow);
-	
+	*/
 	//END MOVE TO UI
 
 private:
+	//MOVED TO UI
+	/*
     HWND                    m_hWnd;
+	*/
+	//END MOVED TO UI
     INT64                   m_nStartTime;
     INT64                   m_nLastCounter;
     double                  m_fFreq;
     INT64                   m_nNextStatusTime;
     DWORD                   m_nFramesSinceUpdate;
+
+	//MOVED TO MAIN
+	/*
 
     // Current Kinect
     IKinectSensor*          m_pKinectSensor;
@@ -71,16 +78,27 @@ private:
     // Body reader
     IBodyFrameReader*       m_pBodyFrameReader;	
 
+	*/
+	//MOVED TO MAIN
+	
+
 	//SELFMADE PARAMETERS meant to stay here
 	Model model;
+	//MOVED TO UI
+	/*
 	D2D_Graphics graphics;
+	*/
+	//END MOVED TO UI
 
+	//MOVED TO MODEL
+	/*
 		//SELFMADE PARAMETERS
 	bool refresh = false;
 	bool start_1 = true;
 	bool start_2 = true;
 	bool predict = false;
 
+	
 	D2D1_POINT_2F*	savedJointPoints;
 	Joint*			savedJoints;
 
@@ -93,7 +111,7 @@ private:
 
 	double			SVMLabels[6];
 	int				SVMLabelsIndex = 0;
-
+*/
 		//END
 
     /// <summary>

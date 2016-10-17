@@ -1,6 +1,6 @@
-#include "Model.h"
-#include <stdexcept>
 
+#include <stdexcept>
+#include "Model.h"
 
 void Model::setProject(const Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
