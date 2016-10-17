@@ -14,7 +14,7 @@ const Project & Model::getProject() const {
 }
 
 void Model::train() {
-	
+	getProject().getProjectGestures()
 }
 
 const double Model::test() {
