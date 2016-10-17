@@ -1,11 +1,18 @@
-#pragma once
+#ifndef	GESTURE_H
+#define	GESTURE_H
 
-//Abstract class --> to do: add 'virtual' when children of this class are implemented
-class Gesture{
+#include "Frame.h"
+#include <vector>
+
+class Gesture {
 private:
-	double label;
+	std::vector<Frame> frames;
+
 public:
-	double getLabel();
-	void setLabel();
-	
+	std::vector<Frame> getFrames() const;
+	void addFrame(const Frame & frameToAdd);
+	int getNumberOfFrames() const;
+	bool isStaticGesture() const;
 };
+
+#endif //GESTURE_H

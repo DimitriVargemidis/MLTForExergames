@@ -23,6 +23,7 @@
     <ClCompile Include="BodyBasics.cpp" />
     <ClCompile Include="D2D_Graphics.cpp" />
     <ClCompile Include="DUI.cpp" />
+    <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="GestureClass.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="BodyBasics.h" />
     <ClInclude Include="D2D_Graphics.h" />
     <ClInclude Include="DUI.h" />
+    <ClInclude Include="Frame.h" />
     <ClInclude Include="Gesture.h" />
     <ClInclude Include="GestureClass.h" />
     <ClInclude Include="GUI.h" />

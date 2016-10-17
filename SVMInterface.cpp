@@ -6,68 +6,12 @@
 #include <iostream>
 #include "SVMInterface.h"
 
+const int DIMENSIONS_PER_JOINT = 3;
+
 struct svm_parameter param;     // set by parse_command_line
 struct svm_problem prob;        // set by read_problem
 struct svm_model *model;
 struct svm_node *x_space;
-
-//Train the SVM to learn gestures.
-//	@param	A vector containing all gesture objects that are to be used
-//			for computing a model for the SVM.
-//	@result The model instance of this object is initialized.
-//	@result	The parameter instance of this object is initialized.
-//	@result	The problem instance of this object is initialized.
-void SVMInterface::train(const std::vector<Gesture> &gestures) {
-	setAllParameters();
-
-	//setProblem(size(gestures), getLabels(gestures));
-	model = svm_train(&prob, &param);
-}
-
-//Return the pointer that points to an array cointaining the labels of all
-//given gestures in the same order.
-//	@param	A vector containing all gestures.
-//	@result	The pointer of an array containing all labels.
-double * SVMInterface::getLabels(const std::vector<Gesture> &gestures) {
-	double * labels;
-	labels = new double[size(gestures)];
-	Gesture gesture;
-	for (int index = 0; index < size(gestures); index++) {
-		gesture = gestures[index];
-		labels[index] = gesture.getLabel();
-	}
-	return labels;
-}
-
-//Set all parameters, used when computing a model.
-void SVMInterface::setAllParameters() {
-	param.svm_type = C_SVC;
-	param.kernel_type = RBF;
-	param.degree = 3;
-	param.gamma = 0.5;
-	param.coef0 = 0;
-	param.nu = 0.5;
-	param.cache_size = 100;
-	param.C = 1;
-	param.eps = 1e-3;
-	param.p = 0.1;
-	param.shrinking = 1;
-	param.probability = 0;
-	param.nr_weight = 0;
-	param.weight_label = NULL;
-	param.weight = NULL;
-}
-
-//Set the problem object of this object with a given problem size and a given
-//vector containing all labels.
-//	@param problemSize: The number of gestures used for computing the model
-//	@param labels: A vector containing the label of each gesture that was given to
-//					compute a model in the same order the gestures are given.
-void SVMInterface::setProblem(const int problemSize, double * labels, svm_node ** dataset) {
-	prob.l = problemSize;
-	prob.y = labels;
-	prob.x = dataset;
-}
 
 void train(const int problemSize, const int dimensions, double dataset[], double labels[]) {
 	/*
@@ -102,6 +46,16 @@ void train(const int problemSize, const int dimensions, double dataset[], double
 
 	//Set the array containing the labels of all training data
 	prob.y = labels;
+
+	/*
+	//Rescale the dataset
+	for (int i = 0; i < prob.l; i++) {
+		double* subset = new double[dimensions];
+		for (int j = 0; j < dimensions; j++) {
+			subset[j] = dataset[i*dimensions+j];
+		}
+		double maximum = rescale();
+	}*/
 
 	svm_node** x = new svm_node*[prob.l];
 
@@ -140,4 +94,42 @@ double test(const int dimensions, double testData[]) {
 	delete[] testnode;
 	*/
 	return retval;
+}
+
+svm_model SVMInterface::train(const Project & project) {
+	return svm_model();
+}
+
+double SVMInterface::test(const svm_model * model, const Gesture & gesture) {
+	int dimensions = gesture.getNumberOfFrames() * gesture.getNumberOfJointsPerFrame() * DIMENSIONS_PER_JOINT;
+	svm_node* testnode = new svm_node[dimensions + 1];
+
+	int arrayIndex{ 0 };
+	for (int i = 0; i < gesture.getNumberOfFrames(); i++) {
+		for (int j = 0; j < gesture.getNumberOfJointsPerFrame(); j++) {
+			arrayIndex = i*j;
+			testnode[arrayIndex].index = arrayIndex;
+			testnode[arrayIndex].value = gesture.
+			arrayIndex = arrayIndex + 1;
+			testnode[arrayIndex].index = arrayIndex;
+			arrayIndex = arrayIndex + 1;
+			testnode[i].index = i*j + 2;
+		}
+	}
+
+	for (int i = 0; i < dimensions; i++) {
+		testnode[i].index = i;
+		testnode[i].value = testData[i];
+	}
+	testnode[dimensions].index = -1;
+	testnode[dimensions].value = 0;
+
+	double resultLabel = svm_predict(model, testnode);
+
+	svm_destroy_param(&param);
+	/*delete[] prob.y;
+	delete[] prob.x;
+	delete[] testnode;
+	*/
+	return resultLabel;
 }

@@ -38,6 +38,9 @@
     <ClCompile Include="D2D_Graphics.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
+    <ClCompile Include="Frame.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="D2D_Graphics.h">
       <Filter>UI_data</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame.h">
+      <Filter>model_subclasses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
