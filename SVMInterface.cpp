@@ -8,11 +8,6 @@
 
 const int DIMENSIONS_PER_JOINT = 3;
 
-struct svm_parameter param;     // set by parse_command_line
-struct svm_problem prob;        // set by read_problem
-struct svm_model *model;
-struct svm_node *x_space;
-
 /*
 void train(const int problemSize, const int dimensions, double dataset[], double labels[]) {
 	param.svm_type = C_SVC;
@@ -74,35 +69,62 @@ double test(const int dimensions, double testData[]) {
 	return retval;
 }*/
 
-const svm_model & SVMInterface::train(const std::vector<ProjectGesture> & projectGestures) {
-	// TODO: insert return statement here
-	svm_destroy_param(&param);
+const svm_model * SVMInterface::train(const std::vector<ProjectGesture> & projectGestures) {
+	//Set parameters
+	svm_parameter param;
+	param.svm_type = C_SVC;
+	param.kernel_type = RBF;
+	param.degree = 3;
+	param.gamma = 0.5;
+	param.coef0 = 0;
+	param.nu = 0.5;
+	param.cache_size = 100;
+	param.C = 1;
+	param.eps = 1e-3;
+	param.p = 0.1;
+	param.shrinking = 1;
+	param.probability = 0;
+	param.nr_weight = 0;
+	param.weight_label = NULL;
+	param.weight = NULL;
+
+	//Set problem
+	svm_problem prob;
+
+	//Get and set the problem size (= number of gestures that were input)
+	int problemSize{0};
+	for (const ProjectGesture & pg : projectGestures) {
+		problemSize = problemSize + pg.getGestureClass().getGestures().size();
+	}
+	prob.l = problemSize;
+
+	//Set labels and nodes
+	Gesture gesture = projectGestures.at(0).getGestureClass().getGestures().at(0);
+	double * labels = new double[problemSize];
+	svm_node ** x = new svm_node*[problemSize];
+	int rowCount{0};
+	for (const ProjectGesture & pg : projectGestures) {
+		for (const Gesture & g : pg.getGestureClass().getGestures()) {
+			labels[rowCount] = pg.getLabel();
+			x[rowCount] = g.toArray();
+			rowCount = rowCount + 1;
+		}
+	}
+	prob.y = labels;
+	prob.x = x;
+
+	//Train model
+	svm_model * model = svm_train(& prob, & param);
+
+	svm_destroy_param(& param);
+	return model;
 }
 
 const double SVMInterface::test(const svm_model & model, const Gesture & gesture) {
-	int dimensions = gesture.getNumberOfFrames() * gesture.getNumberOfJointsPerFrame() * DIMENSIONS_PER_JOINT;
-	svm_node * testnode = new svm_node[dimensions + 1];
-
-	int indexCount{0};
-	for (int i = 0; i < gesture.getNumberOfFrames(); i++) {
-		for (int j = 0; j < gesture.getNumberOfJointsPerFrame(); j++) {
-			testnode[indexCount].index = indexCount;
-			testnode[indexCount].value = gesture.getFrames().at(i).getJoints().at(j).Position.X;
-			indexCount = indexCount + 1;
-			testnode[indexCount].index = indexCount;
-			testnode[indexCount].value = gesture.getFrames().at(i).getJoints().at(j).Position.Y;
-			indexCount = indexCount + 1;
-			testnode[indexCount].index = indexCount;
-			testnode[indexCount].value = gesture.getFrames().at(i).getJoints().at(j).Position.Z;
-			indexCount = indexCount + 1;
-		}
-	}
-
-	testnode[indexCount].index = -1;
-	testnode[indexCount].value = 0;
-
+	svm_node * testnode = gesture.toArray();
 	double resultLabel = svm_predict(& model, testnode);
-	delete[] testnode;
 	
+	delete[] testnode;
+
 	return resultLabel;
 }

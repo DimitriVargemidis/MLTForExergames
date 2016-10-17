@@ -2,12 +2,12 @@
 #define SVMINTERFACE_H
 
 #include <vector>
-#include "Project.h"
 #include "libsvm-3.21\svm.h"
+#include "Project.h"
 
 
 namespace SVMInterface {
-	const svm_model & train(const std::vector<ProjectGesture> & projectGestures);
+	const svm_model * train(const std::vector<ProjectGesture> & projectGestures);
 	const double test(const svm_model & model, const Gesture & gesture);
 };
 
