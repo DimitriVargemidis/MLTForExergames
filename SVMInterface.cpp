@@ -76,6 +76,7 @@ double test(const int dimensions, double testData[]) {
 
 const svm_model & SVMInterface::train(const std::vector<ProjectGesture> & projectGestures) {
 	// TODO: insert return statement here
+	svm_destroy_param(&param);
 }
 
 const double SVMInterface::test(const svm_model & model, const Gesture & gesture) {
@@ -101,8 +102,6 @@ const double SVMInterface::test(const svm_model & model, const Gesture & gesture
 	testnode[indexCount].value = 0;
 
 	double resultLabel = svm_predict(& model, testnode);
-
-	svm_destroy_param(& param);
 	delete[] testnode;
 	
 	return resultLabel;
