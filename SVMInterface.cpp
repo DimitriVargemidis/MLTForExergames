@@ -128,3 +128,7 @@ const double SVMInterface::test(const svm_model & model, const Gesture & gesture
 
 	return resultLabel;
 }
+
+const svm_node ** SVMInterface::scale(const svm_node ** node) {
+	return nullptr;
+}

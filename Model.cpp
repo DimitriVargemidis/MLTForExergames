@@ -14,7 +14,7 @@ const Project & Model::getProject() const {
 }
 
 void Model::train() {
-	project.setSVMModel(SVMInterface::train(getProject().getProjectGestures()));
+	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
 const double Model::test(const Gesture & gesture) {
