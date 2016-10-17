@@ -5,8 +5,8 @@ void Project::addProjectGesture(const ProjectGesture & projectGesture) {
 	projectGestures.push_back(projectGesture);
 }
 
-std::vector<ProjectGesture> Project::getProjectGestures() const {
-	return std::vector<ProjectGesture>();
+const std::vector<ProjectGesture> & Project::getProjectGestures() const {
+	return projectGestures;
 }
 
 void Project::clearProjectGestures() {
@@ -17,6 +17,6 @@ void Project::setSVMModel(const svm_model & modelToSet) {
 	model = modelToSet;
 }
 
-svm_model Project::getSVMModel() const {
+const svm_model & Project::getSVMModel() const {
 	return model;
 }

@@ -10,7 +10,7 @@ private:
 
 public:
 	void addGesture(const Gesture & gesture);
-	std::vector<Gesture> getGestures() const;
+	const std::vector<Gesture> & getGestures() const;
 };
 
 #endif //GESTURECLASS_H

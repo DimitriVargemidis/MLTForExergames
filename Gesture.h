@@ -9,10 +9,11 @@ private:
 	std::vector<Frame> frames;
 
 public:
-	std::vector<Frame> getFrames() const;
+	const std::vector<Frame> & getFrames() const;
 	void addFrame(const Frame & frameToAdd);
-	int getNumberOfFrames() const;
-	bool isStaticGesture() const;
+	const int getNumberOfFrames() const;
+	const int getNumberOfJointsPerFrame() const;
+	const bool isStaticGesture() const;
 };
 
 #endif //GESTURE_H

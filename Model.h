@@ -10,10 +10,10 @@ private:
 	Project project;
 
 public:
-	void setProject(const Project & project);
-	Project getProject() const;
+	void setProject(const Project & projectToSet);
+	const Project & getProject() const;
 	void train();
-	double test();
+	const double test();
 };
 
 #endif //MODEL_H
