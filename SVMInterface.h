@@ -6,8 +6,8 @@
 #include <vector>
 
 namespace SVMInterface {
-	svm_model train(const Project & project);
-	double test(const svm_model * model, const Gesture & gesture);
+	//const svm_model & train(const std::vector<ProjectGesture> & projectGestures);
+	const double test(const svm_model * model, const Gesture & gesture);
 };
 
 #endif //SVMINTERFACE_H

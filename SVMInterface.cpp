@@ -96,11 +96,11 @@ double test(const int dimensions, double testData[]) {
 	return retval;
 }
 
-svm_model SVMInterface::train(const Project & project) {
-	return svm_model();
-}
+/*const svm_model & SVMInterface::train(const std::vector<ProjectGesture> & projectGestures) {
+	// TODO: insert return statement here
+}*/
 
-double SVMInterface::test(const svm_model * model, const Gesture & gesture) {
+const double SVMInterface::test(const svm_model * model, const Gesture & gesture) {
 	int dimensions = gesture.getNumberOfFrames() * gesture.getNumberOfJointsPerFrame() * DIMENSIONS_PER_JOINT;
 	svm_node* testnode = new svm_node[dimensions + 1];
 
@@ -109,17 +109,19 @@ double SVMInterface::test(const svm_model * model, const Gesture & gesture) {
 		for (int j = 0; j < gesture.getNumberOfJointsPerFrame(); j++) {
 			arrayIndex = i*j;
 			testnode[arrayIndex].index = arrayIndex;
-			testnode[arrayIndex].value = gesture.
+			testnode[arrayIndex].value = gesture.getFrames().at(i).getJoints().at(j).Position.X;
 			arrayIndex = arrayIndex + 1;
 			testnode[arrayIndex].index = arrayIndex;
+			testnode[arrayIndex].value = gesture.getFrames().at(i).getJoints().at(j).Position.Y;
 			arrayIndex = arrayIndex + 1;
-			testnode[i].index = i*j + 2;
+			testnode[i].index = arrayIndex;
+			testnode[arrayIndex].value = gesture.getFrames().at(i).getJoints().at(j).Position.Z;
 		}
 	}
 
 	for (int i = 0; i < dimensions; i++) {
 		testnode[i].index = i;
-		testnode[i].value = testData[i];
+		//testnode[i].value = testData[i];
 	}
 	testnode[dimensions].index = -1;
 	testnode[dimensions].value = 0;

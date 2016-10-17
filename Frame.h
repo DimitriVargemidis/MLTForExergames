@@ -10,9 +10,10 @@ private:
 	std::vector<Joint> joints;
 
 public:
-	Frame(std::vector<Joint> joints);
-	std::vector<Joint> getJoints() const;
-	int getNumberOfJoints() const;
+	Frame(const std::vector<Joint> & joints);
+	Frame(IBody * body);
+	const std::vector<Joint> & getJoints() const;
+	const int getNumberOfJoints() const;
 };
 
 #endif //FRAME_H

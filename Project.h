@@ -12,10 +12,10 @@ private:
 
 public:
 	void addProjectGesture(const ProjectGesture & projectGesture);
-	std::vector<ProjectGesture> getProjectGestures() const;
+	const std::vector<ProjectGesture> & getProjectGestures() const;
 	void clearProjectGestures();
 	void setSVMModel(const svm_model & modelToSet);
-	svm_model getSVMModel() const;
+	const svm_model & getSVMModel() const;
 };
 
 #endif //PROJECT_H

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Body.cpp" />
     <ClCompile Include="BodyBasics.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Gesture.cpp" />
@@ -37,7 +36,6 @@
     <ResourceCompile Include="BodyBasics.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Body.h" />
     <ClInclude Include="BodyBasics.h" />
     <ClInclude Include="Frame.h" />
     <ClInclude Include="Gesture.h" />
