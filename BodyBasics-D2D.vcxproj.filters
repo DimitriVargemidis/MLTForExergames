@@ -3,34 +3,46 @@
   <ItemGroup>
     <ClCompile Include="BodyBasics.cpp" />
     <ClCompile Include="Gesture.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="libsvm-3.21\svm.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
     <ClCompile Include="SVMInterface.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="Project.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="ProjectGesture.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="GestureClass.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClCompile>
     <ClCompile Include="Body.cpp">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UI_data</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>UI_data</Filter>
+    </ClCompile>
+    <ClCompile Include="DUI.cpp">
+      <Filter>UI_data</Filter>
+    </ClCompile>
+    <ClCompile Include="D2D_Graphics.cpp">
+      <Filter>UI_data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
     <ClInclude Include="Gesture.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>libraries</Filter>
@@ -42,41 +54,56 @@
       <Filter>UI_data</Filter>
     </ClInclude>
     <ClInclude Include="SVMInterface.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Project.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="ProjectGesture.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="GestureClass.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Body.h">
-      <Filter>model_subclasses</Filter>
+      <Filter>libraries\model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>UI_data</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>UI_data</Filter>
+    </ClInclude>
+    <ClInclude Include="DUI.h">
+      <Filter>UI_data</Filter>
+    </ClInclude>
+    <ClInclude Include="D2D_Graphics.h">
+      <Filter>UI_data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="model_subclasses">
-      <UniqueIdentifier>{1a742d66-b7f8-42bf-b10b-b29048bc9a07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="libraries">
       <UniqueIdentifier>{51f4e584-62a5-4858-ae4a-5e73babfa6db}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI_data">
       <UniqueIdentifier>{ca7a3f6b-9d2b-44e5-a36a-d99a568a1f49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="libraries\model_subclasses">
+      <UniqueIdentifier>{1a742d66-b7f8-42bf-b10b-b29048bc9a07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BodyBasics.rc">
       <Filter>UI_data</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

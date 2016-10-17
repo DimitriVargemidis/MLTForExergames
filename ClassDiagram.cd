@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Gesture" Collapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAEAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Gesture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SVMInterface" Collapsed="true">
+    <Position X="11.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAIAAAAACAAAAAAEAAAAAAEAAIAAAAAAAAAAA=</HashCode>
+      <FileName>SVMInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project" Collapsed="true">
+    <Position X="7.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Project.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectGesture" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ProjectGesture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GestureClass" Collapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAgAAAAAA=</HashCode>
+      <FileName>GestureClass.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Body" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Body.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cache" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAggEAAAAAAAIAAQAAAAEAAAAAgBAAIAQAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QMatrix" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAABAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kernel" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEEAAAAAAQACAAAAAEAIAAAgBAAAEBAgJIBAAggAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Solver" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAABABAAAACAAiAAAAAgAEQIAAgACQAgBkIwCgCgEAg=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Solver_NU" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAABAAAAAAAAQAAAAAAAAIAAAAAAAAAgAAAgAAEAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SVC_Q" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAACAAAAAAAAAAAAABAgAAAggAAAgAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ONE_CLASS_Q" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAACAAAAAAAAAAAAABAAAAAAhAAAAIAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SVR_Q" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAACAAAAAAAAQBAAABAAABAggBABAAAABAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI" Collapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>UI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GUI" Collapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABBAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DUI" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>DUI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBodyBasics">
+    <Position X="11.25" Y="0.5" Width="6.25" />
+    <TypeIdentifier>
+      <HashCode>BRQABMBgcHoABECBQOCAACgAAAiAiCAgAMACCRIIQAM=</HashCode>
+      <FileName>BodyBasics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="decision_function" Collapsed="true">
+    <Position X="7.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAQAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="svm_node" Collapsed="true">
+    <Position X="11.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAABAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="svm_problem" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABgAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="svm_parameter" Collapsed="true">
+    <Position X="13" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAACACAAAAAAAggAAAAAAgAAAAEAAgBEIAoAEgAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="svm_model" Collapsed="true">
+    <Position X="9.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAADABAoAAAAAAAAAAAAAAABBgAgCgAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Qfloat" Collapsed="true">
+    <Position X="7.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="schar" Collapsed="true">
+    <Position X="9.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="__unnamed_enum_00e8_1" Collapsed="true">
+    <Position X="7.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgACAAAAAQAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_00e8_2" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBACQA=</HashCode>
+      <FileName>libsvm-3.21\svm.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

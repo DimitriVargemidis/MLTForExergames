@@ -6,16 +6,13 @@
 
 #include "stdafx.h"
 #include <strsafe.h>
+#include "D2D_Graphics.h"
 #include "resource.h"
 #include "BodyBasics.h"
-#include "svm_interface.h"
+//#include "svm_interface.h"
 #include "Model.h"
 
-static const float c_JointThickness = 3.0f;
-static const float c_TrackedBoneThickness = 6.0f;
-static const float c_InferredBoneThickness = 1.0f;
-static const float c_HandSize = 30.0f;
-
+//endInterface
 /// <summary>
 /// Entry point for the application
 /// </summary>
@@ -42,25 +39,20 @@ int APIENTRY wWinMain(
 /// Constructor
 /// </summary>
 CBodyBasics::CBodyBasics() :
-    m_hWnd(NULL),
-    m_nStartTime(0),
-    m_nLastCounter(0),
-    m_nFramesSinceUpdate(0),
-    m_fFreq(0),
-    m_nNextStatusTime(0LL),
-    m_pKinectSensor(NULL),
-    m_pCoordinateMapper(NULL),
-    m_pBodyFrameReader(NULL),
-    m_pD2DFactory(NULL),
-    m_pRenderTarget(NULL),
-    m_pBrushJointTracked(NULL),
-    m_pBrushJointInferred(NULL),
-    m_pBrushBoneTracked(NULL),
-    m_pBrushBoneInferred(NULL),
-    m_pBrushHandClosed(NULL),
-    m_pBrushHandOpen(NULL),
-    m_pBrushHandLasso(NULL)
+	m_hWnd(NULL),
+	m_nStartTime(0),
+	m_nLastCounter(0),
+	m_nFramesSinceUpdate(0),
+	m_fFreq(0),
+	m_nNextStatusTime(0LL),
+	m_pKinectSensor(NULL),
+	m_pCoordinateMapper(NULL),
+	m_pBodyFrameReader(NULL),
+	graphics{}
+
+	
 {
+	//graphics = D2D_Graphics();
     LARGE_INTEGER qpf = {0};
     if (QueryPerformanceFrequency(&qpf))
     {
@@ -68,11 +60,11 @@ CBodyBasics::CBodyBasics() :
     }
 
 	//SELFMADE parameters that are meant to stay
-	model = new Model;
+	//model = new Model;
 
 
 	//initialising SELFMADE PARAMETERS
-	savedJointPoints = new D2D1_POINT_2F [25SVMInterface::;
+	savedJointPoints = new D2D1_POINT_2F [25];
 	savedJoints = new Joint[25];
 
 	savedJointPoints_2 = new D2D1_POINT_2F[25];
@@ -86,11 +78,10 @@ CBodyBasics::CBodyBasics() :
 /// </summary>
 CBodyBasics::~CBodyBasics()
 {
-    DiscardDirect2DResources();
 
-    // clean up Direct2D
-    SafeRelease(m_pD2DFactory);
-
+	// clean up Direct2D
+	graphics.CleanD2D();
+	
     // done with body frame reader
     SafeRelease(m_pBodyFrameReader);
 
@@ -104,8 +95,13 @@ CBodyBasics::~CBodyBasics()
     }
 
     SafeRelease(m_pKinectSensor);
+
+	
 }
 
+//moved to UI
+
+//UI
 /// <summary>
 /// Creates the main window and begins processing
 /// </summary>
@@ -162,6 +158,9 @@ int CBodyBasics::Run(HINSTANCE hInstance, int nCmdShow)
     return static_cast<int>(msg.wParam);
 }
 
+//END MOVE TO UI
+
+//endinterface
 /// <summary>
 /// Main processing function
 /// </summary>
@@ -203,6 +202,7 @@ void CBodyBasics::Update()
     SafeRelease(pBodyFrame);
 }
 
+//UI
 /// <summary>
 /// Handles window messages, passes most to the class instance to handle
 /// </summary>
@@ -233,6 +233,7 @@ LRESULT CALLBACK CBodyBasics::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam,
     return 0;
 }
 
+//UI
 /// <summary>
 /// Handle windows messages for the class instance
 /// </summary>
@@ -253,8 +254,16 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
             // Bind application window handle
             m_hWnd = hWnd;
 
+			//TO D2D_Graphics
+			/*
+
             // Init Direct2D
             D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+
+			*/ 
+			//END TO D2D_Graphics
+
+			graphics.InitD2D();
 
             // Get and initialize the default Kinect sensor
             InitializeDefaultSensor();
@@ -281,7 +290,7 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 			{
 				//put here the train function
-				train(6, 9, SVMInputData, SVMLabels);
+				//train(6, 9, SVMInputData, SVMLabels);
 				predict = true;
 			}
 
@@ -289,7 +298,7 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			{
 				SVMInputDataIndex = 0;
 				SVMLabelsIndex = 0;
-				predict = false;
+				//predict = false;
 
 
 			}
@@ -300,6 +309,7 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
     return FALSE;
 }
 
+//endinterface
 /// <summary>
 /// Initializes the default Kinect sensor
 /// </summary>
@@ -348,6 +358,7 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
     return hr;
 }
 
+//model??
 /// <summary>
 /// Handle new body data
 /// <param name="nTime">timestamp of frame</param>
@@ -358,12 +369,19 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 {
     if (m_hWnd)
     {
-        HRESULT hr = EnsureDirect2DResources();
-
-        if (SUCCEEDED(hr) && m_pRenderTarget && m_pCoordinateMapper)
+        //HRESULT hr = graphics.EnsureDirect2DResources();
+		HRESULT hr = graphics.EnsureDirect2DResources(m_hWnd);
+        if (SUCCEEDED(hr) && (graphics.GetRenderTarget()) && m_pCoordinateMapper) //!! this is changed too
         {
+			/*
             m_pRenderTarget->BeginDraw();
             m_pRenderTarget->Clear();
+			*/
+
+			//SELFMADE MEANT TO STAY
+			(graphics.GetRenderTarget())->BeginDraw();
+			(graphics.GetRenderTarget())->Clear();
+
 
             RECT rct;
             GetClientRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rct);
@@ -412,7 +430,7 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 								}
 								transformedJoints[j] = joints[j];
 								transformedJoints[j].Position = still;
-								jointPoints[j] = BodyToScreen(still, width, height);
+								jointPoints[j] = graphics.BodyToScreen(still, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 								ShowJointCoordinates(transformedJoints, 0);
 								
                                 //jointPoints[j] = BodyToScreen(joints[j].Position, width, height);
@@ -476,28 +494,31 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 
 							//DrawBody(joints, jointPoints);
 
-                            DrawBody(transformedJoints, jointPoints); //SELFMADE
+							graphics.DrawBody(transformedJoints, jointPoints); //SELFMADE
 							
 						    //SELFMADE CODE
-							DrawBody(savedJoints, savedJointPoints);
-							DrawBody(savedJoints_2, savedJointPoints_2);
+							graphics.DrawBody(savedJoints, savedJointPoints);
+							graphics.DrawBody(savedJoints_2, savedJointPoints_2);
 							//END
 
-                            DrawHand(leftHandState, jointPoints[JointType_HandLeft]);
-                            DrawHand(rightHandState, jointPoints[JointType_HandRight]);
+							graphics.DrawHand(leftHandState, jointPoints[JointType_HandLeft]);
+							graphics.DrawHand(rightHandState, jointPoints[JointType_HandRight]);
                         }
                     }
                 }
             }
 
-            hr = m_pRenderTarget->EndDraw();
+            //hr = m_pRenderTarget->EndDraw();
+
+			//SELFMADE MEANT TO STAY
+			graphics.GetRenderTarget()->EndDraw();
 
             // Device lost, need to recreate the render target
             // We'll dispose it now and retry drawing
             if (D2DERR_RECREATE_TARGET == hr)
             {
                 hr = S_OK;
-                DiscardDirect2DResources();
+				graphics.DiscardDirect2DResources();
             }
         }
 
@@ -532,6 +553,7 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
     }
 }
 
+//UI
 /// <summary>
 /// Set the status bar message
 /// </summary>
@@ -553,224 +575,10 @@ bool CBodyBasics::SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec,
     return false;
 }
 
-/// <summary>
-/// Ensure necessary Direct2d resources are created
-/// </summary>
-/// <returns>S_OK if successful, otherwise an error code</returns>
-HRESULT CBodyBasics::EnsureDirect2DResources()
-{
-    HRESULT hr = S_OK;
-
-    if (m_pD2DFactory && !m_pRenderTarget)
-    {
-        RECT rc;
-        GetWindowRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rc);  
-
-        int width = rc.right - rc.left;
-        int height = rc.bottom - rc.top;
-        D2D1_SIZE_U size = D2D1::SizeU(width, height);
-        D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
-        rtProps.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE);
-        rtProps.usage = D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE;
-
-        // Create a Hwnd render target, in order to render to the window set in initialize
-        hr = m_pD2DFactory->CreateHwndRenderTarget(
-            rtProps,
-            D2D1::HwndRenderTargetProperties(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), size),
-            &m_pRenderTarget
-        );
-
-        if (FAILED(hr))
-        {
-            SetStatusMessage(L"Couldn't create Direct2D render target!", 10000, true);
-            return hr;
-        }
-
-        // light green
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.27f, 0.75f, 0.27f), &m_pBrushJointTracked);
-
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Yellow, 1.0f), &m_pBrushJointInferred);
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.0f), &m_pBrushBoneTracked);
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
-
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushHandClosed);
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 0.5f), &m_pBrushHandOpen);
-        m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushHandLasso);
-    }
-
-    return hr;
-}
-
-/// <summary>
-/// Dispose Direct2d resources 
-/// </summary>
-void CBodyBasics::DiscardDirect2DResources()
-{
-    SafeRelease(m_pRenderTarget);
-
-    SafeRelease(m_pBrushJointTracked);
-    SafeRelease(m_pBrushJointInferred);
-    SafeRelease(m_pBrushBoneTracked);
-    SafeRelease(m_pBrushBoneInferred);
-
-    SafeRelease(m_pBrushHandClosed);
-    SafeRelease(m_pBrushHandOpen);
-    SafeRelease(m_pBrushHandLasso);
-}
-
-/// <summary>
-/// Converts a body point to screen space
-/// </summary>
-/// <param name="bodyPoint">body point to tranform</param>
-/// <param name="width">width (in pixels) of output buffer</param>
-/// <param name="height">height (in pixels) of output buffer</param>
-/// <returns>point in screen-space</returns>
-D2D1_POINT_2F CBodyBasics::BodyToScreen(const CameraSpacePoint& bodyPoint, int width, int height)
-{
-    // Calculate the body's position on the screen
-    DepthSpacePoint depthPoint = {0};
-    m_pCoordinateMapper->MapCameraPointToDepthSpace(bodyPoint, &depthPoint);
-
-    float screenPointX = static_cast<float>(depthPoint.X * width) / cDepthWidth;
-    float screenPointY = static_cast<float>(depthPoint.Y * height) / cDepthHeight;
-
-    return D2D1::Point2F(screenPointX, screenPointY);
-}
-
-/// <summary>
-/// Draws a body 
-/// </summary>
-/// <param name="pJoints">joint data</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
-void CBodyBasics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints)
-{
-    // Draw the bones
-
-    // Torso
-    DrawBone(pJoints, pJointPoints, JointType_Head, JointType_Neck);
-    DrawBone(pJoints, pJointPoints, JointType_Neck, JointType_SpineShoulder);
-    DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_SpineMid);
-    DrawBone(pJoints, pJointPoints, JointType_SpineMid, JointType_SpineBase);
-    DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_ShoulderRight);
-    DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_ShoulderLeft);
-    DrawBone(pJoints, pJointPoints, JointType_SpineBase, JointType_HipRight);
-    DrawBone(pJoints, pJointPoints, JointType_SpineBase, JointType_HipLeft);
-    
-    // Right Arm    
-    DrawBone(pJoints, pJointPoints, JointType_ShoulderRight, JointType_ElbowRight);
-    DrawBone(pJoints, pJointPoints, JointType_ElbowRight, JointType_WristRight);
-    DrawBone(pJoints, pJointPoints, JointType_WristRight, JointType_HandRight);
-    DrawBone(pJoints, pJointPoints, JointType_HandRight, JointType_HandTipRight);
-    DrawBone(pJoints, pJointPoints, JointType_WristRight, JointType_ThumbRight);
-
-    // Left Arm
-    DrawBone(pJoints, pJointPoints, JointType_ShoulderLeft, JointType_ElbowLeft);
-    DrawBone(pJoints, pJointPoints, JointType_ElbowLeft, JointType_WristLeft);
-    DrawBone(pJoints, pJointPoints, JointType_WristLeft, JointType_HandLeft);
-    DrawBone(pJoints, pJointPoints, JointType_HandLeft, JointType_HandTipLeft);
-    DrawBone(pJoints, pJointPoints, JointType_WristLeft, JointType_ThumbLeft);
-
-    // Right Leg
-    DrawBone(pJoints, pJointPoints, JointType_HipRight, JointType_KneeRight);
-    DrawBone(pJoints, pJointPoints, JointType_KneeRight, JointType_AnkleRight);
-    DrawBone(pJoints, pJointPoints, JointType_AnkleRight, JointType_FootRight);
-
-    // Left Leg
-    DrawBone(pJoints, pJointPoints, JointType_HipLeft, JointType_KneeLeft);
-    DrawBone(pJoints, pJointPoints, JointType_KneeLeft, JointType_AnkleLeft);
-    DrawBone(pJoints, pJointPoints, JointType_AnkleLeft, JointType_FootLeft);
-
-    // Draw the joints
-    for (int i = 0; i < JointType_Count; ++i)
-    {
-        D2D1_ELLIPSE ellipse = D2D1::Ellipse(pJointPoints[i], c_JointThickness, c_JointThickness);
-
-        if (pJoints[i].TrackingState == TrackingState_Inferred)
-        {
-            m_pRenderTarget->FillEllipse(ellipse, m_pBrushJointInferred);
-        }
-        else if (pJoints[i].TrackingState == TrackingState_Tracked)
-        {
-            m_pRenderTarget->FillEllipse(ellipse, m_pBrushJointTracked);
-        }
-    }
-
-	//SELFMADE CODE
-	//simple button 
-	D2D_RECT_F measureButton = D2D1::RectF(100, 0,200, 200);
-	m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
-	
-
-
-
-	//END SELFMADE
-}
-
-/// <summary>
-/// Draws one bone of a body (joint to joint)
-/// </summary>
-/// <param name="pJoints">joint data</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
-/// <param name="joint0">one joint of the bone to draw</param>
-/// <param name="joint1">other joint of the bone to draw</param>
-void CBodyBasics::DrawBone(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, JointType joint0, JointType joint1)
-{
-    TrackingState joint0State = pJoints[joint0].TrackingState;
-    TrackingState joint1State = pJoints[joint1].TrackingState;
-
-    // If we can't find either of these joints, exit
-    if ((joint0State == TrackingState_NotTracked) || (joint1State == TrackingState_NotTracked))
-    {
-        return;
-    }
-
-    // Don't draw if both points are inferred
-    if ((joint0State == TrackingState_Inferred) && (joint1State == TrackingState_Inferred))
-    {
-        return;
-    }
-
-    // We assume all drawn bones are inferred unless BOTH joints are tracked
-    if ((joint0State == TrackingState_Tracked) && (joint1State == TrackingState_Tracked))
-    {
-        m_pRenderTarget->DrawLine(pJointPoints[joint0], pJointPoints[joint1], m_pBrushBoneTracked, c_TrackedBoneThickness);
-    }
-    else
-    {
-        m_pRenderTarget->DrawLine(pJointPoints[joint0], pJointPoints[joint1], m_pBrushBoneInferred, c_InferredBoneThickness);
-    }
-}
-
-
-
-/// <summary>
-/// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
-/// </summary>
-/// <param name="handState">state of the hand</param>
-/// <param name="handPosition">position of the hand</param>
-void CBodyBasics::DrawHand(HandState handState, const D2D1_POINT_2F& handPosition)
-{
-    D2D1_ELLIPSE ellipse = D2D1::Ellipse(handPosition, c_HandSize, c_HandSize);
-
-    switch (handState)
-    {
-        case HandState_Closed:
-            m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandClosed);
-            break;
-
-        case HandState_Open:
-            m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandOpen);
-            break;
-
-        case HandState_Lasso:
-            m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandLasso);
-            break;
-    }
-}
 
 //SELFMADE FUNCTIONS
 
+//UI
 /// <summary>
 /// Show the joint coordinates on the screen
 /// </summary>
@@ -843,6 +651,7 @@ void CBodyBasics::ShowJointCoordinates(const Joint * joints, int tab)
 	}
 }
 
+//SVMinterface
 void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 {
 	if (SVMLabelsIndex < 6)
@@ -868,10 +677,12 @@ void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 
 }
 
+//model
 int CBodyBasics::MakePrediction(const Joint * joints)
 {
 	double	SVMpredictInput[9];
-	int		SVMpredictInputIndex = 0;
+	int		SVMpredictInputIndex = int{ 0 };
+	int		result = int{ 0 };
 	
 
 	for (int i = 0; i < 3; i++)
@@ -882,7 +693,9 @@ int CBodyBasics::MakePrediction(const Joint * joints)
 		SVMpredictInputIndex = SVMpredictInputIndex + 3;
 	}
 
-	return test(9,SVMpredictInput); //put the test method from SVM here
+	//result = test(9,SVMpredictInput);
+
+	return result; //put the test method from SVM here
 }
 
 //END
