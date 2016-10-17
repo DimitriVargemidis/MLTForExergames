@@ -1,5 +1,5 @@
-#include "Gesture.h"
 #include <stdexcept>
+#include "Gesture.h"
 
 
 const std::vector<Frame> & Gesture::getFrames() const {
