@@ -1,5 +1,5 @@
-#include "GestureClass.h"
 #include <stdexcept>
+#include "GestureClass.h"
 
 
 void GestureClass::addGesture(const Gesture & gesture) {

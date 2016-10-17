@@ -1,5 +1,5 @@
-#include "Model.h"
 #include <stdexcept>
+#include "Model.h"
 
 
 void Model::setProject(const Project & projectToSet) {
@@ -14,9 +14,9 @@ const Project & Model::getProject() const {
 }
 
 void Model::train() {
-	getProject().getProjectGestures()
+	project.setSVMModel(SVMInterface::train(getProject().getProjectGestures()));
 }
 
-const double Model::test() {
-	return 0.0;
+const double Model::test(const Gesture & gesture) {
+	return SVMInterface::test(getProject().getSVMModel(), gesture);
 }

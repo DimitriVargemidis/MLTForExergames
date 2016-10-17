@@ -13,7 +13,7 @@ public:
 	void setProject(const Project & projectToSet);
 	const Project & getProject() const;
 	void train();
-	const double test();
+	const double test(const Gesture & gesture);
 };
 
 #endif //MODEL_H

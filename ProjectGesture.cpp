@@ -1,5 +1,5 @@
-#include "ProjectGesture.h"
 #include <stdexcept>
+#include "ProjectGesture.h"
 
 
 ProjectGesture::ProjectGesture(const GestureClass & gestureClass, const double label, const unsigned int key) :
