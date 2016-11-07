@@ -10,6 +10,9 @@ private:
 	std::vector<Joint> joints;
 
 public:
+	Frame();
+	~Frame();
+
 	Frame(const std::vector<Joint> & joints);
 	Frame(IBody * body);
 	const std::vector<Joint> & getJoints() const;

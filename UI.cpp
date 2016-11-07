@@ -9,16 +9,28 @@
 
 
 
-UI::UI()
+UI::UI() :
+m_pCoordinateMapper(NULL),
+m_hWnd(NULL),
+graphics {}
 {
 }
 
 
 UI::~UI()
 {
+	// clean up Direct2D
+	graphics.CleanD2D();
+
+
+	// done with coordinate mapper
+	SafeRelease(m_pCoordinateMapper);
 }
 
-UI::UI(Main main)
+UI::UI(Main * main) :
+m_pCoordinateMapper(NULL),
+m_hWnd(NULL),
+graphics{}
 {
 
 }
@@ -30,9 +42,8 @@ UI::UI(Main main)
 /// <param name="nCmdShow">whether to display minimized, maximized, or normally</param>
 int UI::Run(HINSTANCE hInstance, int nCmdShow)
 {
-	MSG       msg = { 0 };
-	WNDCLASS  wc;
-
+	msg = { 0 };
+	
 	// Dialog custom window class
 	ZeroMemory(&wc, sizeof(wc));
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -48,7 +59,7 @@ int UI::Run(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	// Create main application window
-	HWND hWndApp = CreateDialogParamW(
+		hWndApp = CreateDialogParamW(
 		NULL,
 		MAKEINTRESOURCE(IDD_APP),
 		NULL,
@@ -58,6 +69,9 @@ int UI::Run(HINSTANCE hInstance, int nCmdShow)
 	// Show window
 	ShowWindow(hWndApp, nCmdShow);
 
+	return 1;
+	//MOVED TO MAIN + other functions in UI
+	/*
 	// Main message loop
 	while (WM_QUIT != msg.message)
 	{
@@ -75,8 +89,12 @@ int UI::Run(HINSTANCE hInstance, int nCmdShow)
 			DispatchMessageW(&msg);
 		}
 	}
+	
+
 
 	return static_cast<int>(msg.wParam);
+	*/
+	//END MOVED TO MAIN + other functions in UI
 }
 
 /// <summary>
@@ -109,6 +127,66 @@ LRESULT CALLBACK UI::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 	return 0;
 }
 
+void UI::checkPeekMsg()
+{
+	MSG       msg = { 0 };
+
+	while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		// If a dialog message will be taken care of by the dialog proc
+		if (hWndApp && IsDialogMessageW(hWndApp, &msg))
+		{
+			continue;
+		}
+
+		TranslateMessage(&msg);
+		DispatchMessageW(&msg);
+	}
+
+
+}
+
+bool UI::checkQuitMsg()
+{
+	if (WM_QUIT == msg.message)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+void UI::SetCoordinateMapper(ICoordinateMapper * m_pCoordinateMapper)
+{
+	this->m_pCoordinateMapper = m_pCoordinateMapper;
+}
+
+bool UI::checkResource()
+{
+	if (m_hWnd)
+	{
+		//HRESULT hr = graphics.EnsureDirect2DResources();
+		HRESULT hr = graphics.EnsureDirect2DResources(m_hWnd);
+		if (SUCCEEDED(hr) && (graphics.GetRenderTarget()) && m_pCoordinateMapper) //!! this is changed too
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void UI::drawFrames(std::vector<Frame> frames)
+{
+	(graphics.GetRenderTarget())->BeginDraw();
+	(graphics.GetRenderTarget())->Clear();
+
+	RECT rct;
+	GetClientRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rct);
+	int width = rct.right;
+	int height = rct.bottom;
+
+}
+
 /// <summary>
 /// Handle windows messages for the class instance
 /// </summary>
@@ -133,7 +211,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		// Get and initialize the default Kinect sensor
 		//InitializeDefaultSensor();
-	main.mainCanInitializeKinectSensor();
+		main->mainCanInitializeKinectSensor();
 		
 	}
 	break;
@@ -152,20 +230,20 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
-			refresh = TRUE;
+			//main->setModelPredict(TRUE);
 		}
 
 		if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
 			//put here the train function
 			//train(6, 9, SVMInputData, SVMLabels);
-			predict = true;
+			main->setModelPredict(TRUE);
 		}
 
 		if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
-			SVMInputDataIndex = 0;
-			SVMLabelsIndex = 0;
+			//SVMInputDataIndex = 0;
+			//SVMLabelsIndex = 0;
 			//predict = false;
 
 

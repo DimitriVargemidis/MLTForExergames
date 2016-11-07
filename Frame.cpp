@@ -1,5 +1,13 @@
 #include "Frame.h"
 
+Frame::Frame()
+{
+}
+
+Frame::~Frame()
+{
+}
+
 Frame::Frame(const std::vector<Joint> & joints) : joints{joints} {
 }
 

@@ -7,6 +7,8 @@
 
 class Model {
 private:
+	Main* main;
+
 	Project project;
 
 	bool refresh = false;
@@ -15,24 +17,24 @@ private:
 	bool predict = false;
 
 
-	D2D1_POINT_2F*	savedJointPoints;
-	Joint*			savedJoints;
-
-	D2D1_POINT_2F*	savedJointPoints_2;
-	Joint*			savedJoints_2;
-
-
-	double			SVMInputData[54];
-	int				SVMInputDataIndex = 0;
-
-	double			SVMLabels[6];
-	int				SVMLabelsIndex = 0;
-
 public:
-	void setProject(const Project & projectToSet);
-	const Project & getProject() const;
-	void train();
-	const double test(const Gesture & gesture);
+	Model();
+	~Model();
+
+	Model(Main * main);
+
+	void				setProject(const Project & projectToSet);
+	const Project &		getProject() const;
+	void				train();
+	const double		test(const Gesture & gesture);
+
+	void				setRefresh(boolean refresh);
+	boolean				getRefresh();
+
+	void				setPredict(boolean refresh);
+	boolean				getPredict();
+
+	void				ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 };
 
 #endif //MODEL_H

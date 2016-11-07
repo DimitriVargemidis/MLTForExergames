@@ -12,7 +12,8 @@
 //#include "svm_interface.h"
 #include "Model.h"
 
-//endInterface
+//MOVED TO endInterface
+/*
 /// <summary>
 /// Entry point for the application
 /// </summary>
@@ -34,21 +35,23 @@ int APIENTRY wWinMain(
     CBodyBasics application;
     application.Run(hInstance, nShowCmd);
 }
+*/
+//END MOVED TO endInterface
 
 /// <summary>
 /// Constructor
 /// </summary>
 CBodyBasics::CBodyBasics() :
-	m_hWnd(NULL),
+	//m_hWnd(NULL),
 	m_nStartTime(0),
 	m_nLastCounter(0),
 	m_nFramesSinceUpdate(0),
 	m_fFreq(0),
 	m_nNextStatusTime(0LL),
-	m_pKinectSensor(NULL),
-	m_pCoordinateMapper(NULL),
-	m_pBodyFrameReader(NULL),
-	graphics{}
+	//m_pKinectSensor(NULL),
+	//m_pCoordinateMapper(NULL),
+	//m_pBodyFrameReader(NULL),
+	//graphics{}
 
 	
 {
@@ -62,14 +65,15 @@ CBodyBasics::CBodyBasics() :
 	//SELFMADE parameters that are meant to stay
 	//model = new Model;
 
-
+	//No longer uses
+	/*
 	//initialising SELFMADE PARAMETERS
 	savedJointPoints = new D2D1_POINT_2F [25];
 	savedJoints = new Joint[25];
 
 	savedJointPoints_2 = new D2D1_POINT_2F[25];
 	savedJoints_2 = new Joint[25];
-	
+	*/
 }
   
 
@@ -78,10 +82,18 @@ CBodyBasics::CBodyBasics() :
 /// </summary>
 CBodyBasics::~CBodyBasics()
 {
+	//MOVED TO UI
+	/*
 
 	// clean up Direct2D
 	graphics.CleanD2D();
+
+	*/
+	//MOVED TO UI
 	
+	//MOVED TO Main
+	/*
+
     // done with body frame reader
     SafeRelease(m_pBodyFrameReader);
 
@@ -95,7 +107,9 @@ CBodyBasics::~CBodyBasics()
     }
 
     SafeRelease(m_pKinectSensor);
-
+	
+	*/
+	//END MOVED TO Main
 	
 }
 
@@ -161,7 +175,8 @@ int CBodyBasics::Run(HINSTANCE hInstance, int nCmdShow)
 */
 //END MOVE TO UI
 
-//endinterface
+//MOVED TO MAIN
+/*
 /// <summary>
 /// Main processing function
 /// </summary>
@@ -202,6 +217,8 @@ void CBodyBasics::Update()
 
     SafeRelease(pBodyFrame);
 }
+*/
+//END MOVED TO MAIN
 
 //MOVED TO UI
 /*
@@ -308,7 +325,8 @@ LRESULT CALLBACK CBodyBasics::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LP
 //END MOVED TO UI
 
 
-//Main
+//MOVED TO Main
+/*
 /// <summary>
 /// Initializes the default Kinect sensor
 /// </summary>
@@ -357,6 +375,9 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
     return hr;
 }
 
+*/
+//MOVED TO Main
+
 //model??
 /// <summary>
 /// Handle new body data
@@ -366,16 +387,22 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
 /// </summary>
 void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 {
+	//Begin UI
+	/*
     if (m_hWnd)
     {
         //HRESULT hr = graphics.EnsureDirect2DResources();
 		HRESULT hr = graphics.EnsureDirect2DResources(m_hWnd);
         if (SUCCEEDED(hr) && (graphics.GetRenderTarget()) && m_pCoordinateMapper) //!! this is changed too
         {
+			*/
 			/*
             m_pRenderTarget->BeginDraw();
             m_pRenderTarget->Clear();
 			*/
+
+			//MOVED TO UI
+			/*
 
 			//SELFMADE MEANT TO STAY
 			(graphics.GetRenderTarget())->BeginDraw();
@@ -386,7 +413,11 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
             GetClientRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rct);
             int width = rct.right;
             int height = rct.bottom;
-
+			*/
+			//END MOVED TO UI
+	
+			//MOVED TO Model
+			/*
             for (int i = 0; i < nBodyCount; ++i)
             {
                 IBody* pBody = ppBodies[i];
@@ -397,9 +428,19 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 
                     if (SUCCEEDED(hr) && bTracked)
                     {
+						*/
+						//END MOVED TO Model
+
+						//This one is going to be delivered by the model
+						/*
                         Joint joints[JointType_Count]; 
+						*/
+
 						Joint transformedJoints[JointType_Count];
                         D2D1_POINT_2F jointPoints[JointType_Count];
+
+						//currently not used
+						/*
                         HandState leftHandState = HandState_Unknown;
                         HandState rightHandState = HandState_Unknown;
 
@@ -407,8 +448,11 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
                         pBody->get_HandRightState(&rightHandState);
 
                         hr = pBody->GetJoints(_countof(joints), joints);
+						*/
+						/*
                         if (SUCCEEDED(hr))
                         {
+						*/
                             for (int j = 0; j < _countof(joints); ++j)
                             {
 								//SELFMADE code to convert to coordinates relative to the spine
@@ -433,7 +477,7 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 								ShowJointCoordinates(transformedJoints, 0);
 								
                                 //jointPoints[j] = BodyToScreen(joints[j].Position, width, height);
-                            }
+                           // }
 
 							if ((refresh || start_1 || start_2) && !predict)
 							{
@@ -495,6 +539,8 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 
 							graphics.DrawBody(transformedJoints, jointPoints); //SELFMADE
 							
+							//No long used
+							/*
 						    //SELFMADE CODE
 							graphics.DrawBody(savedJoints, savedJointPoints);
 							graphics.DrawBody(savedJoints_2, savedJointPoints_2);
@@ -502,10 +548,13 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 
 							graphics.DrawHand(leftHandState, jointPoints[JointType_HandLeft]);
 							graphics.DrawHand(rightHandState, jointPoints[JointType_HandRight]);
+							*/
                         }
+						/*
                     }
                 }
-            }
+				*/
+            //}
 
             //hr = m_pRenderTarget->EndDraw();
 
@@ -521,6 +570,8 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
             }
         }
 
+//Unnecesary FPS measuring
+/*
         if (!m_nStartTime)
         {
             m_nStartTime = nTime;
@@ -549,7 +600,9 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
             m_nLastCounter = qpcNow.QuadPart;
             m_nFramesSinceUpdate = 0;
         }
+		*/
     }
+	
 }
 
 //UI

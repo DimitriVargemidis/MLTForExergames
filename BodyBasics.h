@@ -25,6 +25,8 @@ public:
     /// </summary>
     ~CBodyBasics();
 
+	//MOVED TO UI
+	/*
     /// <summary>
     /// Handles window messages, passes most to the class instance to handle
     /// </summary>
@@ -34,6 +36,11 @@ public:
     /// <param name="lParam">additional message data</param>
     /// <returns>result of message processing</returns>
     static LRESULT CALLBACK MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	*/
+	//END MOVED TO UI
+
+//moved to UI
+	/*
 
     /// <summary>
     /// Handle windows messages for a class instance
@@ -45,8 +52,7 @@ public:
     /// <returns>result of message processing</returns>
     LRESULT CALLBACK        DlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	//moved to UI
-	/*
+	
     /// <summary>
     /// Creates the main window and begins processing
     /// </summary>
@@ -114,6 +120,9 @@ private:
 */
 		//END
 
+	//MOVED TO MAIN
+	/*
+
     /// <summary>
     /// Main processing function
     /// </summary>
@@ -124,7 +133,10 @@ private:
     /// </summary>
     /// <returns>S_OK on success, otherwise failure code</returns>
     HRESULT                 InitializeDefaultSensor();
-    
+
+	*/
+    //END MOVED TO MAIN
+
     /// <summary>
     /// Handle new body data
     /// <param name="nTime">timestamp of frame</param>
