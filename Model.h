@@ -11,11 +11,10 @@ private:
 
 	Project project;
 
-	bool refresh = false;
-	bool start_1 = true;
-	bool start_2 = true;
-	bool predict = false;
-
+	bool			refresh = false;
+	bool			start_1 = true;
+	bool			start_2 = true;
+	bool			predict = false;
 
 public:
 	Model();
@@ -30,6 +29,8 @@ public:
 
 	void				setRefresh(boolean refresh);
 	boolean				getRefresh();
+	double			SVMInputData[54];
+	int				SVMInputDataIndex = 0;
 
 	void				setPredict(boolean refresh);
 	boolean				getPredict();

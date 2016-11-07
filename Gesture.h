@@ -1,8 +1,9 @@
 #ifndef	GESTURE_H
 #define	GESTURE_H
 
-#include "Frame.h"
 #include <vector>
+#include "libsvm-3.21\svm.h"
+#include "Frame.h"
 
 class Gesture {
 private:
@@ -14,6 +15,7 @@ public:
 	const int getNumberOfFrames() const;
 	const int getNumberOfJointsPerFrame() const;
 	const bool isStaticGesture() const;
+	svm_node * toArray() const;
 };
 
 #endif //GESTURE_H
