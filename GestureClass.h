@@ -1,15 +1,20 @@
 #ifndef GESTURECLASS_H
 #define GESTURECLASS_H
 
-#include "Gesture.h"
+//#include "Gesture.h"
 #include <vector>
+
+class Gesture;
 
 class GestureClass {
 private:
 	std::vector<Gesture> gestures;
 
 public:
-	void addGesture(const Gesture & gesture);
+	GestureClass();
+	GestureClass(const Gesture gesture);
+
+	void addGesture(const Gesture gesture);
 	const std::vector<Gesture> & getGestures() const;
 };
 

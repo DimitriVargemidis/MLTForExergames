@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <memory>
 #include "Gesture.h"
+#include "Frame.h"
 
 const int DIMENSIONS_PER_JOINT = 3;
 
@@ -8,7 +9,7 @@ const std::vector<Frame> & Gesture::getFrames() const {
 	return frames;
 }
 
-void Gesture::addFrame(const Frame & frameToAdd) {
+void Gesture::addFrame(const Frame frameToAdd) {
 	if (frameToAdd.getNumberOfJoints() == 0) {
 		throw std::invalid_argument("The given frame must contain at least one joint.");
 	}

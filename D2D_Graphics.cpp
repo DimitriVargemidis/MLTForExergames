@@ -1,5 +1,7 @@
 
 #include "stdafx.h"
+#include "resource.h"
+
 #include "D2D_Graphics.h"
 
 static const float c_JointThickness = 3.0f;

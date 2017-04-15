@@ -1,9 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
+#include "Model.h"
+#include "UI.h"
 
-class Model;
+//class UI;
+//class Model;
 class Frame;
 
 class Main
@@ -14,16 +18,16 @@ public:
 
 	void mainCanInitializeKinectSensor();
 
-	void setModelRefresh(boolean refresh);
-	boolean getModelRefresh();
+	void setModelRefresh(bool refresh);
+	bool getModelRefresh();
 
-	void setModelPredict(boolean refresh);
-	boolean getModelPredict();
+	void setModelPredict(bool refresh);
+	bool getModelPredict();
 
 	/// <summary>
 	/// Main processing function
 	/// </summary>
-	void Main::Update();
+	void Update();
 
 	int Run(HINSTANCE hInstance, int nCmdShow);
 
@@ -31,8 +35,12 @@ public:
 
 private:
 
-	Model model;
-	UI ui;
+	//Model model;
+	//UI ui;
+
+	std::shared_ptr<Model> model;
+	std::shared_ptr<UI> ui;
+	
 
 	boolean running;
 

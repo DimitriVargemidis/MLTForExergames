@@ -1,19 +1,59 @@
+
+#include "ProjectGesture.h"
+#include "Gesture.h"
+#include "Frame.h"
+
 #include "Project.h"
 
+//deleted the reference argument
+void Project::addProjectGesture(const ProjectGesture  projectGesture) {
+	
+	//protection so that projectgestures with the same label are not added twice
 
-void Project::addProjectGesture(const ProjectGesture & projectGesture) {
-	projectGestures.push_back(projectGesture);
+	/* //TO be removed if alternative code works
+	bool matched = false;
+	
+
+	for (int i = 0; i < projectGestures.size(); i++)
+	{
+		if (projectGesture.getLabel() == projectGestures[i].getLabel())
+		{
+			matched = true;
+		}
+	}
+	*/
+
+	//if the label of the found projectGesture is -1 no projectGesture is found
+	int label = getProjectGestureFromLabel(projectGesture.getLabel()).getLabel();
+	if (label == -1)
+	{
+		projectGestures.push_back(projectGesture);
+	}
+	
 }
 
 const std::vector<ProjectGesture> & Project::getProjectGestures() const {
 	return projectGestures;
 }
 
+const ProjectGesture & Project::getProjectGestureFromLabel(double label)
+{
+	for (int i = 0; i < projectGestures.size(); i++)
+	{
+		if (label == projectGestures[i].getLabel())
+		{
+			return projectGestures[i];
+		}
+	}
+
+	return EmptyProjectGesture;
+}
+
 void Project::clearProjectGestures() {
 	projectGestures.clear();
 }
 
-void Project::setSVMModel(const svm_model & modelToSet) {
+void Project::setSVMModel(const svm_model modelToSet) {
 	model = modelToSet;
 }
 

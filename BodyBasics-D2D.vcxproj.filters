@@ -35,8 +35,13 @@
     <ClCompile Include="D2D_Graphics.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
-    <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Frame.cpp">
+      <Filter>model_subclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Keypress.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -79,8 +84,13 @@
     <ClInclude Include="D2D_Graphics.h">
       <Filter>UI_data</Filter>
     </ClInclude>
-    <ClInclude Include="Frame.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="Frame.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Keypress.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

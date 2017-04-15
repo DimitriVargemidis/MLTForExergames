@@ -37,7 +37,7 @@ int APIENTRY wWinMain(
 }
 */
 //END MOVED TO endInterface
-
+/*
 /// <summary>
 /// Constructor
 /// </summary>
@@ -47,21 +47,22 @@ CBodyBasics::CBodyBasics() :
 	m_nLastCounter(0),
 	m_nFramesSinceUpdate(0),
 	m_fFreq(0),
-	m_nNextStatusTime(0LL),
+	m_nNextStatusTime(0LL),*/
 	//m_pKinectSensor(NULL),
 	//m_pCoordinateMapper(NULL),
 	//m_pBodyFrameReader(NULL),
 	//graphics{}
 
 	
-{
+//{
 	//graphics = D2D_Graphics();
+		/*
     LARGE_INTEGER qpf = {0};
     if (QueryPerformanceFrequency(&qpf))
     {
         m_fFreq = double(qpf.QuadPart);
     }
-
+	*/
 	//SELFMADE parameters that are meant to stay
 	//model = new Model;
 
@@ -74,14 +75,14 @@ CBodyBasics::CBodyBasics() :
 	savedJointPoints_2 = new D2D1_POINT_2F[25];
 	savedJoints_2 = new Joint[25];
 	*/
-}
+//}
   
 
 /// <summary>
 /// Destructor
 /// </summary>
-CBodyBasics::~CBodyBasics()
-{
+//CBodyBasics::~CBodyBasics()
+//{
 	//MOVED TO UI
 	/*
 
@@ -111,7 +112,7 @@ CBodyBasics::~CBodyBasics()
 	*/
 	//END MOVED TO Main
 	
-}
+//}
 
 //moved to UI
 
@@ -385,8 +386,8 @@ HRESULT CBodyBasics::InitializeDefaultSensor()
 /// <param name="nBodyCount">body data count</param>
 /// <param name="ppBodies">body data in frame</param>
 /// </summary>
-void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
-{
+//void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
+//{
 	//Begin UI
 	/*
     if (m_hWnd)
@@ -435,9 +436,9 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 						/*
                         Joint joints[JointType_Count]; 
 						*/
-
-						Joint transformedJoints[JointType_Count];
-                        D2D1_POINT_2F jointPoints[JointType_Count];
+		
+						//Joint transformedJoints[JointType_Count];	//TO MODEL
+                        //D2D1_POINT_2F jointPoints[JointType_Count]; //TO UI
 
 						//currently not used
 						/*
@@ -453,9 +454,13 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
                         if (SUCCEEDED(hr))
                         {
 						*/
+						//where does this need to be?
+						//MOVED TO Frame.cpp
+						/*
                             for (int j = 0; j < _countof(joints); ++j)
                             {
 								//SELFMADE code to convert to coordinates relative to the spine
+								//This is not done in the SVMinterface is it?
 								CameraSpacePoint still = joints[j].Position;
 
 								if (j == 1)
@@ -473,12 +478,20 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 								}
 								transformedJoints[j] = joints[j];
 								transformedJoints[j].Position = still;
+								*/
+						//END MOVED TO frame.cpp
+
+						//MOVED TO UI
+								/*
 								jointPoints[j] = graphics.BodyToScreen(still, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 								ShowJointCoordinates(transformedJoints, 0);
-								
+								*/
+						//END MOVED TO UI
                                 //jointPoints[j] = BodyToScreen(joints[j].Position, width, height);
                            // }
 
+//logica voor het opnemen van statische gestures moet herdesigned worden.
+/*
 							if ((refresh || start_1 || start_2) && !predict)
 							{
 									BOOL sc;
@@ -538,7 +551,8 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 							//DrawBody(joints, jointPoints);
 
 							graphics.DrawBody(transformedJoints, jointPoints); //SELFMADE
-							
+*/
+//einde van logica 							
 							//No long used
 							/*
 						    //SELFMADE CODE
@@ -549,7 +563,7 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
 							graphics.DrawHand(leftHandState, jointPoints[JointType_HandLeft]);
 							graphics.DrawHand(rightHandState, jointPoints[JointType_HandRight]);
 							*/
-                        }
+                       // }
 						/*
                     }
                 }
@@ -557,10 +571,12 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
             //}
 
             //hr = m_pRenderTarget->EndDraw();
-
+			//MOVED TO UI
+			/*
 			//SELFMADE MEANT TO STAY
 			graphics.GetRenderTarget()->EndDraw();
 
+			
             // Device lost, need to recreate the render target
             // We'll dispose it now and retry drawing
             if (D2DERR_RECREATE_TARGET == hr)
@@ -568,7 +584,8 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
                 hr = S_OK;
 				graphics.DiscardDirect2DResources();
             }
-        }
+			*/
+      //  }
 
 //Unnecesary FPS measuring
 /*
@@ -601,11 +618,12 @@ void CBodyBasics::ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies)
             m_nFramesSinceUpdate = 0;
         }
 		*/
-    }
+  //  }
 	
-}
+//}
 
-//UI
+//MOVED TO UI
+/*
 /// <summary>
 /// Set the status bar message
 /// </summary>
@@ -626,11 +644,13 @@ bool CBodyBasics::SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec,
 
     return false;
 }
-
+*/
+//END MOVED TO UI
 
 //SELFMADE FUNCTIONS
 
 //UI
+/*
 /// <summary>
 /// Show the joint coordinates on the screen
 /// </summary>
@@ -648,6 +668,7 @@ void CBodyBasics::ShowJointCoordinates(const Joint * joints, int tab)
 			still.Position.Z = joints[8 + i].Position.Z - joints[1].Position.Z;
 			armJoints[i] = still;
 		}*/
+/*
 		if (joints[9].Position.X*100.0 < -10000)
 		{
 
@@ -702,8 +723,11 @@ void CBodyBasics::ShowJointCoordinates(const Joint * joints, int tab)
 		
 	}
 }
+*/
+//END MOVE TO UI
 
-//SVMinterface
+//SVMinterface NEED TO BE MOVED STILL !!
+/*
 void CBodyBasics::AddDataToSVMInputData(const Joint * joints, int label)
 {
 	if (SVMLabelsIndex < 6)
@@ -752,5 +776,5 @@ int CBodyBasics::MakePrediction(const Joint * joints)
 
 	return result; //put the test method from SVM here
 }
-
+*/
 //END

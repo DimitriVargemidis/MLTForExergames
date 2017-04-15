@@ -3,6 +3,7 @@
 #include <strsafe.h>
 #include "resource.h"
 #include "Model.h"
+#include "Frame.h"
 #include "UI.h"
 
 #include "Main.h"
@@ -30,10 +31,11 @@ int APIENTRY wWinMain(
 }
 
 
-Main::Main():
-m_pKinectSensor(NULL),
-m_pBodyFrameReader(NULL)
+Main::Main() :
+	m_pKinectSensor(NULL),
+	m_pBodyFrameReader(NULL)
 {
+	
 	running = true;
 }
 
@@ -86,7 +88,7 @@ HRESULT Main::InitializeDefaultSensor()
 		{
 			ICoordinateMapper*      m_pCoordinateMapper;
 			hr = m_pKinectSensor->get_CoordinateMapper(&m_pCoordinateMapper);
-			ui.SetCoordinateMapper(m_pCoordinateMapper);
+			ui->SetCoordinateMapper(m_pCoordinateMapper);
 		}
 
 		if (SUCCEEDED(hr))
@@ -123,7 +125,15 @@ void Main::Update()
 
 	IBodyFrame* pBodyFrame = NULL;
 
+
+	IBodyFrameSource* pBodyFrameSource = NULL;
+	int bodies = -1;
+	m_pBodyFrameReader->get_BodyFrameSource(&pBodyFrameSource);
+	pBodyFrameSource->get_BodyCount(&bodies);
+
+
 	HRESULT hr = m_pBodyFrameReader->AcquireLatestFrame(&pBodyFrame);
+
 
 	if (SUCCEEDED(hr))
 	{
@@ -140,7 +150,8 @@ void Main::Update()
 
 		if (SUCCEEDED(hr))
 		{
-			model.ProcessBody(nTime, BODY_COUNT, ppBodies);
+			model->ProcessBody(nTime, BODY_COUNT, ppBodies);
+
 		}
 
 		for (int i = 0; i < _countof(ppBodies); ++i)
@@ -154,15 +165,22 @@ void Main::Update()
 
 int Main::Run(HINSTANCE hInstance, int nCmdShow)
 {
-	model = Model( this );
-	ui = UI( this );
+	ui = std::make_shared<UI>();
+	model = std::make_shared<Model>();
 
-	int rc = ui.Run(hInstance, nCmdShow);
+	std::shared_ptr<Main> shared_ptr_this(this);
 
-	while (ui.checkQuitMsg())
+	ui->setMain(shared_ptr_this);
+	ui->setModel(model);
+
+	model->setView(ui);
+
+	int rc = ui->Run(hInstance, nCmdShow);
+
+	while (ui->checkQuitMsg())
 	{
 		Update();
-		ui.checkPeekMsg();
+		ui->checkPeekMsg();
 	}
 
 	return 0;
@@ -170,28 +188,28 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 
 void Main::drawFrames(std::vector<Frame> frames)
 {
-	if (ui.checkResource)
+	if (ui->checkResource())
 	{
-		ui.drawFrames(frames);
+		ui->drawFrames(frames);
 	}
 }
 
-void Main::setModelRefresh(boolean refresh)
+void Main::setModelRefresh(bool refresh)
 {
-	model.setRefresh(refresh);
+	model->setRefresh(refresh);
 }
 
-boolean Main::getModelRefresh()
+bool Main::getModelRefresh()
 {
-	return model.getRefresh;
+	return model->getRefresh();
 }
 
-void Main::setModelPredict(boolean predict)
+void Main::setModelPredict(bool predict)
 {
-	model.setPredict(predict);
+	model->setPredict(predict);
 }
 
-boolean Main::getModelPredict()
+bool Main::getModelPredict()
 {
-	return model.getPredict();
+	return model->getPredict();
 }

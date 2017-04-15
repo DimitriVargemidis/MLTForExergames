@@ -1,8 +1,12 @@
-#include "stdafx.h"
 #include <strsafe.h>
+#include <memory>
+using namespace std;
+
+#include "stdafx.h"
 #include "D2D_Graphics.h"
 #include "resource.h"
 #include "Main.h"
+#include "Frame.h"
 
 #include "UI.h"
 
@@ -27,6 +31,7 @@ UI::~UI()
 	SafeRelease(m_pCoordinateMapper);
 }
 
+/*
 UI::UI(Main * main) :
 m_pCoordinateMapper(NULL),
 m_hWnd(NULL),
@@ -34,6 +39,7 @@ graphics{}
 {
 
 }
+*/
 
 /// <summary>
 /// Creates the main window and begins processing
@@ -59,15 +65,17 @@ int UI::Run(HINSTANCE hInstance, int nCmdShow)
 	}
 
 	// Create main application window
-		hWndApp = CreateDialogParamW(
-		NULL,
-		MAKEINTRESOURCE(IDD_APP),
-		NULL,
-		(DLGPROC)UI::MessageRouter,
-		reinterpret_cast<LPARAM>(this));
+	HWND	hWnd = CreateDialogParamW(
+			NULL,
+			MAKEINTRESOURCE(IDD_APP),	
+			NULL,
+			(DLGPROC)UI::MessageRouter,
+			reinterpret_cast<LPARAM>(this));
+
+	hWndApp = &hWnd;
 
 	// Show window
-	ShowWindow(hWndApp, nCmdShow);
+	ShowWindow(*hWndApp, nCmdShow);
 
 	return 1;
 	//MOVED TO MAIN + other functions in UI
@@ -129,12 +137,12 @@ LRESULT CALLBACK UI::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 void UI::checkPeekMsg()
 {
-	MSG       msg = { 0 };
+	//MSG       msg = { 0 };
 
 	while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		// If a dialog message will be taken care of by the dialog proc
-		if (hWndApp && IsDialogMessageW(hWndApp, &msg))
+		if (hWndApp && IsDialogMessageW(*hWndApp, &msg))
 		{
 			continue;
 		}
@@ -148,7 +156,8 @@ void UI::checkPeekMsg()
 
 bool UI::checkQuitMsg()
 {
-	if (WM_QUIT == msg.message)
+	UINT message = msg.message;
+	if ( msg.message != WM_QUIT)
 	{
 		return true;
 	}
@@ -175,7 +184,7 @@ bool UI::checkResource()
 	return false;
 }
 
-void UI::drawFrames(std::vector<Frame> frames)
+void UI::drawFrames(std::vector<Frame> & frames )
 {
 	(graphics.GetRenderTarget())->BeginDraw();
 	(graphics.GetRenderTarget())->Clear();
@@ -185,6 +194,61 @@ void UI::drawFrames(std::vector<Frame> frames)
 	int width = rct.right;
 	int height = rct.bottom;
 
+	//printf(frames.size());
+
+	for (int j = 0; j < frames.size(); ++j)
+	{
+		std::vector<Joint> joints = frames[j].getJoints(); 
+		D2D1_POINT_2F jointPoints[JointType_Count];
+		Joint jointArray[JointType_Count];
+
+		int jointCount = JointType_Count;
+		int jointAmount = joints.size();
+
+		//for (int i = 0; i < frames.size(); ++i)
+		for (int i = 0; i < joints.size(); ++i)
+		{
+			jointArray[i] = joints[i];
+			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
+			if (j == 1)
+			{
+				ShowJointCoordinates(joints, 0);
+			}
+			else
+			{
+				ShowJointCoordinates(joints, 1);
+			}
+		}
+
+		
+		graphics.DrawBody(jointArray, jointPoints);
+
+	}
+
+	
+
+	HRESULT hr = graphics.GetRenderTarget()->EndDraw();
+
+	// Device lost, need to recreate the render target
+	// We'll dispose it now and retry drawing
+	if (D2DERR_RECREATE_TARGET == hr)
+	{
+		hr = S_OK;
+		graphics.DiscardDirect2DResources();
+	}
+
+}
+
+
+void UI::setMain(std::shared_ptr<Main>  m)
+{
+	main = m;
+}
+
+
+void UI::setModel(std::shared_ptr<Model> m)
+{
+	model = m;
 }
 
 /// <summary>
@@ -231,6 +295,15 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
 			//main->setModelPredict(TRUE);
+			BOOL sc;
+			int label = GetDlgItemInt(m_hWnd, IDC_EDIT_LABEL, &sc, true);
+			
+			if (sc)
+			{
+				model->setActiveLabel(label);
+				model->setRefresh(true);
+			}
+
 		}
 
 		if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
@@ -255,3 +328,111 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	return FALSE;
 }
 
+/// <summary>
+/// Show the joint coordinates on the screen
+/// </summary>
+/// <param name="skel">skeleton of which the joints will be shown</param>
+void UI::ShowJointCoordinates(const vector<Joint> & joints, int tab)
+{
+	if (tab == 0)
+	{
+
+		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
+		/*Joint still, armJoints[3];
+
+		for (int i = 0; i < 3; i++)
+		{
+		still.Position.X = joints[8 + i].Position.X - joints[1].Position.X;
+		still.Position.Y = joints[8 + i].Position.Y - joints[1].Position.Y;
+		still.Position.Z = joints[8 + i].Position.Z - joints[1].Position.Z;
+		armJoints[i] = still;
+		}*/
+		if (joints[9].Position.X*100.0 < -10000)
+		{
+
+		}
+
+		if (joints[9].Position.X*100.0 > -10000 && joints[9].Position.Y*100.0 > -10000 && joints[9].Position.Z*100.0 > -10000 && joints[10].Position.X*100.0 > -10000 && joints[10].Position.Y*100.0 > -10000 && joints[10].Position.Z*100.0 > -10000 && joints[11].Position.X*100.0 > -10000 && joints[11].Position.Y*100.0 > -10000 && joints[11].Position.Z*100.0 > -10000) //sometimes empty jointarrays are given, this if will make sure these are not displayed
+		{
+
+			//right shoulder
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_X, (UINT32)(joints[9].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_Y, (UINT32)((joints[9].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_Z, (UINT32)((joints[9].Position.Z - 1.8)*100.0), TRUE);
+
+			//right elbow
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_X, (UINT32)(joints[10].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_Y, (UINT32)((joints[10].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_Z, (UINT32)((joints[10].Position.Z - 1.8)*100.0), TRUE);
+
+			//right wrist
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_X, (UINT32)(joints[11].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_Y, (UINT32)((joints[11].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_Z, (UINT32)((joints[11].Position.Z - 1.8)*100.0), TRUE);
+
+		}
+	}
+	else if (tab == 1)
+	{
+		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
+		/*
+		Joint still, armJoints[3];
+
+		for (int i = 0; i < 3; i++)
+		{
+			still.Position.X = joints[8 + i].Position.X - joints[1].Position.X;
+			still.Position.Y = joints[8 + i].Position.Y - joints[1].Position.Y;
+			still.Position.Z = joints[8 + i].Position.Z - joints[1].Position.Z;
+			armJoints[i] = still;
+		}
+		*/
+		if (joints[9].Position.X*100.0 < -10000)
+		{
+
+		}
+
+		if (joints[9].Position.X*100.0 > -10000 && joints[9].Position.Y*100.0 > -10000 && joints[9].Position.Z*100.0 > -10000 && joints[10].Position.X*100.0 > -10000 && joints[10].Position.Y*100.0 > -10000 && joints[10].Position.Z*100.0 > -10000 && joints[11].Position.X*100.0 > -10000 && joints[11].Position.Y*100.0 > -10000 && joints[11].Position.Z*100.0 > -10000) //sometimes empty jointarrays are given, this if will make sure these are not displayed
+		{
+			//right shoulder
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_X2, (UINT32)(joints[9].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_Y2, (UINT32)((joints[9].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT1_Z2, (UINT32)((joints[9].Position.Z - 1.8)*100.0), TRUE);
+
+			//right elbow
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_X2, (UINT32)(joints[10].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_Y2, (UINT32)((joints[10].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT2_Z2, (UINT32)((joints[10].Position.Z - 1.8)*100.0), TRUE);
+
+			//right wrist
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_X2, (UINT32)(joints[11].Position.X*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_Y2, (UINT32)((joints[11].Position.Y - 0.3)*100.0), TRUE);
+			SetDlgItemInt(m_hWnd, IDC_JOINT3_Z2, (UINT32)((joints[11].Position.Z - 1.8)*100.0), TRUE);
+		}
+	}
+}
+
+/// <summary>
+/// Set the status bar message
+/// </summary>
+/// <param name="szMessage">message to display</param>
+/// <param name="showTimeMsec">time in milliseconds to ignore future status messages</param>
+/// <param name="bForce">force status update</param>
+bool UI::SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce)
+{
+	INT64 now = GetTickCount64();
+
+	if (m_hWnd && (bForce || (m_nNextStatusTime <= now)))
+	{
+		SetDlgItemText(m_hWnd, IDC_STATUS, szMessage);
+		m_nNextStatusTime = now + nShowTimeMsec;
+
+		return true;
+	}
+
+	return false;
+}
+
+void UI::setPredictedLabel(int label)
+{
+	SetDlgItemInt(m_hWnd, IDC_PREDICTION, label, true);
+}

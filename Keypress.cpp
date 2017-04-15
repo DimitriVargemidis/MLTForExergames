@@ -24,8 +24,12 @@
 #include <windows.h>
 #include "Keypress.h"
 
-int pressSpace()
+int Keypress::pressKey(const WORD keycode)
 {
+	if (keycode == 0)
+	{
+		return 1;
+	}
 	// This structure will be used to create the keyboard
 	// input event.
 	INPUT ip;
@@ -37,13 +41,64 @@ int pressSpace()
 	ip.ki.dwExtraInfo = 0;
 
 	// Press the "space" key
-	ip.ki.wVk = 0x20; // virtual-key code for the "space" key
+	ip.ki.wVk = keycode; 
 	ip.ki.dwFlags = 0; // 0 for key press
 	SendInput(1, &ip, sizeof(INPUT));
 
 	Sleep(50);
 
 	// Release the "space" key
+	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
+	SendInput(1, &ip, sizeof(INPUT));
+
+	// Exit normally
+	return 0;
+}
+
+int Keypress::keyDown(const WORD keycode)
+{
+	if (keycode == 0)
+	{
+		return 1;
+	}
+	// This structure will be used to create the keyboard
+	// input event.
+	INPUT ip;
+
+	// Set up a generic keyboard event.
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+
+	// Press the "space" key
+	ip.ki.wVk = keycode; 
+	ip.ki.dwFlags = 0; // 0 for key press
+	SendInput(1, &ip, sizeof(INPUT));
+
+	// Exit normally
+	return 0;
+}
+
+int Keypress::keyUp(const WORD keycode)
+{
+	if (keycode == 0)
+	{
+		return 1;
+	}
+	// This structure will be used to create the keyboard
+	// input event.
+	INPUT ip;
+
+	// Set up a generic keyboard event.
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+
+	// Press the "space" key
+	ip.ki.wVk = keycode; 
+
 	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
 	SendInput(1, &ip, sizeof(INPUT));
 

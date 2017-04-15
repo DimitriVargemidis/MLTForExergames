@@ -1,20 +1,27 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include "ProjectGesture.h"
 #include "libsvm-3.21\svm.h"
 #include <vector>
+
+#include "ProjectGesture.h"
+
+//class ProjectGesture;
 
 class Project {
 private:
 	std::vector<ProjectGesture> projectGestures;
 	svm_model model;
 
+	ProjectGesture EmptyProjectGesture; //used when a projectGesture is requested but none is found
+
 public:
-	void addProjectGesture(const ProjectGesture & projectGesture);
+	void addProjectGesture(const ProjectGesture  projectGesture); //deleted the reference argument
 	const std::vector<ProjectGesture> & getProjectGestures() const;
+	const ProjectGesture & getProjectGestureFromLabel(double label);
 	void clearProjectGestures();
-	void setSVMModel(const svm_model & modelToSet);
+	//Deleted the reference 
+	void setSVMModel(const svm_model  modelToSet);
 	const svm_model & getSVMModel() const;
 };
 

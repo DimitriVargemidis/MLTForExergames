@@ -1,8 +1,21 @@
 #include <stdexcept>
+
+#include "Gesture.h"
+#include "Frame.h"
+
 #include "GestureClass.h"
 
 
-void GestureClass::addGesture(const Gesture & gesture) {
+GestureClass::GestureClass()
+{
+}
+
+GestureClass::GestureClass(const Gesture gesture)
+{
+	addGesture(gesture);
+}
+
+void GestureClass::addGesture(const Gesture gesture) {
 	if (gesture.getNumberOfFrames() == 0) {
 		throw std::invalid_argument("The given gesture does not contain any Frames.");
 	}

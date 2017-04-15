@@ -4,6 +4,12 @@
 #include <ctype.h>
 #include <errno.h>
 #include <iostream>
+#include <windows.h>
+
+#include "ProjectGesture.h"
+#include "Gesture.h"
+#include "Frame.h"
+
 #include "SVMInterface.h"
 
 const int DIMENSIONS_PER_JOINT = 3;

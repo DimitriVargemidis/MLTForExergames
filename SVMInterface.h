@@ -3,8 +3,10 @@
 
 #include <vector>
 #include "libsvm-3.21\svm.h"
-#include "Project.h"
+//#include "Project.h"
 
+class ProjectGesture;
+class Gesture;
 
 namespace SVMInterface {
 	const svm_model * train(const std::vector<ProjectGesture> & projectGestures);

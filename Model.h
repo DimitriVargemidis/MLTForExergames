@@ -1,39 +1,61 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <memory>
+
+#include "stdafx.h"
 #include "Project.h"
 #include "SVMInterface.h"
 
 
-class Model {
+class Main;
+class UI;
+class GestureClass;
+
+
+class Model 
+{
 private:
-	Main* main;
+	//std::shared_ptr<Main>	main; //no longer need the pointer to main object
+	std::shared_ptr<UI>		view;
+	
 
 	Project project;
+	std::vector<GestureClass> gestureClasses; //initialised with 2 gestureclasses for now
 
-	bool			refresh = false;
-	bool			start_1 = true;
-	bool			start_2 = true;
-	bool			predict = false;
+
+	int				ActiveGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
+	bool			refresh = false;			//boolean if the current frame needs to be added to a gestureclass or not
+	bool			predict = false;			//boolean if the program is in prediction mode or not
+	bool			trained = false;
+
+	WORD	        lastkey = 0;
 
 public:
 	Model();
 	~Model();
 
-	Model(Main * main);
+	//Model(Main * main);
+
+	void				setView(std::shared_ptr<UI> v);
 
 	void				setProject(const Project & projectToSet);
 	const Project &		getProject() const;
 	void				train();
 	const double		test(const Gesture & gesture);
 
-	void				setRefresh(boolean refresh);
-	boolean				getRefresh();
-	double			SVMInputData[54];
-	int				SVMInputDataIndex = 0;
+	
+	double				SVMInputData[54];
+	int					SVMInputDataIndex = 0;
 
-	void				setPredict(boolean refresh);
-	boolean				getPredict();
+	void				setActiveLabel(int label);
+	int					getActiveLabel();
+	
+	void				setRefresh(bool refresh);
+	bool				getRefresh();
+
+	void				setPredict(bool refresh);
+	bool				getPredict();
 
 	void				ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 };

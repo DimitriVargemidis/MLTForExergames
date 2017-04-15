@@ -1,7 +1,7 @@
 //This whole class is code from the microsoft library examples called BodyBasics-D2D 
 
 #pragma once
-
+#include <Kinect.h>
 #include "resource.h"
 
 class D2D_Graphics

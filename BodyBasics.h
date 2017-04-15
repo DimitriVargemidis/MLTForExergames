@@ -143,7 +143,7 @@ private:
     /// <param name="nBodyCount">body data count</param>
     /// <param name="ppBodies">body data in frame</param>
     /// </summary>
-    void                    ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+   // void                    ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 
     /// <summary>
     /// Set the status bar message
@@ -151,7 +151,7 @@ private:
     /// <param name="szMessage">message to display</param>
     /// <param name="nShowTimeMsec">time in milliseconds for which to ignore future status messages</param>
     /// <param name="bForce">force status update</param>
-    bool                    SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce);
+ //   bool                    SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce);
 
 
 	//SELFMADE FUNCTIONS
@@ -161,7 +161,7 @@ private:
 	/// </summary>
 	/// <param name="joints">joint data array</param>
 	/// <param name="tab">is 0 if current body data needs to be set, is 1 if saved body data needs to be set</param>
-	void CBodyBasics::ShowJointCoordinates(const Joint* joints, int tab);
+	//void CBodyBasics::ShowJointCoordinates(const Joint* joints, int tab);
 
 
 	/// <summary>
@@ -169,13 +169,13 @@ private:
 	/// </summary>
 	/// <param name="joints">joint data array</param>
 	/// <param name="tab">label of the gesture to which the joint data belongs</param>
-	void CBodyBasics::AddDataToSVMInputData(const Joint* joints, int label);
+//	void CBodyBasics::AddDataToSVMInputData(const Joint* joints, int label);
 
 	/// <summary>
 	/// enters the joint data in to de predict function of the SVM, return the class in which it falls
 	/// </summary>
 	/// <param name="joints">joint data array</param>
-	int CBodyBasics::MakePrediction(const Joint* joints);
+//	int CBodyBasics::MakePrediction(const Joint* joints);
 	//END
 };
 
