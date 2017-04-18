@@ -7,21 +7,6 @@
 
 //deleted the reference argument
 void Project::addProjectGesture(const ProjectGesture  projectGesture) {
-	
-	//protection so that projectgestures with the same label are not added twice
-
-	/* //TO be removed if alternative code works
-	bool matched = false;
-	
-
-	for (int i = 0; i < projectGestures.size(); i++)
-	{
-		if (projectGesture.getLabel() == projectGestures[i].getLabel())
-		{
-			matched = true;
-		}
-	}
-	*/
 
 	//if the label of the found projectGesture is -1 no projectGesture is found
 	int label = getProjectGestureFromLabel(projectGesture.getLabel()).getLabel();
@@ -59,4 +44,9 @@ void Project::setSVMModel(const svm_model modelToSet) {
 
 const svm_model & Project::getSVMModel() const {
 	return model;
+}
+
+Project & Project::operator=(const Project & projectObject)
+{
+	return *this;
 }

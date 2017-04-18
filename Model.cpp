@@ -3,19 +3,16 @@
 #include <windows.h>
 #include <string>
 
-#include "stdafx.h"
 #include "Main.h"
 #include "ProjectGesture.h"
 #include "GestureClass.h"
 #include "Gesture.h"
 #include "Frame.h"
 #include "Keypress.h"
-
-
 #include "Model.h"
 
 
-Model::Model()
+Model::Model() : project(Project())
 {
 	gestureClasses.resize(10);
 }
@@ -23,30 +20,19 @@ Model::Model()
 Model::~Model()
 {
 }
-/*
-Model::Model(Main * main)
-{
-	this->main = main;
-}
 
-//no longer needs pointer to the main object
-void Model::setMain(std::shared_ptr<Main> m)
-{
-	main = m;
-}
-*/
 void Model::setView(std::shared_ptr<UI> v)
 {
 	view = v;
 }
-/*
+
 void Model::setProject(const Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
 	}
 	project = projectToSet;
 }
-*/
+
 const Project & Model::getProject() const {
 	return project;
 }
@@ -183,25 +169,17 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						OutputDebugStringW(L"\n");
 
 						//	(std::to_string(static_cast<int>(keycode))).c_str());
-						
 					}
-
 				}
-
 			}
 		}
-
-		
-
-		
-
 	}
+
 	if (view->checkResource())
 	{
 			view->drawFrames(frames);
 	}
 	//ADD LATER code to add the 1 Frame from the each gesture class in the current project.
-
 }
 
 
