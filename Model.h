@@ -39,7 +39,7 @@ public:
 
 	void				setView(std::shared_ptr<UI> v);
 
-	void				setProject(const Project & projectToSet);
+	//void				setProject(const Project & projectToSet);
 	const Project &		getProject() const;
 	void				train();
 	const double		test(const Gesture & gesture);

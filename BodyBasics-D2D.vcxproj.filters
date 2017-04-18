@@ -91,6 +91,9 @@
     <ClInclude Include="Keypress.h">
       <Filter>libraries</Filter>
     </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>model_subclasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
