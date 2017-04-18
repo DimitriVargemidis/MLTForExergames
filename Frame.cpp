@@ -1,5 +1,7 @@
 #include "Frame.h"
 #include <Kinect.h>
+#include <chrono>
+
 
 Frame::Frame()
 {
@@ -10,6 +12,8 @@ Frame::~Frame()
 }
 
 Frame::Frame(const std::vector<Joint> & joints) : joints{joints} {
+	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count());
 }
 
 Frame::Frame(IBody * body, bool relative) {
@@ -59,4 +63,14 @@ std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vecto
 		transformedJoints[j].Position = still;
 	}
 	return transformedJoints;
+}
+
+const double Frame::getTimestamp() const
+{
+	return timestamp;
+}
+
+void Frame::setTimestamp(double timestampToSet)
+{
+	timestamp = timestampToSet;
 }

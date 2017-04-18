@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "libsvm-3.21\svm.h"
-//#include "Frame.h"
 
 class Frame;
 
@@ -13,7 +12,7 @@ private:
 
 public:
 	const std::vector<Frame> & getFrames() const;
-	void addFrame(const Frame frameToAdd);
+	void addFrame(Frame & frameToAdd);
 	const int getNumberOfFrames() const;
 	const int getNumberOfJointsPerFrame() const;
 	const bool isStaticGesture() const;
