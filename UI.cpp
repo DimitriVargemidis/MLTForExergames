@@ -1,6 +1,5 @@
 #include <strsafe.h>
 #include <memory>
-using namespace std;
 
 #include "stdafx.h"
 #include "D2D_Graphics.h"
@@ -318,10 +317,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			//SVMInputDataIndex = 0;
 			//SVMLabelsIndex = 0;
 			//predict = false;
-
-
 		}
-
 		break;
 	}
 
@@ -332,7 +328,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 /// Show the joint coordinates on the screen
 /// </summary>
 /// <param name="skel">skeleton of which the joints will be shown</param>
-void UI::ShowJointCoordinates(const vector<Joint> & joints, int tab)
+void UI::ShowJointCoordinates(const std::vector<Joint> & joints, int tab)
 {
 	if (tab == 0)
 	{
@@ -388,7 +384,6 @@ void UI::ShowJointCoordinates(const vector<Joint> & joints, int tab)
 		*/
 		if (joints[9].Position.X*100.0 < -10000)
 		{
-
 		}
 
 		if (joints[9].Position.X*100.0 > -10000 && joints[9].Position.Y*100.0 > -10000 && joints[9].Position.Z*100.0 > -10000 && joints[10].Position.X*100.0 > -10000 && joints[10].Position.Y*100.0 > -10000 && joints[10].Position.Z*100.0 > -10000 && joints[11].Position.X*100.0 > -10000 && joints[11].Position.Y*100.0 > -10000 && joints[11].Position.Z*100.0 > -10000) //sometimes empty jointarrays are given, this if will make sure these are not displayed
