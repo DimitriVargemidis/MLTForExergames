@@ -46,7 +46,7 @@ const svm_model & Project::getSVMModel() const {
 	return model;
 }
 
-Project & Project::operator=(const Project & projectObject)
+const Project & Project::operator=(const Project & projectObject)
 {
-	return *this;
+	return projectObject;
 }

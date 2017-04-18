@@ -25,7 +25,7 @@ public:
 	void setSVMModel(const svm_model modelToSet);
 	const svm_model & getSVMModel() const;
 
-	Project& operator=(const Project& projectObject);
+	const Project& operator=(const Project& projectObject);
 };
 
 #endif //PROJECT_H
