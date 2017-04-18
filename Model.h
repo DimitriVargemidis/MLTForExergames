@@ -16,12 +16,10 @@ class GestureClass;
 class Model 
 {
 private:
-	//std::shared_ptr<Main>	main; //no longer need the pointer to main object
 	std::shared_ptr<UI>		view;
-	
 
 	Project project;
-	std::vector<GestureClass> gestureClasses; //initialised with 2 gestureclasses for now
+	std::vector<GestureClass> gestureClasses; //initialised with 2 gesture classes for now
 
 
 	int				ActiveGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
@@ -35,11 +33,9 @@ public:
 	Model();
 	~Model();
 
-	//Model(Main * main);
-
 	void				setView(std::shared_ptr<UI> v);
 
-	//void				setProject(const Project & projectToSet);
+	void				setProject(const Project & projectToSet);
 	const Project &		getProject() const;
 	void				train();
 	const double		test(const Gesture & gesture);

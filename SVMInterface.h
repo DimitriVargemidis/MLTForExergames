@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "libsvm-3.21\svm.h"
-//#include "Project.h"
 
 class ProjectGesture;
 class Gesture;

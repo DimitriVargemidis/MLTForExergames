@@ -8,7 +8,6 @@
 #include "Action.h"
 #include "ProjectGesture.h"
 
-//class ProjectGesture;
 
 class Project {
 private:
@@ -18,13 +17,15 @@ private:
 	ProjectGesture EmptyProjectGesture; //used when a projectGesture is requested but none is found
 
 public:
-	void addProjectGesture(const ProjectGesture  projectGesture); //deleted the reference argument
+	void addProjectGesture(const ProjectGesture projectGesture); //deleted the reference argument
 	const std::vector<ProjectGesture> & getProjectGestures() const;
 	const ProjectGesture & getProjectGestureFromLabel(double label);
 	void clearProjectGestures();
 	//Deleted the reference 
-	void setSVMModel(const svm_model  modelToSet);
+	void setSVMModel(const svm_model modelToSet);
 	const svm_model & getSVMModel() const;
+
+	Project& operator=(const Project& projectObject);
 };
 
 #endif //PROJECT_H
