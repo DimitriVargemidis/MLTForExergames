@@ -16,6 +16,7 @@ public:
 	const int getNumberOfFrames() const;
 	const int getNumberOfJointsPerFrame() const;
 	const bool isStaticGesture() const;
+	void applyRelativeTimestamps();
 	svm_node * toArray() const;
 };
 

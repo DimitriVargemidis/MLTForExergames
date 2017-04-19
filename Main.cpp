@@ -25,9 +25,6 @@ int APIENTRY wWinMain(
 )
 {
 	Console::useConsole();
-	Console::printsl("wWinMain PRINT TEST ");
-	Console::printsl(1);
-	Console::print(".");
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -171,7 +168,6 @@ void Main::Update()
 
 int Main::Run(HINSTANCE hInstance, int nCmdShow)
 {
-	Console::print("Run PRINT TEST 2");
 	ui = std::make_shared<UI>();
 	model = std::make_shared<Model>();
 

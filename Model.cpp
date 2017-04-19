@@ -9,7 +9,6 @@
 #include "Gesture.h"
 #include "Frame.h"
 #include "Keypress.h"
-#include "Console.h"
 #include "Model.h"
 
 
@@ -24,7 +23,6 @@ Model::~Model()
 
 void Model::setView(std::shared_ptr<UI> v)
 {
-	Console::print("setView PRINT TEST 3");
 	view = v;
 }
 
@@ -80,7 +78,7 @@ bool Model::getPredict()
 void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
 	//OutputDebugStringW(L"test string");
-	std::vector<Frame> frames;	//the frames that are goint to be drawn
+	std::vector<Frame> frames;	//the frames that are going to be drawn
 
 	// go through all the bodies that are being seen now if a body is tracked than it's frame is made and added to the frames vector
 	for (int i = 0; i < nBodyCount; ++i)

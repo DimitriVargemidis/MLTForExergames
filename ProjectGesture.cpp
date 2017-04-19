@@ -13,7 +13,7 @@ ProjectGesture::ProjectGesture():
 	label = -1;
 }
 
-//here the reference as GestureClass is usefull because the gestureClasses are kept in the model and 
+//here the reference as GestureClass is useful because the gestureClasses are kept in the model and 
 //When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 // key changed to WORD, the format to enter when pressing a key, see keypress.cpp
 ProjectGesture::ProjectGesture( GestureClass & gestureClass, const double label, const WORD key) :

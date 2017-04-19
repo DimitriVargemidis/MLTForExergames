@@ -3,31 +3,20 @@
 #include <chrono>
 
 
-Frame::Frame()
-{
-}
-
-Frame::~Frame()
-{
-}
-
-Frame::Frame(const std::vector<Joint> & joints) : joints{joints} {
+Frame::Frame(IBody * body, bool relative) {
+	//Set the (absolute) timestamp
 	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count());
-}
 
-Frame::Frame(IBody * body, bool relative) {
+	//Get the joints from the given IBody
 	Joint bodyJoints[JointType_Count];
-	
 	body -> GetJoints(_countof(bodyJoints), bodyJoints);
-
 	std::vector<Joint> jointVector(bodyJoints, bodyJoints + sizeof bodyJoints / sizeof bodyJoints[0]);
 	
 	if (relative)
 	{	
 		jointVector = convertToRelativeToJoint(JointType_SpineMid, jointVector);
 	}
-
 	joints = jointVector;
 }
 
@@ -43,7 +32,7 @@ std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vecto
 {
 	std::vector<Joint> transformedJoints(joints.size());
 
-	for (int j = 0; j <  joints.size(); ++j)
+	for (int j = 0; j < joints.size(); ++j)
 	{
 		//Convert to coordinates relative to the spine
 		CameraSpacePoint still = joints[j].Position;
