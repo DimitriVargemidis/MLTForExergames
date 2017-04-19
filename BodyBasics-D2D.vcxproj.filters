@@ -42,6 +42,7 @@
     <ClCompile Include="Keypress.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Action.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
+    <ClInclude Include="Console.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

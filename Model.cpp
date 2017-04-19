@@ -9,6 +9,7 @@
 #include "Gesture.h"
 #include "Frame.h"
 #include "Keypress.h"
+#include "Console.h"
 #include "Model.h"
 
 
@@ -23,6 +24,7 @@ Model::~Model()
 
 void Model::setView(std::shared_ptr<UI> v)
 {
+	Console::print("setView PRINT TEST 3");
 	view = v;
 }
 

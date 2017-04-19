@@ -1,0 +1,17 @@
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
+#include <string>
+
+namespace Console
+{
+	void useConsole();
+	void print(std::string stringToPrint);
+	void printsl(std::string stringToPrint);
+	void print(int numberToPrint);
+	void printsl(int numberToPrint);
+	void print(double numberToPrint);
+	void printsl(double numberToPrint);
+}
+
+#endif //CONSOLE_H

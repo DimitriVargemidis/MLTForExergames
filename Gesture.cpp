@@ -18,12 +18,17 @@ void Gesture::addFrame(Frame & frameToAdd) {
 	if ( (getNumberOfFrames() != 0) && (getFrames().at(0).getNumberOfJoints() != frameToAdd.getNumberOfJoints()) ) {
 		throw std::invalid_argument("Size of the given frame must match the size of the previously added frames.");
 	}
+	/*
+	//Find solution for case getNumberOfFrames() == 0 -> timestamp of the first frame can only be set when 
+	//the entire gesture is stored, otherwise the relative value cannot be computed.
+	//
 	//Compute and set the relative time of this frame
 	if (getNumberOfFrames() > 0)
 	{
 		double timestampOfFirstFrame = getFrames().at(0).getTimestamp();
 		frameToAdd.setTimestamp(frameToAdd.getTimestamp() - timestampOfFirstFrame);
 	}
+	*/
 	//Add the frame
 	frames.push_back(frameToAdd);
 }
