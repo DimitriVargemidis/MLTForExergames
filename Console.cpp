@@ -16,7 +16,7 @@ namespace Console
 
 	void print(std::string stringToPrint)
 	{
-		std::cout << stringToPrint << std::endl;
+		std::cout << std::endl << stringToPrint;
 	}
 
 	void printsl(std::string stringToPrint)
@@ -24,9 +24,19 @@ namespace Console
 		std::cout << stringToPrint;
 	}
 
+	void print(wchar_t stringToPrint[])
+	{
+		std::wcout << std::endl << stringToPrint;
+	}
+
+	void printsl(wchar_t stringToPrint[])
+	{
+		std::wcout << stringToPrint;
+	}
+
 	void print(int numberToPrint)
 	{
-		std::cout << numberToPrint << std::endl;
+		std::cout << std::endl << numberToPrint;
 	}
 
 	void printsl(int numberToPrint)
@@ -36,7 +46,7 @@ namespace Console
 
 	void print(double numberToPrint)
 	{
-		std::cout << numberToPrint << std::endl;
+		std::cout << std::endl << numberToPrint;
 	}
 
 	void printsl(double numberToPrint)

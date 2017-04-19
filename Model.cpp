@@ -9,6 +9,7 @@
 #include "Gesture.h"
 #include "Frame.h"
 #include "Keypress.h"
+#include "Console.h"
 #include "Model.h"
 
 
@@ -92,8 +93,8 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			if (SUCCEEDED(hr) && bTracked)
 			{
 				Gesture currentGesture;
-				Frame frame(pBody, true);				//create a frame of every tracked body
-				frames.push_back(Frame(pBody,true));
+				Frame frame(pBody);				//create a frame of every tracked body
+				frames.push_back(Frame(pBody));
 
 				currentGesture.addFrame(frame);
 
@@ -148,7 +149,6 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					if (!trained)
 					{
 						project.setSVMModel(*(SVMInterface::train(project.getProjectGestures())));
-
 						trained = true;
 					}
 
@@ -164,9 +164,13 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						int a = static_cast<int>(keycode);
 						wchar_t buffer[256];
 						wsprintfW(buffer, L"%d", a);
-						OutputDebugStringW(L"keycode is ");
-						OutputDebugStringW(buffer);
-						OutputDebugStringW(L"\n");
+
+						Console::print("Keycode is ");
+						Console::printsl(buffer);
+
+						//OutputDebugStringW(L"keycode is ");
+						//OutputDebugStringW(buffer);
+						//OutputDebugStringW(L"\n");
 
 						//	(std::to_string(static_cast<int>(keycode))).c_str());
 					}

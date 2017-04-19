@@ -11,7 +11,7 @@ private:
 	double timestamp = 0;	//Stores the moment on which the frame is created.
 
 public:
-	Frame(IBody * body, bool relative);
+	Frame(IBody * body, bool relative = true);
 
 	const std::vector<Joint> & getJoints() const;
 	const int getNumberOfJoints() const;
