@@ -86,6 +86,8 @@ private:
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
+	long					time; //test parameter to see how long a button is pressed by a human
+
 	MSG       msg;
 	WNDCLASS  wc;
 
@@ -98,5 +100,8 @@ private:
 	/// <param name="lParam">additional message data</param>
 	/// <returns>result of message processing</returns>
 	LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	void processKeyInput(MSG msg);
+
 
 };

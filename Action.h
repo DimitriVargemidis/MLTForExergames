@@ -8,4 +8,5 @@ struct Action
 {
 	WORD keycode;
 	bool hold;
+	bool active;
 };

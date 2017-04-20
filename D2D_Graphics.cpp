@@ -133,9 +133,11 @@ D2D1_POINT_2F D2D_Graphics::BodyToScreen(const CameraSpacePoint& bodyPoint, int 
 /// </summary>
 /// <param name="pJoints">joint data</param>
 /// <param name="pJointPoints">joint positions converted to screen space</param>
-void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints)
+void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, const int colorID)
 {
 	// Draw the bones
+
+	changeColor(colorID);
 
 	// Torso
 	DrawBone(pJoints, pJointPoints, JointType_Head, JointType_Neck);
@@ -188,8 +190,13 @@ void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoi
 
 	//SELFMADE CODE
 	//simple button 
-	//D2D_RECT_F measureButton = D2D1::RectF(100, 0, 200, 200);
-	//m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
+	//D2D_RECT_F measureButton = D2D1::RectF(1000, 1000, 1200, 1200);
+	D2D_RECT_F up = D2D1::RectF(100, 550, 150, 600);
+	D2D_RECT_F  = D2D1::RectF(50, 600, 100, 650);
+	D2D_RECT_F up = D2D1::RectF(100, 550, 150, 600);
+	D2D_RECT_F up = D2D1::RectF(100, 550, 150, 600);
+
+	m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
 
 
 
@@ -269,6 +276,45 @@ void D2D_Graphics::CleanD2D()
 {
 	DiscardDirect2DResources();
 	SafeRelease(m_pD2DFactory);
+}
+
+//limited to 15 different color
+void D2D_Graphics::changeColor(int colorID)
+{
+	/*
+	switch (colorID)
+	{
+	case 0:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushJointInferred);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
+
+		break;
+	case 1:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Yellow, 1.0f), &m_pBrushJointInferred);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.0f), &m_pBrushBoneTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
+
+		break;
+	}
+	*/
+	if (colorID < 15)
+	{
+		float c = colorID*0.05; //the change in the color from skelet to skelet
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f + c, 0.75f - c, 0.25f + c), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f + c, 1.0f - c, 0.0f + c), &m_pBrushBoneTracked);
+	}
+	else
+	{
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
+	}
+
 }
 
 
