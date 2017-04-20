@@ -10,7 +10,7 @@ GestureClass;
 
 class ProjectGesture {
 private:
-	GestureClass gestureClass; //? keep constant?
+	GestureClass & gestureClass; //? keep constant?
 	double label;
 	//WORD key;
 	std::vector<Action> actions;

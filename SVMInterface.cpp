@@ -104,9 +104,9 @@ svm_model * SVMInterface::train(std::vector<ProjectGesture> & projectGestures) {
 		problemSize = problemSize + pg.getGestureClass().getGestures().size();
 	}
 
-Console::printsl("Problem size: ");
-Console::printsl(problemSize);
-Console::printsl(" ->");
+//Console::printsl("Problem size: ");
+//Console::printsl(problemSize);
+//Console::printsl(" ->");
 
 	prob.l = problemSize;
 
@@ -118,8 +118,8 @@ Console::printsl(" ->");
 	for (ProjectGesture & pg : projectGestures) {
 		for (Gesture & g : pg.getGestureClass().getGestures()) {
 
-Console::printsl(", RC: ");
-Console::printsl(rowCount);
+//Console::printsl(", RC: ");
+//Console::printsl(rowCount);
 			
 			labels[rowCount] = pg.getLabel();
 			x[rowCount] = g.toArray();

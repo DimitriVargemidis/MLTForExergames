@@ -22,7 +22,7 @@ std::vector<ProjectGesture> Project::getProjectGestures()
 	return projectGestures;
 }
 
-ProjectGesture Project::getProjectGestureFromLabel(double label)
+ProjectGesture & Project::getProjectGestureFromLabel(double label)
 {
 	for (int i = 0; i < projectGestures.size(); i++)
 	{

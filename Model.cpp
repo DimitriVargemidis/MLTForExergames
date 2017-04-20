@@ -4,6 +4,7 @@
 #include <string>
 
 
+
 #include "Main.h"
 #include "ProjectGesture.h"
 #include "GestureClass.h"
@@ -178,8 +179,6 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					case 10:
 						//button Z
 						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x5A, true));
-						break;
-						
 						break;
 					}
 

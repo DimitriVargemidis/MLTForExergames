@@ -19,7 +19,7 @@ private:
 public:
 	void addProjectGesture(ProjectGesture projectGesture);
 	std::vector<ProjectGesture> getProjectGestures();
-	ProjectGesture getProjectGestureFromLabel(double label);
+	ProjectGesture & getProjectGestureFromLabel(double label);
 	void clearProjectGestures();
 	//Deleted the reference 
 	void setSVMModel(svm_model & modelToSet);
