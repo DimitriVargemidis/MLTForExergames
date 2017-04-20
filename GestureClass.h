@@ -15,7 +15,7 @@ public:
 	GestureClass(const Gesture gesture);
 
 	void addGesture(const Gesture gesture);
-	const std::vector<Gesture> & getGestures() const;
+	std::vector<Gesture> getGestures();
 };
 
 #endif //GESTURECLASS_H

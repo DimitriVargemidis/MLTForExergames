@@ -10,6 +10,7 @@
 #include "Gesture.h"
 #include "Frame.h"
 #include "Keypress.h"
+#include "Console.h"
 #include "Model.h"
 
 
@@ -27,14 +28,14 @@ void Model::setView(std::shared_ptr<UI> v)
 	view = v;
 }
 
-void Model::setProject(const Project & projectToSet) {
+void Model::setProject(Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
 	}
 	project = projectToSet;
 }
 
-const Project & Model::getProject() const {
+Project Model::getProject() {
 	return project;
 }
 
@@ -42,7 +43,7 @@ void Model::train() {
 	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
-const double Model::test(const Gesture & gesture) {
+double Model::test(Gesture & gesture) {
 	return SVMInterface::test(getProject().getSVMModel(), gesture);
 }
 
@@ -79,7 +80,7 @@ bool Model::getPredict()
 void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
 	//OutputDebugStringW(L"test string");
-	std::vector<Frame> frames;	//the frames that are goint to be drawn
+	std::vector<Frame> frames;	//the frames that are going to be drawn
 
 	// go through all the bodies that are being seen now if a body is tracked than it's frame is made and added to the frames vector
 	for (int i = 0; i < nBodyCount; ++i)
@@ -93,10 +94,26 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			if (SUCCEEDED(hr) && bTracked)
 			{
 				Gesture currentGesture;
-				Frame frame(pBody, true);				//create a frame of every tracked body
-				frames.push_back(Frame(pBody,true));
+				Frame frame(pBody);				//create a frame of every tracked body
+				frames.push_back(Frame(pBody));
 
 				currentGesture.addFrame(frame);
+
+				//ONLY FOR TESTING -- DELETE AFTERWARDS
+				/*
+				if (counter % 30 == 0)
+				{
+					oldFrame = newFrame;
+					newFrame = std::make_shared<Frame>(frame);
+					Console::printsl(oldFrame->equals(*newFrame));
+					counter = 1;
+				}
+				else
+				{
+					counter++;
+				}
+				*/
+				//ONLY FOR TESTING -- END
 
 				//the measure button was pressed last	
 				if (refresh && !predict)
@@ -186,7 +203,6 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					if (!trained)
 					{
 						project.setSVMModel(*(SVMInterface::train(project.getProjectGestures())));
-
 						trained = true;
 					}
 
@@ -240,9 +256,13 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						int a = static_cast<int>(keycode);
 						wchar_t buffer[256];
 						wsprintfW(buffer, L"%d", a);
-						OutputDebugStringW(L"keycode is ");
-						OutputDebugStringW(buffer);
-						OutputDebugStringW(L"\n");
+
+						Console::print("Keycode is ");
+						Console::printsl(buffer);
+
+						//OutputDebugStringW(L"keycode is ");
+						//OutputDebugStringW(buffer);
+						//OutputDebugStringW(L"\n");
 
 						//	(std::to_string(static_cast<int>(keycode))).c_str());
 					}

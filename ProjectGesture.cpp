@@ -8,13 +8,12 @@
 
 #include "ProjectGesture.h"
 
-ProjectGesture::ProjectGesture():
-	gestureClass{ GestureClass() }
+ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }
 {
 	label = -1;
 }
 
-//here the reference as GestureClass is usefull because the gestureClasses are kept in the model and 
+//here the reference as GestureClass is useful because the gestureClasses are kept in the model and 
 //When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 // key changed to WORD, the format to enter when pressing a key, see keypress.cpp
 ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, const WORD key, bool holding):
@@ -28,15 +27,18 @@ ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, 
 	actions.push_back(a);
 }
 
-const GestureClass & ProjectGesture::getGestureClass() const {
+GestureClass ProjectGesture::getGestureClass()
+{
 	return gestureClass;
 }
 
-void ProjectGesture::setLabel(const double labelToSet) {
+void ProjectGesture::setLabel(const double labelToSet)
+{
 	label = labelToSet;
 }
 
-const double ProjectGesture::getLabel() const {
+const double ProjectGesture::getLabel() const
+{
 	return label;
 }
 
@@ -68,8 +70,8 @@ void ProjectGesture::setKey(const WORD keyToSet) {
 }
 */
 
-const WORD ProjectGesture::getKey() const {
-
+const WORD ProjectGesture::getKey() const
+{
 	if (actions.size() == 0)
 	{
 		return 0;

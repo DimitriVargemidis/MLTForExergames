@@ -1,45 +1,36 @@
-#include "Frame.h"
 #include <Kinect.h>
+#include <chrono>
+#include <cmath>
+
+#include "Frame.h"
+
 
 Frame::Frame()
 {
 }
 
-Frame::~Frame()
-{
-}
-
-Frame::Frame(const std::vector<Joint> & joints) : joints{joints} {
-}
-
 Frame::Frame(IBody * body, bool relative) {
-	Joint bodyJoints[JointType_Count];
-	
-	body -> GetJoints(_countof(bodyJoints), bodyJoints);
+	//Set the (absolute) timestamp
+	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count());
 
+	//Get the joints from the given IBody
+	Joint bodyJoints[JointType_Count];
+	body -> GetJoints(_countof(bodyJoints), bodyJoints);
 	std::vector<Joint> jointVector(bodyJoints, bodyJoints + sizeof bodyJoints / sizeof bodyJoints[0]);
 	
 	if (relative)
 	{	
 		jointVector = convertToRelativeToJoint(JointType_SpineMid, jointVector);
 	}
-
 	joints = jointVector;
-}
-
-const std::vector<Joint> & Frame::getJoints() const {
-	return joints;
-}
-
-const int Frame::getNumberOfJoints() const {
-	return joints.size();
 }
 
 std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints)
 {
 	std::vector<Joint> transformedJoints(joints.size());
 
-	for (int j = 0; j <  joints.size(); ++j)
+	for (int j = 0; j < joints.size(); ++j)
 	{
 		//Convert to coordinates relative to the spine
 		CameraSpacePoint still = joints[j].Position;
@@ -59,4 +50,43 @@ std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vecto
 		transformedJoints[j].Position = still;
 	}
 	return transformedJoints;
+}
+
+bool Frame::equals(Frame frameToCompare) const
+{
+	if (getJoints().size() != frameToCompare.getJoints().size())
+	{
+		return false;
+	}
+
+	for (int i = 0; i < getJoints().size(); i++)
+	{
+		if (abs(getJoints().at(i).Position.Y - frameToCompare.getJoints().at(i).Position.Y) > THRESHOLD_EQUALS ||
+			abs(getJoints().at(i).Position.X - frameToCompare.getJoints().at(i).Position.X) > THRESHOLD_EQUALS ||
+			abs(getJoints().at(i).Position.Z - frameToCompare.getJoints().at(i).Position.Z) > THRESHOLD_EQUALS)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+const std::vector<Joint> & Frame::getJoints() const
+{
+	return joints;
+}
+
+const int Frame::getNumberOfJoints() const
+{
+	return joints.size();
+}
+
+const double Frame::getTimestamp() const
+{
+	return timestamp;
+}
+
+void Frame::setTimestamp(double timestampToSet)
+{
+	timestamp = timestampToSet;
 }

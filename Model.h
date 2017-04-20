@@ -9,6 +9,7 @@ typedef std::chrono::high_resolution_clock Clock;
 #include "stdafx.h"
 #include "Project.h"
 #include "SVMInterface.h"
+#include "Frame.h"
 
 
 
@@ -36,16 +37,24 @@ private:
 
 	WORD	        lastkey = 0;
 
+	//ONLY FOR TESTING -- DELETE AFTERWARDS
+	/*
+	std::shared_ptr<Frame> oldFrame = std::make_shared<Frame>(Frame());
+	std::shared_ptr<Frame> newFrame = std::make_shared<Frame>(Frame());
+	int counter = 1;
+	*/
+	//ONLY FOR TESTING -- END
+
 public:
 	Model();
 	~Model();
 
 	void				setView(std::shared_ptr<UI> v);
 
-	void				setProject(const Project & projectToSet);
-	const Project &		getProject() const;
+	void				setProject(Project & projectToSet);
+	Project				getProject();
 	void				train();
-	const double		test(const Gesture & gesture);
+	double				test(Gesture & gesture);
 
 	
 	double				SVMInputData[54];
@@ -61,6 +70,7 @@ public:
 	bool				getPredict();
 
 	void				ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+
 };
 
 #endif //MODEL_H

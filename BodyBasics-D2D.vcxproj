@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BodyBasics.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="D2D_Graphics.cpp" />
     <ClCompile Include="DUI.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="GestureClass.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Action.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="Keypress.h" />
     <ClInclude Include="libsvm-3.21\svm.h" />
     <ClInclude Include="Main.h" />

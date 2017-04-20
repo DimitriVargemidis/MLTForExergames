@@ -190,8 +190,8 @@ void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoi
 
 	//SELFMADE CODE
 	//simple button 
-	D2D_RECT_F measureButton = D2D1::RectF(100, 0, 200, 200);
-	m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
+	//D2D_RECT_F measureButton = D2D1::RectF(100, 0, 200, 200);
+	//m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
 
 
 

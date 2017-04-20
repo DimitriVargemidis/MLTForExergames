@@ -75,7 +75,7 @@ double test(const int dimensions, double testData[]) {
 	return retval;
 }*/
 
-const svm_model * SVMInterface::train(const std::vector<ProjectGesture> & projectGestures) {
+svm_model * SVMInterface::train(std::vector<ProjectGesture> & projectGestures) {
 	//Set parameters
 	svm_parameter param;
 	param.svm_type = C_SVC;
@@ -99,8 +99,8 @@ const svm_model * SVMInterface::train(const std::vector<ProjectGesture> & projec
 
 	//Get and set the problem size (= number of gestures that were input)
 	int problemSize{0};
-	for (const ProjectGesture & pg : projectGestures) {
-		problemSize = problemSize + pg.getGestureClass().getGestures().size();
+	for (ProjectGesture & pg : projectGestures) {
+		problemSize = problemSize + pg.getGestureClass().getGestures().size() + 1; //+1 is for the time feature
 	}
 	prob.l = problemSize;
 
@@ -109,8 +109,8 @@ const svm_model * SVMInterface::train(const std::vector<ProjectGesture> & projec
 	double * labels = new double[problemSize];
 	svm_node ** x = new svm_node*[problemSize];
 	int rowCount{0};
-	for (const ProjectGesture & pg : projectGestures) {
-		for (const Gesture & g : pg.getGestureClass().getGestures()) {
+	for (ProjectGesture & pg : projectGestures) {
+		for (Gesture & g : pg.getGestureClass().getGestures()) {
 			labels[rowCount] = pg.getLabel();
 			x[rowCount] = g.toArray();
 			rowCount = rowCount + 1;
@@ -126,7 +126,7 @@ const svm_model * SVMInterface::train(const std::vector<ProjectGesture> & projec
 	return model;
 }
 
-const double SVMInterface::test(const svm_model & model, const Gesture & gesture) {
+double SVMInterface::test(svm_model & model, Gesture & gesture) {
 	svm_node * testnode = gesture.toArray();
 	double resultLabel = svm_predict(& model, testnode);
 	
@@ -135,6 +135,6 @@ const double SVMInterface::test(const svm_model & model, const Gesture & gesture
 	return resultLabel;
 }
 
-const svm_node ** SVMInterface::scale(const svm_node ** node) {
+svm_node ** SVMInterface::scale(svm_node ** node) {
 	return nullptr;
 }

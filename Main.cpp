@@ -5,10 +5,12 @@ typedef std::chrono::high_resolution_clock Clock;
 
 #include "stdafx.h"
 #include <strsafe.h>
+#include <iostream>
 #include "resource.h"
 #include "Model.h"
 #include "Frame.h"
 #include "UI.h"
+#include "Console.h"
 
 #include "Main.h"
 
@@ -21,12 +23,11 @@ typedef std::chrono::high_resolution_clock Clock;
 /// <param name="nCmdShow">whether to display minimized, maximized, or normally</param>
 /// <returns>status</returns>
 int APIENTRY wWinMain(
-	_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR lpCmdLine,
-	_In_ int nShowCmd
-)
+	_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
+	Console::useConsole();
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -35,11 +36,8 @@ int APIENTRY wWinMain(
 }
 
 
-Main::Main() :
-	m_pKinectSensor(NULL),
-	m_pBodyFrameReader(NULL)
+Main::Main() : m_pKinectSensor(NULL), m_pBodyFrameReader(NULL)
 {
-	
 	running = true;
 }
 
@@ -49,8 +47,6 @@ Main::~Main()
 	// done with body frame reader
 	SafeRelease(m_pBodyFrameReader);
 
-	
-
 	// close the Kinect Sensor
 	if (m_pKinectSensor)
 	{
@@ -58,7 +54,6 @@ Main::~Main()
 	}
 
 	SafeRelease(m_pKinectSensor);
-
 }
 
 void Main::mainCanInitializeKinectSensor()
@@ -129,22 +124,17 @@ void Main::Update()
 
 	IBodyFrame* pBodyFrame = NULL;
 
-
 	IBodyFrameSource* pBodyFrameSource = NULL;
 	int bodies = -1;
 	m_pBodyFrameReader->get_BodyFrameSource(&pBodyFrameSource);
 	pBodyFrameSource->get_BodyCount(&bodies);
 
-
 	HRESULT hr = m_pBodyFrameReader->AcquireLatestFrame(&pBodyFrame);
-
 
 	if (SUCCEEDED(hr))
 	{
 		INT64 nTime = 0;
-
 		hr = pBodyFrame->get_RelativeTime(&nTime);
-
 		IBody* ppBodies[BODY_COUNT] = { 0 };
 
 		if (SUCCEEDED(hr))
@@ -155,7 +145,6 @@ void Main::Update()
 		if (SUCCEEDED(hr))
 		{
 			model->ProcessBody(nTime, BODY_COUNT, ppBodies);
-
 		}
 
 		for (int i = 0; i < _countof(ppBodies); ++i)
@@ -163,7 +152,6 @@ void Main::Update()
 			SafeRelease(ppBodies[i]);
 		}
 	}
-
 	SafeRelease(pBodyFrame);
 }
 
@@ -201,7 +189,6 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 		Update();
 		ui->checkPeekMsg();
 	}
-
 	return 0;
 }
 

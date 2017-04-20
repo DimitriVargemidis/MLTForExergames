@@ -7,18 +7,22 @@
 
 class Frame {
 private:
+	const float THRESHOLD_EQUALS = 0.15;
 	std::vector<Joint> joints;
+	double timestamp = 0;	//Stores the moment on which the frame is created.
 
 public:
 	Frame();
-	~Frame();
+	Frame(IBody * body, bool relative = true);
 
-	Frame(const std::vector<Joint> & joints);
-	Frame(IBody * body, bool relative);
+	std::vector<Joint> convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints);
+	bool equals(Frame frameToCompare) const;
+
 	const std::vector<Joint> & getJoints() const;
 	const int getNumberOfJoints() const;
 
-	std::vector<Joint> convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints);
+	const double getTimestamp() const;
+	void setTimestamp(double timestampToSet);
 };
 
 #endif //FRAME_H
