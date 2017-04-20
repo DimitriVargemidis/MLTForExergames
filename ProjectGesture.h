@@ -10,7 +10,7 @@ GestureClass;
 
 class ProjectGesture {
 private:
-	GestureClass &  gestureClass; //? keep constant?
+	GestureClass gestureClass; //? keep constant?
 	double label;
 	//WORD key;
 	std::vector<Action> actions;
@@ -23,7 +23,7 @@ public:
 	// label changed to int, Why did we take double?
 	ProjectGesture( GestureClass & g, const double label, const WORD key = 0x20);
 	//ProjectGesture(const GestureClass & gestureClass, const double label, const WORD key = 0x20);
-	const GestureClass & getGestureClass() const;
+	GestureClass getGestureClass();
 	void setLabel(const double labelToSet);
 	const double getLabel() const;
 	void setActions(std::vector<Action> a);

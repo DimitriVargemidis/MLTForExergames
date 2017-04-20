@@ -27,14 +27,14 @@ void Model::setView(std::shared_ptr<UI> v)
 	view = v;
 }
 
-void Model::setProject(const Project & projectToSet) {
+void Model::setProject(Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
 	}
 	project = projectToSet;
 }
 
-const Project & Model::getProject() const {
+Project Model::getProject() {
 	return project;
 }
 
@@ -42,7 +42,7 @@ void Model::train() {
 	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
-const double Model::test(const Gesture & gesture) {
+double Model::test(Gesture & gesture) {
 	return SVMInterface::test(getProject().getSVMModel(), gesture);
 }
 
@@ -97,6 +97,22 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 				frames.push_back(Frame(pBody));
 
 				currentGesture.addFrame(frame);
+
+				//ONLY FOR TESTING -- DELETE AFTERWARDS
+				/*
+				if (counter % 30 == 0)
+				{
+					oldFrame = newFrame;
+					newFrame = std::make_shared<Frame>(frame);
+					Console::printsl(oldFrame->equals(*newFrame));
+					counter = 1;
+				}
+				else
+				{
+					counter++;
+				}
+				*/
+				//ONLY FOR TESTING -- END
 
 				//the measure button was pressed last	
 				if (refresh && !predict)

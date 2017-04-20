@@ -8,9 +8,9 @@ class ProjectGesture;
 class Gesture;
 
 namespace SVMInterface {
-	const svm_model * train(const std::vector<ProjectGesture> & projectGestures);
-	const double test(const svm_model & model, const Gesture & gesture);
-	const svm_node ** scale(const svm_node ** node);
+	svm_model * train(std::vector<ProjectGesture> & projectGestures);
+	double test(svm_model & model, Gesture & gesture);
+	svm_node ** scale(svm_node ** node);
 };
 
 #endif //SVMINTERFACE_H

@@ -1,5 +1,4 @@
 #include <stdexcept>
-
 #include "Gesture.h"
 #include "Frame.h"
 
@@ -28,6 +27,6 @@ void GestureClass::addGesture(const Gesture gesture) {
 	gestures.push_back(gesture);
 }
 
-const std::vector<Gesture> & GestureClass::getGestures() const {
+std::vector<Gesture> GestureClass::getGestures() {
 	return gestures;
 }

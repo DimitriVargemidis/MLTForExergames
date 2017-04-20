@@ -34,6 +34,16 @@ namespace Console
 		std::wcout << stringToPrint;
 	}
 
+	void print(bool boolToPrint)
+	{
+		std::cout << std::endl << boolToPrint;
+	}
+
+	void printsl(bool boolToPrint)
+	{
+		std::cout << boolToPrint;
+	}
+
 	void print(int numberToPrint)
 	{
 		std::cout << std::endl << numberToPrint;

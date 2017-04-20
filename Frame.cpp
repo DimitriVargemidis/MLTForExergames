@@ -1,7 +1,13 @@
-#include "Frame.h"
 #include <Kinect.h>
 #include <chrono>
+#include <cmath>
 
+#include "Frame.h"
+
+
+Frame::Frame()
+{
+}
 
 Frame::Frame(IBody * body, bool relative) {
 	//Set the (absolute) timestamp
@@ -18,14 +24,6 @@ Frame::Frame(IBody * body, bool relative) {
 		jointVector = convertToRelativeToJoint(JointType_SpineMid, jointVector);
 	}
 	joints = jointVector;
-}
-
-const std::vector<Joint> & Frame::getJoints() const {
-	return joints;
-}
-
-const int Frame::getNumberOfJoints() const {
-	return joints.size();
 }
 
 std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints)
@@ -52,6 +50,35 @@ std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vecto
 		transformedJoints[j].Position = still;
 	}
 	return transformedJoints;
+}
+
+bool Frame::equals(Frame frameToCompare) const
+{
+	if (getJoints().size() != frameToCompare.getJoints().size())
+	{
+		return false;
+	}
+
+	for (int i = 0; i < getJoints().size(); i++)
+	{
+		if (abs(getJoints().at(i).Position.Y - frameToCompare.getJoints().at(i).Position.Y) > THRESHOLD_EQUALS ||
+			abs(getJoints().at(i).Position.X - frameToCompare.getJoints().at(i).Position.X) > THRESHOLD_EQUALS ||
+			abs(getJoints().at(i).Position.Z - frameToCompare.getJoints().at(i).Position.Z) > THRESHOLD_EQUALS)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+const std::vector<Joint> & Frame::getJoints() const
+{
+	return joints;
+}
+
+const int Frame::getNumberOfJoints() const
+{
+	return joints.size();
 }
 
 const double Frame::getTimestamp() const

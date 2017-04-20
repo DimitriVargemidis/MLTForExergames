@@ -7,8 +7,7 @@
 
 #include "ProjectGesture.h"
 
-ProjectGesture::ProjectGesture():
-	gestureClass{ GestureClass() }
+ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }
 {
 	label = -1;
 }
@@ -27,15 +26,18 @@ ProjectGesture::ProjectGesture( GestureClass & gestureClass, const double label,
 	actions.push_back(a);
 }
 
-const GestureClass & ProjectGesture::getGestureClass() const {
+GestureClass ProjectGesture::getGestureClass()
+{
 	return gestureClass;
 }
 
-void ProjectGesture::setLabel(const double labelToSet) {
+void ProjectGesture::setLabel(const double labelToSet)
+{
 	label = labelToSet;
 }
 
-const double ProjectGesture::getLabel() const {
+const double ProjectGesture::getLabel() const
+{
 	return label;
 }
 
@@ -57,8 +59,8 @@ void ProjectGesture::setKey(const WORD keyToSet) {
 }
 */
 
-const WORD ProjectGesture::getKey() const {
-
+const WORD ProjectGesture::getKey() const
+{
 	if (actions.size() == 0)
 	{
 		return 0;

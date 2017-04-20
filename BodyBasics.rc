@@ -60,8 +60,8 @@ BEGIN
     LTEXT           "Y",IDC_Y_TITLE,375,5,50,15
     LTEXT           "Z",IDC_Z_TITLE,425,5,50,15
     LTEXT           "Right shoulder",IDC_JOINT1,250,20,75,15
-    LTEXT           "right elbow",IDC_JOINT2,250,35,75,15
-    LTEXT           "right wrist",IDC_JOINT3,250,50,75,15
+    LTEXT           "Right elbow",IDC_JOINT2,250,35,75,15
+    LTEXT           "Right wrist",IDC_JOINT3,250,50,75,15
     LTEXT           "0",IDC_JOINT1_X,325,20,50,15
     LTEXT           "0",IDC_JOINT2_X,325,35,50,15
     LTEXT           "0",IDC_JOINT3_X,325,50,50,15
@@ -77,8 +77,8 @@ BEGIN
     LTEXT           "Y",IDC_Y_TITLE2,375,85,50,15
     LTEXT           "Z",IDC_Z_TITLE2,425,85,50,15
     LTEXT           "Right shoulder",IDC_JOINT4,250,100,50,15
-    LTEXT           "right elbow",IDC_JOINT5,250,115,50,15
-    LTEXT           "right wrist",IDC_JOINT6,250,130,50,15
+    LTEXT           "Right elbow",IDC_JOINT5,250,115,50,15
+    LTEXT           "Right wrist",IDC_JOINT6,250,130,50,15
     LTEXT           "0",IDC_JOINT1_X2,325,100,50,15
     LTEXT           "0",IDC_JOINT2_X2,325,115,50,15
     LTEXT           "0",IDC_JOINT3_X2,325,130,50,15

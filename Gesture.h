@@ -17,7 +17,7 @@ public:
 	const int getNumberOfJointsPerFrame() const;
 	const bool isStaticGesture() const;
 	void applyRelativeTimestamps();
-	svm_node * toArray() const;
+	svm_node * toArray();
 };
 
 #endif //GESTURE_H

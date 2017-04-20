@@ -6,8 +6,8 @@
 #include "Project.h"
 
 //deleted the reference argument
-void Project::addProjectGesture(const ProjectGesture  projectGesture) {
-
+void Project::addProjectGesture(const ProjectGesture  projectGesture)
+{
 	//if the label of the found projectGesture is -1 no projectGesture is found
 	int label = getProjectGestureFromLabel(projectGesture.getLabel()).getLabel();
 	if (label == -1)
@@ -17,11 +17,12 @@ void Project::addProjectGesture(const ProjectGesture  projectGesture) {
 	
 }
 
-const std::vector<ProjectGesture> & Project::getProjectGestures() const {
+std::vector<ProjectGesture> Project::getProjectGestures()
+{
 	return projectGestures;
 }
 
-const ProjectGesture & Project::getProjectGestureFromLabel(double label)
+ProjectGesture Project::getProjectGestureFromLabel(double label)
 {
 	for (int i = 0; i < projectGestures.size(); i++)
 	{
@@ -34,15 +35,18 @@ const ProjectGesture & Project::getProjectGestureFromLabel(double label)
 	return EmptyProjectGesture;
 }
 
-void Project::clearProjectGestures() {
+void Project::clearProjectGestures()
+{
 	projectGestures.clear();
 }
 
-void Project::setSVMModel(const svm_model modelToSet) {
+void Project::setSVMModel(svm_model & modelToSet)
+{
 	model = modelToSet;
 }
 
-const svm_model & Project::getSVMModel() const {
+svm_model & Project::getSVMModel()
+{
 	return model;
 }
 

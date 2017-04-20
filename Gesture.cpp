@@ -46,8 +46,10 @@ void Gesture::applyRelativeTimestamps()
 	}
 }
 
-svm_node * Gesture::toArray() const {
-	const int dimensions{getNumberOfFrames() * getNumberOfJointsPerFrame() * DIMENSIONS_PER_JOINT};
+svm_node * Gesture::toArray() {
+	//applyRelativeTimestamps();
+
+	const int dimensions{getNumberOfFrames() * (getNumberOfJointsPerFrame() * DIMENSIONS_PER_JOINT + 1)}; //+ 1 for the timestamp as a feature
 	const int nbOfJoints{getNumberOfFrames() * getNumberOfJointsPerFrame()};
 	svm_node * rawArray{new svm_node[dimensions+1]};
 	int indexCount{0};
@@ -63,6 +65,9 @@ svm_node * Gesture::toArray() const {
 			rawArray[indexCount].value = getFrames().at(i).getJoints().at(j).Position.Z;
 			indexCount = indexCount + 1;
 		}
+		rawArray[indexCount].index = indexCount;
+		rawArray[indexCount].value = getFrames().at(i).getTimestamp();
+		indexCount = indexCount + 1;
 	}
 	rawArray[indexCount].index = -1;
 	rawArray[indexCount].value = 0;
