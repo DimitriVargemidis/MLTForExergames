@@ -24,8 +24,7 @@ Model::~Model()
 void Model::setView(std::shared_ptr<UI> v)
 {
 	view = v;
-}
-
+/*
 void Model::setProject(const Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
