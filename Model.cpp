@@ -176,19 +176,11 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					if (keycode != 0)
 					{
 						Keypress::pressKey(keycode);
-						//OutputDebugStringW(L"test string\n");
-						int a = static_cast<int>(keycode);
-						wchar_t buffer[256];
-						wsprintfW(buffer, L"%d", a);
-
-						Console::print("Keycode is ");
-						Console::printsl(buffer);
-
-						//OutputDebugStringW(L"keycode is ");
-						//OutputDebugStringW(buffer);
-						//OutputDebugStringW(L"\n");
-
-						//	(std::to_string(static_cast<int>(keycode))).c_str());
+						//int a = static_cast<int>(keycode);
+						//wchar_t buffer[256];
+						//wsprintfW(buffer, L"%d", a);
+						//Console::print("Keycode is ");
+						//Console::printsl(buffer);
 					}
 				}
 			}

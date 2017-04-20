@@ -9,6 +9,7 @@
 #include "ProjectGesture.h"
 #include "Gesture.h"
 #include "Frame.h"
+#include "Console.h"
 
 #include "SVMInterface.h"
 
@@ -100,8 +101,13 @@ svm_model * SVMInterface::train(std::vector<ProjectGesture> & projectGestures) {
 	//Get and set the problem size (= number of gestures that were input)
 	int problemSize{0};
 	for (ProjectGesture & pg : projectGestures) {
-		problemSize = problemSize + pg.getGestureClass().getGestures().size() + 1; //+1 is for the time feature
+		problemSize = problemSize + pg.getGestureClass().getGestures().size();
 	}
+
+Console::printsl("Problem size: ");
+Console::printsl(problemSize);
+Console::printsl(" ->");
+
 	prob.l = problemSize;
 
 	//Set labels and nodes
@@ -111,6 +117,10 @@ svm_model * SVMInterface::train(std::vector<ProjectGesture> & projectGestures) {
 	int rowCount{0};
 	for (ProjectGesture & pg : projectGestures) {
 		for (Gesture & g : pg.getGestureClass().getGestures()) {
+
+Console::printsl(", RC: ");
+Console::printsl(rowCount);
+			
 			labels[rowCount] = pg.getLabel();
 			x[rowCount] = g.toArray();
 			rowCount = rowCount + 1;

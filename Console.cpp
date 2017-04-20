@@ -39,6 +39,7 @@ namespace Console
 		std::cout << std::endl << boolToPrint;
 	}
 
+	/*
 	void printsl(bool boolToPrint)
 	{
 		std::cout << boolToPrint;
@@ -48,6 +49,7 @@ namespace Console
 	{
 		std::cout << std::endl << numberToPrint;
 	}
+	*/
 
 	void printsl(int numberToPrint)
 	{

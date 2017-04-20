@@ -10,8 +10,8 @@ namespace Console
 	void printsl(std::string stringToPrint);
 	void print(wchar_t stringToPrint[]);
 	void printsl(wchar_t stringToPrint[]);
-	void print(bool boolToPrint);
-	void printsl(bool boolToPrint);
+	//void print(bool boolToPrint);
+	//void printsl(bool boolToPrint);
 	void print(int numberToPrint);
 	void printsl(int numberToPrint);
 	void print(double numberToPrint);
