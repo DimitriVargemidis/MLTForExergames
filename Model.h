@@ -2,10 +2,14 @@
 #define MODEL_H
 
 #include <memory>
+#include <iostream>
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
 
 #include "stdafx.h"
 #include "Project.h"
 #include "SVMInterface.h"
+
 
 
 class Main;
@@ -20,12 +24,15 @@ private:
 
 	Project project;
 	std::vector<GestureClass> gestureClasses; //initialised with 2 gesture classes for now
+	ProjectGesture* lastActiveProjectGesture = nullptr; //the ProjectGesture that was last activated
 
 
 	int				ActiveGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
 	bool			refresh = false;			//boolean if the current frame needs to be added to a gestureclass or not
 	bool			predict = false;			//boolean if the program is in prediction mode or not
 	bool			trained = false;
+
+	std::chrono::time_point<std::chrono::steady_clock>		timer = Clock::now();
 
 	WORD	        lastkey = 0;
 

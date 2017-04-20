@@ -19,7 +19,7 @@ private:
 public:
 	void addProjectGesture(const ProjectGesture projectGesture); //deleted the reference argument
 	const std::vector<ProjectGesture> & getProjectGestures() const;
-	const ProjectGesture & getProjectGestureFromLabel(double label);
+	ProjectGesture & getProjectGestureFromLabel(double label);
 	void clearProjectGestures();
 	//Deleted the reference 
 	void setSVMModel(const svm_model modelToSet);

@@ -1,4 +1,6 @@
 #include <strsafe.h>
+#include <Windows.h>
+#include <Winuser.h>
 #include <memory>
 
 #include "stdafx.h"
@@ -138,6 +140,29 @@ void UI::checkPeekMsg()
 {
 	//MSG       msg = { 0 };
 
+	//check keyboard inputs 
+
+	/*
+	PBYTE keyboardstate = static_cast<PBYTE>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,sizeof(PBYTE)*256));
+	GetKeyboardState(keyboardstate);
+
+	for (int i = 0; i < 256; i++)
+	{
+		if (keyboardstate[i] != 0)
+		{
+			wchar_t buffer[256];
+			wsprintfW(buffer, L"%d", i);
+			OutputDebugStringW(L"button ");
+			OutputDebugStringW(buffer);
+			OutputDebugStringW(L" is active \n");
+		}
+
+	}
+
+	HeapFree(GetProcessHeap(), 0, keyboardstate);
+	*/
+	
+
 	while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		// If a dialog message will be taken care of by the dialog proc
@@ -147,9 +172,15 @@ void UI::checkPeekMsg()
 		}
 
 		TranslateMessage(&msg);
+
+		//process keyinput (probably bad practise to put it here)
+		if (msg.message >= 0x00000100 && msg.message <= 0x00000102)
+		{
+			processKeyInput(msg);
+		}
+
 		DispatchMessageW(&msg);
 	}
-
 
 }
 
@@ -220,7 +251,7 @@ void UI::drawFrames(std::vector<Frame> & frames )
 		}
 
 		
-		graphics.DrawBody(jointArray, jointPoints);
+		graphics.DrawBody(jointArray, jointPoints,j);
 
 	}
 
@@ -262,6 +293,24 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
+	
+	int a = static_cast<int>(message);
+	
+	//some test code
+	/*
+	if (a != 312 && a != 127 && a != 512 && a != 15 
+	    && a != 134 && a != 6 && a != 28 && a != 20
+		&& a != 310 && a != 78 && a != 792 && a != 309)
+	{
+
+		wchar_t buffer[256];
+		wsprintfW(buffer, L"%d", a);
+		OutputDebugStringW(L"message ");
+		OutputDebugStringW(buffer);
+		OutputDebugStringW(L"\n");
+	}
+	*/
+
 
 	switch (message)
 	{
@@ -288,6 +337,13 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		// Quit the main message pump
 		PostQuitMessage(0);
 		break;
+	case WM_CHAR:
+		//wchar_t buffer[256];
+		//wsprintfW(buffer, L"%d", i);
+		//OutputDebugStringW(L"button ");
+		//OutputDebugStringW(buffer);
+		OutputDebugStringW(L" key pressed\n");
+		break;
 
 	case WM_COMMAND:
 
@@ -310,6 +366,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			//put here the train function
 			//train(6, 9, SVMInputData, SVMLabels);
 			main->setModelPredict(TRUE);
+			
 		}
 
 		if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
@@ -322,6 +379,78 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	}
 
 	return FALSE;
+}
+
+void UI::processKeyInput(MSG msg)
+{
+
+
+
+	//test code to check how long a human presses a button
+	if (msg.message == 0x00000100)
+	{
+		int button = static_cast<int>(msg.wParam);
+		wchar_t buffer[256];
+
+
+		if (time != 0)
+		{
+			long diff = static_cast<long>(msg.time) - time;
+		
+			wchar_t buffer[256];
+			wsprintfW(buffer, L"%ld", diff);
+			OutputDebugStringW(L"auto release after ");
+			OutputDebugStringW(buffer);
+			wsprintfW(buffer, L"%d", button);
+			OutputDebugStringW(L" milliseconds and pressed button ");
+			OutputDebugStringW(buffer);
+			OutputDebugStringW(L" \n");
+		}
+		
+
+		time = static_cast<long>(msg.time);
+		OutputDebugStringW(L" button pressed it was ");
+		wsprintfW(buffer, L"%d", button);
+		OutputDebugStringW(buffer);
+		OutputDebugStringW(L" \n");
+
+
+
+	}
+	/*
+	if (msg.message == 0x00000102)
+	{
+		int lparam = msg.lParam;
+		int wparam = msg.wParam;
+
+		wchar_t buffer[256];
+		wsprintfW(buffer, L"%d", lparam);
+		OutputDebugStringW(L"time between press and release ");
+		OutputDebugStringW(buffer);
+		OutputDebugStringW(L" milliseconds \n");
+		time = 0;
+
+
+	}
+	*/
+	if (msg.message == 0x00000101)
+	{
+		
+		long diff = static_cast<long>(msg.time) - time;
+		int button = static_cast<int>(msg.wParam);
+
+		wchar_t buffer[256];
+		wsprintfW(buffer, L"%ld", diff);
+		OutputDebugStringW(L"time between press and release ");
+		OutputDebugStringW(buffer);
+		wsprintfW(buffer, L"%d", button);
+		OutputDebugStringW(L" milliseconds it was button ");
+		OutputDebugStringW(buffer);
+		OutputDebugStringW(L" \n");
+		time = 0;
+		
+
+	}
 }
 
 /// <summary>

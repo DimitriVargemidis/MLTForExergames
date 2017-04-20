@@ -44,7 +44,7 @@ public:
 	/// </summary>
 	/// <param name="pJoints">joint data</param>
 	/// <param name="pJointPoints">joint positions converted to screen space</param>
-	void                    DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints);
+	void                    DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, const int colorID = 0 );
 
 	/// <summary>
 	/// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
@@ -67,6 +67,9 @@ public:
 	/// Release D2Dfactory
 	/// </summary>
 	void					CleanD2D();
+
+	void					changeColor(int colorID);
+
 
 //private:
 	// Direct2D

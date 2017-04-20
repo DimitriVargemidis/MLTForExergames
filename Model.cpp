@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string>
 
+
 #include "Main.h"
 #include "ProjectGesture.h"
 #include "GestureClass.h"
@@ -14,7 +15,7 @@
 
 Model::Model() : project(Project())
 {
-	gestureClasses.resize(10);
+	gestureClasses.resize(30);
 }
 
 Model::~Model()
@@ -24,7 +25,8 @@ Model::~Model()
 void Model::setView(std::shared_ptr<UI> v)
 {
 	view = v;
-/*
+}
+
 void Model::setProject(const Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
@@ -105,29 +107,66 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					gestureClasses[ActiveGestureClassLabel].addGesture(currentGesture);
 					//make a new ProjectGesture and add it to the project (in project elimination of projectgestures with same labels is done)
 					
+
+
+
 					//temporary hardcoded
 					//keycodes see https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
+					ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41,true);
 
 					switch (ActiveGestureClassLabel)
 					{
+					case 1:
+						//do nothing
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0));
+						break;
 					case 2:
-						keycode = 0x20; //space
+						//space
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x20));
 						break;
 					case 3:
-						keycode = 0x25; //left arrow
+						//left arrow
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x25,true ));
 						break;
 					case 4:
-						keycode = 0x26; //up arrow
+						//up arrow
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x26));
 						break;
 					case 5:
-						keycode = 0x27;	//right arrow
+						//right arrow
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x27,true));
 						break;
 					case 6:
-						keycode = 0x28; //down arrow
+						//down arrow
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x28,true));
+						break;
+					case 7:
+						//button A
+						//ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41);
+						//left arrow
+						projectGest.addAction(0x25, true);
+						project.addProjectGesture(projectGest);
+
+						break;
+					case 8:
+						//button A
+						//ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41);
+						//right arrow
+						projectGest.addAction(0x27, true);
+						project.addProjectGesture(projectGest);
+					case 9:
+						//button A
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41, true));
+						break;
+					case 10:
+						//button Z
+						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x5A, true));
+						break;
+						
 						break;
 					}
 
-					project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel],ActiveGestureClassLabel, keycode));
+					//project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel],ActiveGestureClassLabel, keycode));
 
 					refresh = false;
 				}
@@ -152,10 +191,48 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					}
 
 
-					int predictedLabel = static_cast<int>(SVMInterface::test(project.getSVMModel(), currentGesture));
-					view->setPredictedLabel(predictedLabel);
-					WORD keycode = project.getProjectGestureFromLabel(predictedLabel).getKey();
 
+					double predictedLabel = SVMInterface::test(project.getSVMModel(), currentGesture);
+					view->setPredictedLabel(static_cast<int>(predictedLabel));
+
+					auto timeNow = Clock::now();
+					auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - timer).count();
+
+					if (diff > 0)
+					{
+						timer = Clock::now();
+						
+						//code to check the timing = should be OK
+						/*
+						wchar_t buffer[256];
+						wsprintfW(buffer, L"%ld", diff);
+						OutputDebugStringW(L"time between this action and previous action ");
+						OutputDebugStringW(buffer);
+						OutputDebugStringW(L" milliseconds \n");
+						*/
+
+
+						if (lastActiveProjectGesture != nullptr)
+						{
+
+							if (lastActiveProjectGesture->getLabel() != predictedLabel)
+							{
+								//WORD keycode = project.getProjectGestureFromLabel(predictedLabel).getKey();
+								lastActiveProjectGesture->Deactivate();
+								lastActiveProjectGesture = &(project.getProjectGestureFromLabel(predictedLabel));
+							}
+							lastActiveProjectGesture->Activate();
+							//Sleep(50);
+							//lastActiveProjectGesture->Deactivate();
+						}
+						else
+						{
+							lastActiveProjectGesture = &(project.getProjectGestureFromLabel(predictedLabel));
+							lastActiveProjectGesture->Activate();
+						}
+					}
+					/*
+					
 					if (keycode != 0)
 					{
 						Keypress::pressKey(keycode);
@@ -169,6 +246,7 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 
 						//	(std::to_string(static_cast<int>(keycode))).c_str());
 					}
+					*/
 				}
 			}
 		}

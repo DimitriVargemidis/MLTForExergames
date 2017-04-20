@@ -21,7 +21,7 @@ const std::vector<ProjectGesture> & Project::getProjectGestures() const {
 	return projectGestures;
 }
 
-const ProjectGesture & Project::getProjectGestureFromLabel(double label)
+ProjectGesture & Project::getProjectGestureFromLabel(double label)
 {
 	for (int i = 0; i < projectGestures.size(); i++)
 	{

@@ -1,4 +1,8 @@
 
+#include <iostream>
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
+
 #include "stdafx.h"
 #include <strsafe.h>
 #include "resource.h"
@@ -177,8 +181,23 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 
 	int rc = ui->Run(hInstance, nCmdShow);
 
+	//test clocking code 
+	auto t1 = Clock::now();
+	Sleep(30);
+	auto t2 = Clock::now();
+
+	long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+
+	wchar_t buffer[256];
+	wsprintfW(buffer, L"%ld", time );
+	OutputDebugStringW(L"time between t1 en t2 ");
+	OutputDebugStringW(buffer);
+	OutputDebugStringW(L" milliseconds \n");
+	//end test
+
 	while (ui->checkQuitMsg())
 	{
+
 		Update();
 		ui->checkPeekMsg();
 	}
