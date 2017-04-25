@@ -78,6 +78,16 @@ bool Model::getPredict()
 	return predict;
 }
 
+void Model::setTrained(bool train)
+{
+	trained = train;
+}
+
+bool Model::getTrained()
+{
+	return trained;
+}
+
 void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
 	//OutputDebugStringW(L"test string");
@@ -237,6 +247,7 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 								lastActiveProjectGesture = &(project.getProjectGestureFromLabel(predictedLabel));
 							}
 							lastActiveProjectGesture->Activate();
+							view->changeButtonColor(predictedLabel);
 							//Sleep(50);
 							//lastActiveProjectGesture->Deactivate();
 						}

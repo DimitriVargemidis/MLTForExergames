@@ -69,6 +69,9 @@ public:
 	void				setPredict(bool refresh);
 	bool				getPredict();
 
+	void				setTrained(bool train);
+	bool				getTrained();
+
 	void				ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 
 };

@@ -226,7 +226,7 @@ void UI::drawFrames(std::vector<Frame> & frames )
 
 	//printf(frames.size());
 
-	for (int j = 0; j < frames.size(); ++j)
+	for (int j = frames.size()-1; j > -1; --j)
 	{
 		std::vector<Joint> joints = frames[j].getJoints(); 
 		D2D1_POINT_2F jointPoints[JointType_Count];
@@ -365,8 +365,16 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		{
 			//put here the train function
 			//train(6, 9, SVMInputData, SVMLabels);
-			main->setModelPredict(TRUE);
+			model->setPredict(TRUE);
 			
+		}
+
+		if (IDC_STOP_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+		{
+			//put here the train function
+			//train(6, 9, SVMInputData, SVMLabels);
+			model->setPredict(FALSE);
+			model->setTrained(FALSE);
 		}
 
 		if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
@@ -559,4 +567,9 @@ bool UI::SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bFo
 void UI::setPredictedLabel(int label)
 {
 	SetDlgItemInt(m_hWnd, IDC_PREDICTION, label, true);
+}
+
+void UI::changeButtonColor(int state)
+{
+	graphics.changeButtonColor(state);
 }

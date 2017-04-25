@@ -2,7 +2,9 @@
 
 #pragma once
 #include <Kinect.h>
+#include <memory>
 #include "resource.h"
+
 
 class D2D_Graphics
 {
@@ -69,6 +71,7 @@ public:
 	void					CleanD2D();
 
 	void					changeColor(int colorID);
+	void					changeButtonColor(int state);
 
 
 //private:
@@ -84,6 +87,14 @@ public:
 	ID2D1SolidColorBrush*   m_pBrushHandClosed;
 	ID2D1SolidColorBrush*   m_pBrushHandOpen;
 	ID2D1SolidColorBrush*   m_pBrushHandLasso;
+
+	//dirty button highlight code
+	ID2D1SolidColorBrush*   m_pBrushUpButton;
+	ID2D1SolidColorBrush*   m_pBrushDownButton;
+	ID2D1SolidColorBrush*   m_pBrushRightButton;
+	ID2D1SolidColorBrush*   m_pBrushLeftButton;
+	ID2D1SolidColorBrush*   m_pBrushAButton;
+
 
 
 };

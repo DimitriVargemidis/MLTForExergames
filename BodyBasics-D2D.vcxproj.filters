@@ -43,6 +43,9 @@
       <Filter>libraries</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="save.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -96,6 +99,9 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="save.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
