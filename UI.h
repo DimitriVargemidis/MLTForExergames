@@ -74,6 +74,7 @@ public:
 	bool                    SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce);
 
 	void setPredictedLabel(int label);
+	void changeButtonColor(int state);
 
 private:
 	

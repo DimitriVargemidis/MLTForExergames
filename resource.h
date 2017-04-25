@@ -60,6 +60,8 @@
 #define IDC_LBL_MEAS_COUNT              1061
 #define IDC_MEAS_COUNT                  1062
 #define IDC_measure_4                   1063
+#define IDC_STOP_PREDICT2               1064
+#define IDC_STOP_PREDICT                1064
 
 // Next default values for new objects
 // 

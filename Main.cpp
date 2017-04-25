@@ -11,6 +11,7 @@ typedef std::chrono::high_resolution_clock Clock;
 #include "Frame.h"
 #include "UI.h"
 #include "Console.h"
+#include "save.h"
 
 #include "Main.h"
 
@@ -185,6 +186,9 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	OutputDebugStringW(buffer);
 	OutputDebugStringW(L" milliseconds \n");
 	//end test
+
+	save::writeToFile(L"testfile.txt");
+	save::readFromFile(L"testfile.txt");
 
 	while (ui->checkQuitMsg())
 	{

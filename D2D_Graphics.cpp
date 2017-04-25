@@ -11,7 +11,6 @@ static const float c_HandSize = 30.0f;
 
 
 D2D_Graphics::D2D_Graphics():
-
 m_pD2DFactory(NULL),
 m_pRenderTarget(NULL),
 m_pBrushJointTracked(NULL),
@@ -20,7 +19,12 @@ m_pBrushBoneTracked(NULL),
 m_pBrushBoneInferred(NULL),
 m_pBrushHandClosed(NULL),
 m_pBrushHandOpen(NULL),
-m_pBrushHandLasso(NULL)
+m_pBrushHandLasso(NULL),
+m_pBrushUpButton(NULL),
+m_pBrushDownButton(NULL),
+m_pBrushRightButton(NULL),
+m_pBrushLeftButton(NULL),
+m_pBrushAButton(NULL)
 
 {
 
@@ -85,6 +89,19 @@ HRESULT D2D_Graphics::EnsureDirect2DResources(HWND m_hWnd)
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushHandClosed);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 0.5f), &m_pBrushHandOpen);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushHandLasso);
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
+
+		for (int i = 0; i < 5; ++i)
+		{
+			//buttonC
+		}
+
+
 	}
 
 	return hr;
@@ -105,6 +122,11 @@ void D2D_Graphics::DiscardDirect2DResources()
 	SafeRelease(m_pBrushHandClosed);
 	SafeRelease(m_pBrushHandOpen);
 	SafeRelease(m_pBrushHandLasso);
+	SafeRelease(m_pBrushUpButton);
+	SafeRelease(m_pBrushDownButton);
+	SafeRelease(m_pBrushRightButton);
+	SafeRelease(m_pBrushLeftButton);
+	SafeRelease(m_pBrushAButton);
 }
 
 
@@ -190,13 +212,27 @@ void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoi
 
 	//SELFMADE CODE
 	//simple button 
-	//D2D_RECT_F measureButton = D2D1::RectF(1000, 1000, 1200, 1200);
-	D2D_RECT_F up = D2D1::RectF(100, 550, 150, 600);
-	D2D_RECT_F down = D2D1::RectF(50, 600, 100, 650);
-	D2D_RECT_F left = D2D1::RectF(100, 550, 150, 600);
-	D2D_RECT_F right = D2D1::RectF(100, 550, 150, 600);
+	int Xoffset = 100;
+	int size = 50;
+	int Xpos = 400;
+	int Ypos = 450;
+	
+	D2D_RECT_F measureButton = D2D1::RectF(1000, 1000, 1200, 1200);
+	D2D_RECT_F up = D2D1::RectF(Xpos+size+ Xoffset, Ypos, Xpos + size + size + Xoffset, Ypos +size);
+	D2D_RECT_F left = D2D1::RectF(Xpos + Xoffset, Ypos + size, Xpos + size + Xoffset, Ypos + size + size);
+	D2D_RECT_F down = D2D1::RectF(Xpos + size + Xoffset, Ypos + size + size, Xpos + size + size + Xoffset, Ypos + size + size + size);
+	D2D_RECT_F right = D2D1::RectF(Xpos + size + size + Xoffset, Ypos + size, Xpos + size + size + size + Xoffset, Ypos + size + size);
+	D2D1_POINT_2F APos;
+	APos.x = 150;
+	APos.y = 550;
+	D2D1_ELLIPSE Abutton = D2D1::Ellipse(APos, 75, 75);
 
-	//m_pRenderTarget->FillRectangle(measureButton, m_pBrushJointInferred);
+
+	m_pRenderTarget->FillRectangle(up, m_pBrushUpButton);
+	m_pRenderTarget->FillRectangle(down, m_pBrushDownButton);
+	m_pRenderTarget->FillRectangle(left, m_pBrushLeftButton);
+	m_pRenderTarget->FillRectangle(right, m_pBrushRightButton);
+	m_pRenderTarget->FillEllipse(Abutton, m_pBrushAButton);
 
 
 
@@ -281,7 +317,7 @@ void D2D_Graphics::CleanD2D()
 //limited to 15 different color
 void D2D_Graphics::changeColor(int colorID)
 {
-	/*
+	
 	switch (colorID)
 	{
 	case 0:
@@ -293,15 +329,52 @@ void D2D_Graphics::changeColor(int colorID)
 
 		break;
 	case 1:
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
+		
 
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Yellow, 1.0f), &m_pBrushJointInferred);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.0f), &m_pBrushBoneTracked);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f , 0.0f , 0.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f ), &m_pBrushBoneTracked);
+		break;
+	case 2:
+		
 
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushBoneTracked);
+		break;
+	case 3:
+
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 0.0f, 1.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 0.0f, 1.0f), &m_pBrushBoneTracked);
+		break;
+	case 4:
+
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
+		break;
+	case 5:
+
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 1.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 1.0f), &m_pBrushBoneTracked);
+		break;
+
+	case 6:
+	
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 1.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 1.0f), &m_pBrushBoneTracked);
+		break;
+	case 7:
+
+
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.5f, 0.5f, 0.5f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.5f, 0.5f, 0.5f), &m_pBrushBoneTracked);
 		break;
 	}
-	*/
+	
+
+	/*
 	if (colorID < 15)
 	{
 		float c = colorID*0.05; //the change in the color from skelet to skelet
@@ -313,6 +386,62 @@ void D2D_Graphics::changeColor(int colorID)
 	{
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
+	}
+	*/
+}
+
+void D2D_Graphics::changeButtonColor(int state)
+{
+
+
+	ID2D1SolidColorBrush** buttonColor;
+
+	switch (state)
+	{
+	case(1):
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
+		break;
+	case 3:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red , 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
+		break;
+	case 5:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushRightButton); //activated
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
+		break;
+	case 7:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushAButton);
+		break;
+	case 8:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushAButton);
+		break;
+	case 9:
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushAButton);
+		break;
+
+
 	}
 
 }
