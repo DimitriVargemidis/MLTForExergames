@@ -8,6 +8,8 @@ class ProjectGesture;
 class Gesture;
 
 namespace SVMInterface {
+	const int DIMENSIONS_PER_JOINT = 3;
+
 	svm_model * train(std::vector<ProjectGesture> & projectGestures);
 	double test(svm_model & model, Gesture & gesture);
 	svm_node ** scale(svm_node ** node);

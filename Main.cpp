@@ -28,8 +28,7 @@ int APIENTRY wWinMain(
 {
 	Console::useConsole();
 
-	Console::printsl("INITIALIZING... DONE.");
-	Console::print("");
+	Console::printsl("Initializing... DONE.");
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
