@@ -18,11 +18,6 @@ public:
 
 	void mainCanInitializeKinectSensor();
 
-	void setModelRefresh(bool refresh);
-	bool getModelRefresh();
-
-	void setModelPredict(bool refresh);
-	bool getModelPredict();
 
 	/// <summary>
 	/// Main processing function
@@ -31,8 +26,6 @@ public:
 
 	int Run(HINSTANCE hInstance, int nCmdShow);
 
-	void drawFrames(std::vector<Frame> frames);
-
 private:
 
 	//Model model;
@@ -40,9 +33,9 @@ private:
 
 	std::shared_ptr<Model> model;
 	std::shared_ptr<UI> ui;
-	
 
-	boolean running;
+	IBodyFrame* pBodyFrame;
+	IBodyFrameSource* pBodyFrameSource;
 
 	// Current Kinect
 	IKinectSensor*          m_pKinectSensor;

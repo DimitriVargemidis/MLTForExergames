@@ -19,12 +19,15 @@ ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }
 ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, const WORD key, bool holding):
 	gestureClass{ gestureClass }, label{ label }
 {
-	Action a;
-	a.keycode = key;
-	a.hold = holding;
-	a.active = false;
+	if (key != 0)
+	{
+		Action a;
+		a.keycode = key;
+		a.hold = holding;
+		a.active = false;
 
-	actions.push_back(a);
+		actions.push_back(a);
+	}
 }
 
 GestureClass ProjectGesture::getGestureClass()
@@ -84,9 +87,10 @@ void ProjectGesture::Activate()
 {
 	for (int i = 0; i < actions.size(); i++)
 	{
-		if (actions[i].hold == false)
+		if (actions[i].hold == false && actions[i].active == false)
 		{
 			Keypress::pressKey(actions[i].keycode);
+			actions[i].active = true;
 		}
 		if (actions[i].hold == true && actions[i].active == false)
 		{
@@ -101,6 +105,10 @@ void ProjectGesture::Deactivate()
  {
 	for (int i = 0; i < actions.size(); i++)
 	{
+		if (actions[i].hold == false && actions[i].active == true)
+		{
+			actions[i].active = false;
+		}
 		if (actions[i].hold == true && actions[i].active == true)
 		{
 			Keypress::keyUp(actions[i].keycode);

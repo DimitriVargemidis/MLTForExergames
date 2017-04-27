@@ -27,20 +27,10 @@ UI::~UI()
 	// clean up Direct2D
 	graphics.CleanD2D();
 
-
 	// done with coordinate mapper
 	SafeRelease(m_pCoordinateMapper);
 }
 
-/*
-UI::UI(Main * main) :
-m_pCoordinateMapper(NULL),
-m_hWnd(NULL),
-graphics{}
-{
-
-}
-*/
 
 /// <summary>
 /// Creates the main window and begins processing
@@ -79,31 +69,7 @@ int UI::Run(HINSTANCE hInstance, int nCmdShow)
 	ShowWindow(*hWndApp, nCmdShow);
 
 	return 1;
-	//MOVED TO MAIN + other functions in UI
-	/*
-	// Main message loop
-	while (WM_QUIT != msg.message)
-	{
-		Update();
 
-		while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			// If a dialog message will be taken care of by the dialog proc
-			if (hWndApp && IsDialogMessageW(hWndApp, &msg))
-			{
-				continue;
-			}
-
-			TranslateMessage(&msg);
-			DispatchMessageW(&msg);
-		}
-	}
-	
-
-
-	return static_cast<int>(msg.wParam);
-	*/
-	//END MOVED TO MAIN + other functions in UI
 }
 
 /// <summary>
@@ -138,30 +104,6 @@ LRESULT CALLBACK UI::MessageRouter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
 
 void UI::checkPeekMsg()
 {
-	//MSG       msg = { 0 };
-
-	//check keyboard inputs 
-
-	/*
-	PBYTE keyboardstate = static_cast<PBYTE>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,sizeof(PBYTE)*256));
-	GetKeyboardState(keyboardstate);
-
-	for (int i = 0; i < 256; i++)
-	{
-		if (keyboardstate[i] != 0)
-		{
-			wchar_t buffer[256];
-			wsprintfW(buffer, L"%d", i);
-			OutputDebugStringW(L"button ");
-			OutputDebugStringW(buffer);
-			OutputDebugStringW(L" is active \n");
-		}
-
-	}
-
-	HeapFree(GetProcessHeap(), 0, keyboardstate);
-	*/
-	
 
 	while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
 	{
@@ -174,9 +116,13 @@ void UI::checkPeekMsg()
 		TranslateMessage(&msg);
 
 		//process keyinput (probably bad practise to put it here)
-		if (msg.message >= 0x00000100 && msg.message <= 0x00000102)
+		if (msg.message >= 0x00000100 && msg.message <= 0x00000102 && waitForKey == true)
 		{
 			processKeyInput(msg);
+
+			waitForKey = false;
+			SetDlgItemText(m_hWnd, IDC_ADD_KEY_INFO, L"Key input accepted");
+			
 		}
 
 		DispatchMessageW(&msg);
@@ -214,32 +160,34 @@ bool UI::checkResource()
 	return false;
 }
 
-void UI::drawFrames(std::vector<Frame> & frames )
+void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes)
 {
 	(graphics.GetRenderTarget())->BeginDraw();
 	(graphics.GetRenderTarget())->Clear();
 
-	RECT rct;
 	GetClientRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rct);
-	int width = rct.right;
-	int height = rct.bottom;
+	width = rct.right;
+	height = rct.bottom;
 
-	//printf(frames.size());
+	std::vector<Frame> * frames = &absframes;
 
-	for (int j = frames.size()-1; j > -1; --j)
+	if (!drawAbsCoord)
 	{
-		std::vector<Joint> joints = frames[j].getJoints(); 
-		D2D1_POINT_2F jointPoints[JointType_Count];
-		Joint jointArray[JointType_Count];
+		frames = &relframes;
+	}
 
-		int jointCount = JointType_Count;
-		int jointAmount = joints.size();
 
-		//for (int i = 0; i < frames.size(); ++i)
+	for (int j = frames->size()-1; j > -1; --j)
+	{
+		std::vector<Joint> joints = (*frames)[j].getJoints(); 
+		std::vector<D2D1_POINT_2F> jointPoints(JointType_Count);
+		
 		for (int i = 0; i < joints.size(); ++i)
 		{
-			jointArray[i] = joints[i];
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
+			
+			//code to show coordinates of 3 joints
+			/*
 			if (j == 1)
 			{
 				ShowJointCoordinates(joints, 0);
@@ -248,10 +196,10 @@ void UI::drawFrames(std::vector<Frame> & frames )
 			{
 				ShowJointCoordinates(joints, 1);
 			}
+			*/
 		}
-
 		
-		graphics.DrawBody(jointArray, jointPoints,j);
+		graphics.DrawBody(joints, jointPoints,j);
 
 	}
 
@@ -295,22 +243,6 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	UNREFERENCED_PARAMETER(lParam);
 	
 	int a = static_cast<int>(message);
-	
-	//some test code
-	/*
-	if (a != 312 && a != 127 && a != 512 && a != 15 
-	    && a != 134 && a != 6 && a != 28 && a != 20
-		&& a != 310 && a != 78 && a != 792 && a != 309)
-	{
-
-		wchar_t buffer[256];
-		wsprintfW(buffer, L"%d", a);
-		OutputDebugStringW(L"message ");
-		OutputDebugStringW(buffer);
-		OutputDebugStringW(L"\n");
-	}
-	*/
-
 
 	switch (message)
 	{
@@ -322,7 +254,6 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		graphics.InitD2D();
 
 		// Get and initialize the default Kinect sensor
-		//InitializeDefaultSensor();
 		main->mainCanInitializeKinectSensor();
 		
 	}
@@ -337,51 +268,59 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		// Quit the main message pump
 		PostQuitMessage(0);
 		break;
-	case WM_CHAR:
-		//wchar_t buffer[256];
-		//wsprintfW(buffer, L"%d", i);
-		//OutputDebugStringW(L"button ");
-		//OutputDebugStringW(buffer);
-		OutputDebugStringW(L" key pressed\n");
-		break;
 
 	case WM_COMMAND:
 
-		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+		if (IDC_REL_ABS == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//Start to wait for key input
 		{
-			//main->setModelPredict(TRUE);
+
+			if (drawAbsCoord)
+			{
+				drawAbsCoord = false;
+			}
+			else
+			{
+				drawAbsCoord = true;
+			}
+			
+
+		}
+		if (IDC_ADD_KEY == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//Start to wait for key input
+		{
+	
+				SetDlgItemText(m_hWnd, IDC_ADD_KEY_INFO, L"waiting for key input");
+				waitForKey = true;
+
+		}
+		if (IDC_SELECT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
+		{
 			BOOL sc;
 			int label = GetDlgItemInt(m_hWnd, IDC_EDIT_LABEL, &sc, true);
-			
+
 			if (sc)
 			{
 				model->setActiveLabel(label);
-				model->setRefresh(true);
+				SetDlgItemInt(m_hWnd, IDC_ACTIVE_LABEL, label, TRUE);
+
 			}
+
+		}
+		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//add the current gesture to the active gestureclass
+		{
+				model->setRefresh(true);
 
 		}
 
 		if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
-			//put here the train function
-			//train(6, 9, SVMInputData, SVMLabels);
 			model->setPredict(TRUE);
 			
 		}
 
 		if (IDC_STOP_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
-			//put here the train function
-			//train(6, 9, SVMInputData, SVMLabels);
 			model->setPredict(FALSE);
 			model->setTrained(FALSE);
-		}
-
-		if (IDC_measure_RESET == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
-		{
-			//SVMInputDataIndex = 0;
-			//SVMLabelsIndex = 0;
-			//predict = false;
 		}
 		break;
 	}
@@ -392,15 +331,15 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 void UI::processKeyInput(MSG msg)
 {
 
-
-
 	//test code to check how long a human presses a button
 	if (msg.message == 0x00000100)
 	{
+		//DEBUG CODE
+		/*
 		int button = static_cast<int>(msg.wParam);
 		wchar_t buffer[256];
 
-
+		/* code for time measuring
 		if (time != 0)
 		{
 			long diff = static_cast<long>(msg.time) - time;
@@ -421,29 +360,38 @@ void UI::processKeyInput(MSG msg)
 		wsprintfW(buffer, L"%d", button);
 		OutputDebugStringW(buffer);
 		OutputDebugStringW(L" \n");
+		*/
 
+		int button = static_cast<int>(msg.wParam);
+		wchar_t buffer[256];
+		OutputDebugStringW(L" button pressed it was ");
+		wsprintfW(buffer, L"%d", button);
+		OutputDebugStringW(buffer);
+		OutputDebugStringW(L" \n");
 
+		//model->addKeyToActive(msg.wParam, true); //standard holding for now
+		model->addKeyToActive(msg.wParam, false); //standard holding for now
 
 	}
-	/*
+	
 	if (msg.message == 0x00000102)
 	{
-		int lparam = msg.lParam;
-		int wparam = msg.wParam;
 
+		int button = static_cast<int>(msg.wParam);
 		wchar_t buffer[256];
-		wsprintfW(buffer, L"%d", lparam);
-		OutputDebugStringW(L"time between press and release ");
+		OutputDebugStringW(L" button pressed it was ");
+		wsprintfW(buffer, L"%d", button);
 		OutputDebugStringW(buffer);
-		OutputDebugStringW(L" milliseconds \n");
-		time = 0;
+		OutputDebugStringW(L" \n");
+
 
 
 	}
-	*/
+	
 	if (msg.message == 0x00000101)
 	{
-		
+		//DEBUG CODE
+		/* 
 		long diff = static_cast<long>(msg.time) - time;
 		int button = static_cast<int>(msg.wParam);
 
@@ -456,11 +404,12 @@ void UI::processKeyInput(MSG msg)
 		OutputDebugStringW(buffer);
 		OutputDebugStringW(L" \n");
 		time = 0;
-		
+		*/
 
 	}
 }
 
+/*
 /// <summary>
 /// Show the joint coordinates on the screen
 /// </summary>
@@ -471,15 +420,7 @@ void UI::ShowJointCoordinates(const std::vector<Joint> & joints, int tab)
 	{
 
 		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
-		/*Joint still, armJoints[3];
-
-		for (int i = 0; i < 3; i++)
-		{
-		still.Position.X = joints[8 + i].Position.X - joints[1].Position.X;
-		still.Position.Y = joints[8 + i].Position.Y - joints[1].Position.Y;
-		still.Position.Z = joints[8 + i].Position.Z - joints[1].Position.Z;
-		armJoints[i] = still;
-		}*/
+	
 		if (joints[9].Position.X*100.0 < -10000)
 		{
 
@@ -508,17 +449,8 @@ void UI::ShowJointCoordinates(const std::vector<Joint> & joints, int tab)
 	else if (tab == 1)
 	{
 		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
-		/*
-		Joint still, armJoints[3];
+	
 
-		for (int i = 0; i < 3; i++)
-		{
-			still.Position.X = joints[8 + i].Position.X - joints[1].Position.X;
-			still.Position.Y = joints[8 + i].Position.Y - joints[1].Position.Y;
-			still.Position.Z = joints[8 + i].Position.Z - joints[1].Position.Z;
-			armJoints[i] = still;
-		}
-		*/
 		if (joints[9].Position.X*100.0 < -10000)
 		{
 		}
@@ -542,6 +474,8 @@ void UI::ShowJointCoordinates(const std::vector<Joint> & joints, int tab)
 		}
 	}
 }
+
+*/
 
 /// <summary>
 /// Set the status bar message
@@ -573,3 +507,12 @@ void UI::changeButtonColor(int state)
 {
 	graphics.changeButtonColor(state);
 }
+
+void UI::drawHandState(HandState handState, const D2D1_POINT_2F & handPosition)
+{
+
+}
+
+
+
+

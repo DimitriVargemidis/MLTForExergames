@@ -3,6 +3,8 @@
 #include <vector>
 #include <Kinect.h>
 
+#include "UI_Object.h"
+
 #include "D2D_Graphics.h"
 
 class BodyBasics;
@@ -52,7 +54,8 @@ public:
 
 	bool checkResource();
 	
-	void drawFrames(std::vector<Frame> & frames);
+	//both absolute and relative frames are given to the ui the ui will decide which one will be drawn where
+	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
 
 	void setMain(std::shared_ptr<Main> m);
 
@@ -63,7 +66,7 @@ public:
 	/// </summary>
 	/// <param name="joints">joint data array</param>
 	/// <param name="tab">is 0 if current body data needs to be set, is 1 if saved body data needs to be set</param>
-	void ShowJointCoordinates(const std::vector<Joint> & joints, int tab);
+//	void ShowJointCoordinates(const std::vector<Joint> & joints, int tab);
 
 	/// <summary>
 	/// Set the status bar message
@@ -76,6 +79,9 @@ public:
 	void setPredictedLabel(int label);
 	void changeButtonColor(int state);
 
+	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
+
+
 private:
 	
 	ICoordinateMapper*      m_pCoordinateMapper;
@@ -87,7 +93,19 @@ private:
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
+	std::vector<UI_Object> 	UI_Objects;		//UI elements to be drawn
+
+	bool					waitForKey;		//parameter is set when the interface is waiting for a key
+	bool					drawAbsCoord = true;
+
 	long					time; //test parameter to see how long a button is pressed by a human
+
+	//variables for the drawing of the frame
+	RECT rct;
+	int width;
+	int height;
+
+
 
 	MSG       msg;
 	WNDCLASS  wc;

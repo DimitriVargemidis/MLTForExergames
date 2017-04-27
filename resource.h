@@ -6,6 +6,7 @@
 #define IDD_APP                         100
 #define IDC_VIDEOVIEW                   1000
 #define IDC_STATUS                      1001
+#define IDC_ADD_GESTURECLASS            1002
 #define IDC_X_coord                     1013
 #define IDC_Y_coord                     1014
 #define IDC_Z_coord                     1015
@@ -60,8 +61,12 @@
 #define IDC_LBL_MEAS_COUNT              1061
 #define IDC_MEAS_COUNT                  1062
 #define IDC_measure_4                   1063
-#define IDC_STOP_PREDICT2               1064
 #define IDC_STOP_PREDICT                1064
+#define IDC_SELECT                      1065
+#define IDC_ACTIVE_LABEL                1066
+#define IDC_ADD_KEY                     1067
+#define IDC_ADD_KEY_INFO                1068
+#define IDC_REL_ABS                     1069
 
 // Next default values for new objects
 // 
@@ -70,7 +75,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        101
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1002
+#define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

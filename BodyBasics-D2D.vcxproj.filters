@@ -46,6 +46,9 @@
     <ClCompile Include="save.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Object.cpp">
+      <Filter>UI_data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -101,6 +104,9 @@
     <ClInclude Include="Console.h" />
     <ClInclude Include="save.h">
       <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Object.h">
+      <Filter>UI_data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@ public:
 	//here the reference as GestureClass is usefull because the gestureClasses are kept in the model and 
 	//When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 	// label changed to int, Why did we take double?
-	ProjectGesture(GestureClass & g, const double label, const WORD key = 0x20, bool holding = false);
+	ProjectGesture(GestureClass & g, const double label, const WORD key = 0, bool holding = false);
 	//ProjectGesture(const GestureClass & gestureClass, const double label, const WORD key = 0x20);
 	GestureClass getGestureClass();
 	void setLabel(const double labelToSet);

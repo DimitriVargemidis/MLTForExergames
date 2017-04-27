@@ -127,8 +127,6 @@ void save::readFromFile(LPCWSTR filename)
 	// Read one character less than the buffer size to save room for
 	// the terminating NULL character. 
 
-	ol.OffsetHigh = 1;
-
 	if (FALSE == ReadFileEx(hFile, ReadBuffer, BUFFERSIZE - 1, &ol, FileIOCompletionRoutine))
 	{
 		DisplayError(TEXT("ReadFile"));

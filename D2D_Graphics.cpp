@@ -1,3 +1,5 @@
+#include <vector>
+
 
 #include "stdafx.h"
 #include "resource.h"
@@ -155,10 +157,9 @@ D2D1_POINT_2F D2D_Graphics::BodyToScreen(const CameraSpacePoint& bodyPoint, int 
 /// </summary>
 /// <param name="pJoints">joint data</param>
 /// <param name="pJointPoints">joint positions converted to screen space</param>
-void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, const int colorID)
+void D2D_Graphics::DrawBody(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, const int colorID)
 {
 	// Draw the bones
-
 	changeColor(colorID);
 
 	// Torso
@@ -210,15 +211,17 @@ void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoi
 		}
 	}
 
+
+
 	//SELFMADE CODE
 	//simple button 
 	int Xoffset = 100;
 	int size = 50;
 	int Xpos = 400;
 	int Ypos = 450;
-	
+
 	D2D_RECT_F measureButton = D2D1::RectF(1000, 1000, 1200, 1200);
-	D2D_RECT_F up = D2D1::RectF(Xpos+size+ Xoffset, Ypos, Xpos + size + size + Xoffset, Ypos +size);
+	D2D_RECT_F up = D2D1::RectF(Xpos + size + Xoffset, Ypos, Xpos + size + size + Xoffset, Ypos + size);
 	D2D_RECT_F left = D2D1::RectF(Xpos + Xoffset, Ypos + size, Xpos + size + Xoffset, Ypos + size + size);
 	D2D_RECT_F down = D2D1::RectF(Xpos + size + Xoffset, Ypos + size + size, Xpos + size + size + Xoffset, Ypos + size + size + size);
 	D2D_RECT_F right = D2D1::RectF(Xpos + size + size + Xoffset, Ypos + size, Xpos + size + size + size + Xoffset, Ypos + size + size);
@@ -248,8 +251,9 @@ void D2D_Graphics::DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoi
 /// <param name="pJointPoints">joint positions converted to screen space</param>
 /// <param name="joint0">one joint of the bone to draw</param>
 /// <param name="joint1">other joint of the bone to draw</param>
-void D2D_Graphics::DrawBone(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, JointType joint0, JointType joint1)
+void D2D_Graphics::DrawBone(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, JointType joint0, JointType joint1)
 {
+
 	TrackingState joint0State = pJoints[joint0].TrackingState;
 	TrackingState joint1State = pJoints[joint1].TrackingState;
 
@@ -301,6 +305,7 @@ void D2D_Graphics::DrawHand(HandState handState, const D2D1_POINT_2F& handPositi
 		break;
 	}
 }
+
 
 void D2D_Graphics::InitD2D()
 {

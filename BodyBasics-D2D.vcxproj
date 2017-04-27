@@ -36,6 +36,7 @@
     <ClCompile Include="save.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UI_Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
@@ -64,6 +65,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UI_Object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

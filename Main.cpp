@@ -41,7 +41,7 @@ int APIENTRY wWinMain(
 
 Main::Main() : m_pKinectSensor(NULL), m_pBodyFrameReader(NULL)
 {
-	running = true;
+
 }
 
 
@@ -115,6 +115,47 @@ HRESULT Main::InitializeDefaultSensor()
 	return hr;
 }
 
+int Main::Run(HINSTANCE hInstance, int nCmdShow)
+{
+	ui = std::make_shared<UI>();
+	model = std::make_shared<Model>();
+
+	std::shared_ptr<Main> shared_ptr_this(this);
+
+	ui->setMain(shared_ptr_this);
+	ui->setModel(model);
+	model->setView(ui);
+
+	int rc = ui->Run(hInstance, nCmdShow);
+
+	//test clocking code 
+	/*
+	auto t1 = Clock::now();
+	Sleep(30);
+	auto t2 = Clock::now();
+
+	long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+
+	wchar_t buffer[256];
+	wsprintfW(buffer, L"%ld", time);
+	OutputDebugStringW(L"time between t1 en t2 ");
+	OutputDebugStringW(buffer);
+	OutputDebugStringW(L" milliseconds \n");
+	*/
+	//end test
+
+	save::writeToFile(L"testfile.txt");
+	save::readFromFile(L"testfile.txt");
+
+	while (ui->checkQuitMsg())
+	{
+
+		Update();
+		ui->checkPeekMsg();
+	}
+	return 0;
+}
+
 /// <summary>
 /// Main processing function
 /// </summary>
@@ -125,9 +166,9 @@ void Main::Update()
 		return;
 	}
 
-	IBodyFrame* pBodyFrame = NULL;
+	pBodyFrame = NULL;
+	pBodyFrameSource = NULL;
 
-	IBodyFrameSource* pBodyFrameSource = NULL;
 	int bodies = -1;
 	m_pBodyFrameReader->get_BodyFrameSource(&pBodyFrameSource);
 	pBodyFrameSource->get_BodyCount(&bodies);
@@ -158,70 +199,4 @@ void Main::Update()
 	SafeRelease(pBodyFrame);
 }
 
-int Main::Run(HINSTANCE hInstance, int nCmdShow)
-{
-	ui = std::make_shared<UI>();
-	model = std::make_shared<Model>();
 
-	std::shared_ptr<Main> shared_ptr_this(this);
-
-	ui->setMain(shared_ptr_this);
-	ui->setModel(model);
-
-	model->setView(ui);
-
-	int rc = ui->Run(hInstance, nCmdShow);
-
-	//test clocking code 
-	auto t1 = Clock::now();
-	Sleep(30);
-	auto t2 = Clock::now();
-
-	long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-
-	wchar_t buffer[256];
-	wsprintfW(buffer, L"%ld", time );
-	OutputDebugStringW(L"time between t1 en t2 ");
-	OutputDebugStringW(buffer);
-	OutputDebugStringW(L" milliseconds \n");
-	//end test
-
-	save::writeToFile(L"testfile.txt");
-	save::readFromFile(L"testfile.txt");
-
-	while (ui->checkQuitMsg())
-	{
-
-		Update();
-		ui->checkPeekMsg();
-	}
-	return 0;
-}
-
-void Main::drawFrames(std::vector<Frame> frames)
-{
-	if (ui->checkResource())
-	{
-		ui->drawFrames(frames);
-	}
-}
-
-void Main::setModelRefresh(bool refresh)
-{
-	model->setRefresh(refresh);
-}
-
-bool Main::getModelRefresh()
-{
-	return model->getRefresh();
-}
-
-void Main::setModelPredict(bool predict)
-{
-	model->setPredict(predict);
-}
-
-bool Main::getModelPredict()
-{
-	return model->getPredict();
-}

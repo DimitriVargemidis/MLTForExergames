@@ -15,9 +15,10 @@
 #include "Model.h"
 
 
-Model::Model() : project(Project())
+Model::Model() : activeProject(Project())
 {
 	gestureClasses.resize(30);
+	bodyLostLimit = 30;			//the amount of frames that the body is able to be lost
 }
 
 Model::~Model()
@@ -33,15 +34,15 @@ void Model::setProject(Project & projectToSet) {
 	if (projectToSet.getProjectGestures().size() == 0) {
 		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
 	}
-	project = projectToSet;
+	activeProject = projectToSet;
 }
 
 Project Model::getProject() {
-	return project;
+	return activeProject;
 }
 
 void Model::train() {
-	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
+	activeProject.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
 double Model::test(Gesture & gesture) {
@@ -88,34 +89,50 @@ bool Model::getTrained()
 	return trained;
 }
 
+void Model::addKeyToActive(WORD keycode, bool hold)
+{
+	activeProject.getProjectGestureFromLabel(ActiveGestureClassLabel).addAction(keycode, hold);
+
+}
+
 void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
 	//OutputDebugStringW(L"test string");
-	std::vector<Frame> frames;	//the frames that are going to be drawn
+	relFrames.clear();	//the frames that are going to be drawn
+	absFrames.clear();
 
 	// go through all the bodies that are being seen now if a body is tracked than it's frame is made and added to the frames vector
 	for (int i = 0; i < nBodyCount; ++i)
 	{
-		IBody* pBody = ppBodies[i];
+		pBody = ppBodies[i];
 		if (pBody)
 		{
 			BOOLEAN bTracked = false;
 			HRESULT hr = pBody->get_IsTracked(&bTracked);
 
-			if (SUCCEEDED(hr) && bTracked)
+			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked) //no body is tracked at the moment
+			{
+				currentActiveBody = i;
+				printf("currentActiveBody is %d",i);
+			}
+
+			if (SUCCEEDED(hr) && bTracked && i == currentActiveBody)
 			{
 				Gesture currentGesture;
-				Frame frame(pBody);				//create a frame of every tracked body
-				frames.push_back(Frame(pBody));
+				Frame relFrame(pBody);				//create a frame of every tracked body
+				Frame absFrame(pBody, false);
 
-				currentGesture.addFrame(frame);
+				relFrames.push_back(relFrame);
+				absFrames.push_back(absFrame);
+
+				currentGesture.addFrame(relFrame);
 
 				//ONLY FOR TESTING -- DELETE AFTERWARDS
 				/*
 				if (counter % 30 == 0)
 				{
 					oldFrame = newFrame;
-					newFrame = std::make_shared<Frame>(frame);
+					newFrame = std::make_shared<Frame>(relFrame);
 					Console::printsl(oldFrame->equals(*newFrame));
 					counter = 1;
 				}
@@ -129,70 +146,11 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 				//the measure button was pressed last	
 				if (refresh && !predict)
 				{
-					WORD	keycode = 0;
-
 					//look out no protection against going out of bounds yet!
 					gestureClasses[ActiveGestureClassLabel].addGesture(currentGesture);
-					//make a new ProjectGesture and add it to the project (in project elimination of projectgestures with same labels is done)
-					
-
-
-
-					//temporary hardcoded
-					//keycodes see https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
-					ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41,true);
-
-					switch (ActiveGestureClassLabel)
-					{
-					case 1:
-						//do nothing
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0));
-						break;
-					case 2:
-						//space
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x20));
-						break;
-					case 3:
-						//left arrow
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x25,true ));
-						break;
-					case 4:
-						//up arrow
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x26));
-						break;
-					case 5:
-						//right arrow
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x27,true));
-						break;
-					case 6:
-						//down arrow
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x28,true));
-						break;
-					case 7:
-						//button A
-						//ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41);
-						//left arrow
-						projectGest.addAction(0x25, true);
-						project.addProjectGesture(projectGest);
-
-						break;
-					case 8:
-						//button A
-						//ProjectGesture projectGest(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41);
-						//right arrow
-						projectGest.addAction(0x27, true);
-						project.addProjectGesture(projectGest);
-					case 9:
-						//button A
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x41, true));
-						break;
-					case 10:
-						//button Z
-						project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel, 0x5A, true));
-						break;
-					}
-
-					//project.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel],ActiveGestureClassLabel, keycode));
+	
+					//the check whether the projectGesture allready exists is done inside project
+					activeProject.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel));
 
 					refresh = false;
 				}
@@ -202,7 +160,7 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 				{
 					if (gestureClasses[j].getGestures().size() != 0)
 					{
-						frames.push_back(gestureClasses[j].getGestures().back().getFrames().back());
+						relFrames.push_back(gestureClasses[j].getGestures().back().getFrames().back());
 					}
 				}
 
@@ -211,19 +169,19 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					//if the model is not yet trained, train it
 					if (!trained)
 					{
-						project.setSVMModel(*(SVMInterface::train(project.getProjectGestures())));
+						activeProject.setSVMModel(*(SVMInterface::train(activeProject.getProjectGestures())));
 						trained = true;
 					}
 
 
 
-					double predictedLabel = SVMInterface::test(project.getSVMModel(), currentGesture);
+					double predictedLabel = SVMInterface::test(activeProject.getSVMModel(), currentGesture);
 					view->setPredictedLabel(static_cast<int>(predictedLabel));
 
 					auto timeNow = Clock::now();
 					auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - timer).count();
 
-					if (diff > 0)
+					if (diff > buttondelay)
 					{
 						timer = Clock::now();
 						
@@ -244,16 +202,15 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 							{
 								//WORD keycode = project.getProjectGestureFromLabel(predictedLabel).getKey();
 								lastActiveProjectGesture->Deactivate();
-								lastActiveProjectGesture = &(project.getProjectGestureFromLabel(predictedLabel));
+								lastActiveProjectGesture = &(activeProject.getProjectGestureFromLabel(predictedLabel));
 							}
 							lastActiveProjectGesture->Activate();
 							view->changeButtonColor(predictedLabel);
-							//Sleep(50);
-							//lastActiveProjectGesture->Deactivate();
+						
 						}
 						else
 						{
-							lastActiveProjectGesture = &(project.getProjectGestureFromLabel(predictedLabel));
+							lastActiveProjectGesture = &(activeProject.getProjectGestureFromLabel(predictedLabel));
 							lastActiveProjectGesture->Activate();
 						}
 					}
@@ -271,12 +228,23 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					*/
 				}
 			}
+			else if (i == currentActiveBody)			//if the current tracked body is lost for this frame
+			{
+				bodyLostCounter++;						//increment he lostBodyCounter
+				if (bodyLostCounter > bodyLostLimit)	//if the limit is reached reset the currentActiveBody
+				{
+					currentActiveBody = -1;
+					bodyLostCounter = 0;
+				}
+			}
+
+
 		}
 	}
 
 	if (view->checkResource())
 	{
-			view->drawFrames(frames);
+			view->drawFrames(relFrames, absFrames);
 	}
 	//ADD LATER code to add the 1 Frame from the each gesture class in the current project.
 }

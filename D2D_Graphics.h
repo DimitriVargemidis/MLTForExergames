@@ -1,8 +1,10 @@
 //This whole class is code from the microsoft library examples called BodyBasics-D2D 
 
 #pragma once
+
 #include <Kinect.h>
 #include <memory>
+#include <vector>
 #include "resource.h"
 
 
@@ -46,7 +48,8 @@ public:
 	/// </summary>
 	/// <param name="pJoints">joint data</param>
 	/// <param name="pJointPoints">joint positions converted to screen space</param>
-	void                    DrawBody(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, const int colorID = 0 );
+	void					DrawBody(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, const int colorID = 0);
+
 
 	/// <summary>
 	/// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
@@ -63,7 +66,8 @@ public:
 	/// <param name="pJointPoints">joint positions converted to screen space</param>
 	/// <param name="joint0">one joint of the bone to draw</param>
 	/// <param name="joint1">other joint of the bone to draw</param>
-	void                    DrawBone(const Joint* pJoints, const D2D1_POINT_2F* pJointPoints, JointType joint0, JointType joint1);
+	void					DrawBone(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, JointType joint0, JointType joint1);
+
 
 	/// <summary>
 	/// Release D2Dfactory

@@ -55,48 +55,22 @@ BEGIN
     PUSHBUTTON      "Measure",VS_VERSION_INFO,2,235,33,9,BS_RIGHT
     RTEXT           "w :",IDC_STATUS_Z2,175,234,12,8
     LTEXT           "Static",IDC_W_coord,189,234,19,9
-    LTEXT           "joints",IDC_TITLE,250,5,75,15
-    LTEXT           "X",IDC_X_TITLE,325,5,50,15
-    LTEXT           "Y",IDC_Y_TITLE,375,5,50,15
-    LTEXT           "Z",IDC_Z_TITLE,425,5,50,15
-    LTEXT           "Right shoulder",IDC_JOINT1,250,20,75,15
-    LTEXT           "Right elbow",IDC_JOINT2,250,35,75,15
-    LTEXT           "Right wrist",IDC_JOINT3,250,50,75,15
-    LTEXT           "0",IDC_JOINT1_X,325,20,50,15
-    LTEXT           "0",IDC_JOINT2_X,325,35,50,15
-    LTEXT           "0",IDC_JOINT3_X,325,50,50,15
-    LTEXT           "0",IDC_JOINT1_Y,375,20,50,15
-    LTEXT           "0",IDC_JOINT2_Y,375,35,50,15
-    LTEXT           "0",IDC_JOINT3_Y,375,50,50,15
-    LTEXT           "0",IDC_JOINT1_Z,425,20,50,15
-    LTEXT           "0",IDC_JOINT2_Z,425,35,50,15
-    LTEXT           "0",IDC_JOINT3_Z,425,50,50,15
-    PUSHBUTTON      "RESET",IDC_measure_RESET,466,66,46,15
-    LTEXT           "joints_record",IDC_TITLE2,250,85,50,15
-    LTEXT           "X",IDC_X_TITLE2,325,85,50,15
-    LTEXT           "Y",IDC_Y_TITLE2,375,85,50,15
-    LTEXT           "Z",IDC_Z_TITLE2,425,85,50,15
-    LTEXT           "Right shoulder",IDC_JOINT4,250,100,50,15
-    LTEXT           "Right elbow",IDC_JOINT5,250,115,50,15
-    LTEXT           "Right wrist",IDC_JOINT6,250,130,50,15
-    LTEXT           "0",IDC_JOINT1_X2,325,100,50,15
-    LTEXT           "0",IDC_JOINT2_X2,325,115,50,15
-    LTEXT           "0",IDC_JOINT3_X2,325,130,50,15
-    LTEXT           "0",IDC_JOINT1_Y2,375,100,50,15
-    LTEXT           "0",IDC_JOINT2_Y2,375,115,50,15
-    LTEXT           "0",IDC_JOINT3_Y2,375,130,50,15
-    LTEXT           "0",IDC_JOINT1_Z2,425,100,50,15
-    LTEXT           "0",IDC_JOINT2_Z2,425,115,50,15
-    LTEXT           "0",IDC_JOINT3_Z2,425,130,50,15
-    EDITTEXT        IDC_EDIT_LABEL,325,65,50,15,ES_AUTOHSCROLL
-    PUSHBUTTON      "start predicting",IDC_START_PREDICT,250,146,75,15,BS_CENTER
-    RTEXT           "prediction:",IDC_LBL_PREDICTION,250,178,75,15
-    LTEXT           "NOT READY",IDC_PREDICT_READY,325,145,50,15
-    LTEXT           "NONE",IDC_PREDICTION,326,179,34,13
-    RTEXT           "measure count:",IDC_LBL_MEAS_COUNT,375,65,57,15
-    LTEXT           "NONE",IDC_MEAS_COUNT,435,66,28,15
-    PUSHBUTTON      "measure",IDC_measure_4,250,65,75,15
-    PUSHBUTTON      "stop predicting",IDC_STOP_PREDICT,250,161,75,15,BS_CENTER
+    PUSHBUTTON      "RESET",IDC_measure_RESET,466,49,46,15
+    EDITTEXT        IDC_EDIT_LABEL,252,2,74,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "start predicting",IDC_START_PREDICT,252,49,75,15,BS_CENTER
+    RTEXT           "prediction:",IDC_LBL_PREDICTION,252,81,75,15
+    LTEXT           "NOT READY",IDC_PREDICT_READY,328,49,50,15
+    LTEXT           "NONE",IDC_PREDICTION,328,82,34,13
+    RTEXT           "measure count:",IDC_LBL_MEAS_COUNT,377,49,57,15
+    LTEXT           "NONE",IDC_MEAS_COUNT,437,50,28,15
+    PUSHBUTTON      "Measure Gesture",IDC_measure_4,251,18,75,15
+    PUSHBUTTON      "stop predicting",IDC_STOP_PREDICT,252,64,75,15,BS_CENTER
+    PUSHBUTTON      "Add Gesture",IDC_ADD_GESTURECLASS,254,205,132,20,BS_FLAT
+    PUSHBUTTON      "Select",IDC_SELECT,327,2,75,15
+    LTEXT           "NONE",IDC_ACTIVE_LABEL,403,2,28,15
+    PUSHBUTTON      "Add Key",IDC_ADD_KEY,327,18,75,15
+    LTEXT           "Add key info",IDC_ADD_KEY_INFO,403,18,48,15
+    PUSHBUTTON      "REL / ABS",IDC_REL_ABS,252,94,75,15,BS_CENTER
 END
 
 
