@@ -13,7 +13,6 @@
 
 DWORD g_BytesTransferred = 0; //global variable BAD PRACTISE!!
 
-//void __cdecl _tmain(int argc, TCHAR *argv[])
 void save::writeToFile(LPCWSTR filename)
 {
 	HANDLE hFile;
@@ -24,14 +23,6 @@ void save::writeToFile(LPCWSTR filename)
 
 	printf("\n");
 	
-	/*
-	if (argc != 2)
-	{
-		printf("Usage Error:\tIncorrect number of arguments\n\n");
-		_tprintf(TEXT("%s <file_name>\n"), argv[0]);
-		return;
-	}
-	*/
 
 	hFile = CreateFile(filename,                // name of the write
 		GENERIC_WRITE,          // open for writing

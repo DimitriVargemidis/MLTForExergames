@@ -46,6 +46,12 @@
     <ClCompile Include="save.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
+    <ClCompile Include="Filewriter.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="Filereader.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -100,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="Console.h" />
     <ClInclude Include="save.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Filewriter.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Filereader.h">
       <Filter>libraries</Filter>
     </ClInclude>
   </ItemGroup>

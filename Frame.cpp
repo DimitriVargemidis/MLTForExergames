@@ -7,9 +7,26 @@
 
 Frame::Frame()
 {
+	//Set the (absolute) timestamp
+	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count());
 }
 
-Frame::Frame(IBody * body, bool relative) {
+Frame::Frame(std::vector<Joint> jointVector, bool relative)
+{
+	//Set the (absolute) timestamp
+	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()).count());
+
+	if (relative)
+	{
+		jointVector = convertToRelativeToJoint(JointType_SpineMid, jointVector);
+	}
+	joints = jointVector;
+}
+
+Frame::Frame(IBody * body, bool relative)
+{
 	//Set the (absolute) timestamp
 	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()).count());

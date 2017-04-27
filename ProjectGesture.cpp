@@ -8,16 +8,15 @@
 
 #include "ProjectGesture.h"
 
-ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }
+ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }, projectGestureID{ getAppProjectGestureID() }, label{-1}
 {
-	label = -1;
 }
 
 //here the reference as GestureClass is useful because the gestureClasses are kept in the model and 
 //When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 // key changed to WORD, the format to enter when pressing a key, see keypress.cpp
 ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, const WORD key, bool holding):
-	gestureClass{ gestureClass }, label{ label }
+	gestureClass{ gestureClass }, label{ label }, projectGestureID{ getAppProjectGestureID() }
 {
 	Action a;
 	a.keycode = key;
@@ -25,6 +24,10 @@ ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, 
 	a.active = false;
 
 	actions.push_back(a);
+}
+
+ProjectGesture::ProjectGesture(GestureClass & g) : gestureClass{ g }, projectGestureID{ getAppProjectGestureID() }, label{ -1 }
+{
 }
 
 GestureClass ProjectGesture::getGestureClass()
@@ -109,4 +112,20 @@ void ProjectGesture::Deactivate()
 	}
 
 
+}
+
+int ProjectGesture::getProjectGestureID()
+{
+	return projectGestureID;
+}
+
+void ProjectGesture::setProjectGestureID(int ID)
+{
+	projectGestureID = ID;
+}
+
+int getAppProjectGestureID()
+{
+	appProjectGestureID++;
+	return appProjectGestureID;
 }

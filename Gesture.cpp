@@ -3,7 +3,11 @@
 #include "Gesture.h"
 #include "Frame.h"
 
-const int DIMENSIONS_PER_JOINT = 3;
+
+
+Gesture::Gesture() : gestureID{getAppGestureID()}
+{
+}
 
 const std::vector<Frame> & Gesture::getFrames() const {
 	return frames;
@@ -76,4 +80,18 @@ svm_node * Gesture::toArray() {
 	return rawArray;
 }
 
+int Gesture::getGestureID()
+{
+	return gestureID;
+}
 
+void Gesture::setGestureID(int ID)
+{
+	gestureID = ID;
+}
+
+int getAppGestureID()
+{
+	appGestureID++;
+	return appGestureID;
+}

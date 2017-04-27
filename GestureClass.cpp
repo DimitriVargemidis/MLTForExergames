@@ -5,11 +5,11 @@
 #include "GestureClass.h"
 
 
-GestureClass::GestureClass()
+GestureClass::GestureClass() : gestureClassID{ getAppGestureClassID() }
 {
 }
 
-GestureClass::GestureClass(const Gesture gesture)
+GestureClass::GestureClass(const Gesture gesture) : gestureClassID{ getAppGestureClassID() }
 {
 	addGesture(gesture);
 }
@@ -29,4 +29,20 @@ void GestureClass::addGesture(const Gesture gesture) {
 
 std::vector<Gesture> GestureClass::getGestures() {
 	return gestures;
+}
+
+int GestureClass::getGestureClassID()
+{
+	return gestureClassID;
+}
+
+void GestureClass::setGestureClassID(int ID)
+{
+	gestureClassID = ID;
+}
+
+int getAppGestureClassID()
+{
+	appGestureClassID++;
+	return appGestureClassID;
 }

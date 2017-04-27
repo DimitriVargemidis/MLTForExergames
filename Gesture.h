@@ -9,8 +9,12 @@ class Frame;
 class Gesture {
 private:
 	std::vector<Frame> frames;
+	int gestureID = 0;
 
 public:
+	const static int DIMENSIONS_PER_JOINT = 3;
+
+	Gesture();
 	const std::vector<Frame> & getFrames() const;
 	void addFrame(Frame & frameToAdd);
 	const int getNumberOfFrames() const;
@@ -18,6 +22,12 @@ public:
 	const bool isStaticGesture() const;
 	void applyRelativeTimestamps();
 	svm_node * toArray();
+
+	int getGestureID();
+	void setGestureID(int ID);
 };
+
+static int appGestureID = 0;
+static int getAppGestureID();
 
 #endif //GESTURE_H

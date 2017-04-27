@@ -5,6 +5,11 @@
 
 #include "Project.h"
 
+
+Project::Project() : projectID{getAppProjectID()}
+{
+}
+
 //deleted the reference argument
 void Project::addProjectGesture(const ProjectGesture  projectGesture)
 {
@@ -53,4 +58,20 @@ svm_model & Project::getSVMModel()
 const Project & Project::operator=(const Project & projectObject)
 {
 	return projectObject;
+}
+
+int Project::getProjectID()
+{
+	return projectID;
+}
+
+void Project::setProjectID(int ID)
+{
+	projectID = ID;
+}
+
+int getAppProjectID()
+{
+	appProjectID++;
+	return appProjectID;
 }

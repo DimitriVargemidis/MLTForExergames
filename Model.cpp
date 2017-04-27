@@ -12,6 +12,8 @@
 #include "Frame.h"
 #include "Keypress.h"
 #include "Console.h"
+#include "Filewriter.h"
+#include "Filereader.h"
 #include "Model.h"
 
 
@@ -41,6 +43,9 @@ Project Model::getProject() {
 }
 
 void Model::train() {
+	Console::print("-------------------------------------");
+	Filewriter::save(project);
+	Console::print("-------------------------------------");
 	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
