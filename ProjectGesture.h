@@ -10,20 +10,20 @@ GestureClass;
 
 class ProjectGesture {
 private:
-	GestureClass & gestureClass; //? keep constant?
+	GestureClass & gestureClass;
 	double label;
-	//WORD key;
 	std::vector<Action> actions;
-
+	int projectGestureID = 0;
 
 public:
 	
 	ProjectGesture();
-	//here the reference as GestureClass is usefull because the gestureClasses are kept in the model and 
+	//here the reference as GestureClass is useful because the gestureClasses are kept in the model and 
 	//When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 	// label changed to int, Why did we take double?
 	ProjectGesture(GestureClass & g, const double label, const WORD key = 0, bool holding = false);
-	//ProjectGesture(const GestureClass & gestureClass, const double label, const WORD key = 0x20);
+	ProjectGesture(GestureClass & g);
+
 	GestureClass getGestureClass();
 	void setLabel(const double labelToSet);
 	const double getLabel() const;
@@ -35,6 +35,12 @@ public:
 
 	void Activate();
 	void Deactivate();
+
+	int getProjectGestureID();
+	void setProjectGestureID(int ID);
 };
+
+static int appProjectGestureID = 0;
+static int getAppProjectGestureID();
 
 #endif //PROJECTGESTURE_H
