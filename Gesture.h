@@ -4,6 +4,7 @@
 #include <vector>
 #include "libsvm-3.21\svm.h"
 
+
 class Frame;
 
 class Gesture {
@@ -27,7 +28,7 @@ public:
 	void setGestureID(int ID);
 };
 
-static int appGestureID = 0;
+static int appGestureID;
 static int getAppGestureID();
 
 #endif //GESTURE_H

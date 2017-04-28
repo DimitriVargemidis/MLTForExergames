@@ -23,6 +23,7 @@
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="D2D_Graphics.cpp" />
     <ClCompile Include="DUI.cpp" />
+    <ClCompile Include="FilenameChecker.cpp" />
     <ClCompile Include="Filereader.cpp" />
     <ClCompile Include="Filewriter.cpp" />
     <ClCompile Include="Frame.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="BodyBasics.h" />
     <ClInclude Include="D2D_Graphics.h" />
     <ClInclude Include="DUI.h" />
+    <ClInclude Include="FilenameChecker.h" />
     <ClInclude Include="Filereader.h" />
     <ClInclude Include="Filewriter.h" />
     <ClInclude Include="Frame.h" />

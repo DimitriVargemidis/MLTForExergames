@@ -3,6 +3,7 @@
 
 #include <vector>
 
+
 class Gesture;
 
 class GestureClass {
@@ -21,7 +22,7 @@ public:
 	void setGestureClassID(int ID);
 };
 
-static int appGestureClassID = 0;
+static int appGestureClassID;
 static int getAppGestureClassID();
 
 #endif //GESTURECLASS_H

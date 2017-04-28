@@ -4,7 +4,6 @@
 #include "Frame.h"
 
 
-
 Gesture::Gesture() : gestureID{getAppGestureID()}
 {
 }

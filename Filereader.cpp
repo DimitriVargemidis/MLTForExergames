@@ -108,7 +108,10 @@ void Filereader::readProjectFromFile(std::string & fileName, Project * project, 
 	//Project project;
 	std::vector<ProjectGesture> projectGestures;
 
-	std::ifstream file(fileName);
+	std::ostringstream fNameStream;
+	fNameStream << Filewriter::subDirectoryString;
+	fNameStream << fileName;
+	std::ifstream file(fNameStream.str());
 	std::string fileLine;
 
 	while (std::getline(file, fileLine))
@@ -152,22 +155,21 @@ void Filereader::readProjectFromFile(std::string & fileName, Project * project, 
 
 	for (ProjectGesture pg : projectGestures)
 	{
-		Console::print("pg added to project");
 		project->addProjectGesture(pg);
 	}
 
 	int projectID = std::stoi(fileName.substr(0, fileName.size()-Filewriter::projectExtension.size()));
 	project->setProjectID(projectID);
-	Console::print("END OF LOADING PROJECT");
-	//return project;
 }
 
 void Filereader::readGestureClassFromFile(std::string & fileName, GestureClass * gestureClass)
 {
-	std::ifstream file(fileName);
+	std::ostringstream fNameStream;
+	fNameStream << Filewriter::subDirectoryString;
+	fNameStream << fileName;
+	std::ifstream file(fNameStream.str());
 	std::string fileLine;
 
-	//GestureClass gestureClass;
 	std::vector<Gesture> gestures;
 
 	while (std::getline(file, fileLine))
@@ -194,12 +196,14 @@ void Filereader::readGestureClassFromFile(std::string & fileName, GestureClass *
 	{
 		gestureClass->addGesture(g);
 	}
-	//return gestureClass;
 }
 
 void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 {
-	std::ifstream file(fileName);
+	std::ostringstream fNameStream;
+	fNameStream << Filewriter::subDirectoryString;
+	fNameStream << fileName;
+	std::ifstream file(fNameStream.str());
 	std::string fileLine;
 	std::vector<Frame> frames;
 
@@ -233,10 +237,8 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 		}
 	}
 
-	//Gesture gesture;
 	for (Frame f : frames)
 	{
 		gesture->addFrame(f);
 	}
-	//return gesture;
 }

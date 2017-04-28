@@ -33,7 +33,7 @@ public:
 	void setProjectID(int ID);
 };
 
-static int appProjectID = 0;
+static int appProjectID;
 static int getAppProjectID();
 
 #endif //PROJECT_H
