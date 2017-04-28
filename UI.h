@@ -4,6 +4,7 @@
 #include <Kinect.h>
 
 #include "UI_Object.h"
+#include "UI_Hitbox.h"
 
 #include "D2D_Graphics.h"
 
@@ -56,10 +57,17 @@ public:
 	
 	//both absolute and relative frames are given to the ui the ui will decide which one will be drawn where
 	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
+	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
+
+	void drawUI();
+
+	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type);
+
+	void changeButtonColor(int state);
 
 	void setMain(std::shared_ptr<Main> m);
-
 	void setModel(std::shared_ptr<Model> m);
+
 
 	/// <summary>
 	/// Draws one bone of a body (joint to joint)
@@ -77,9 +85,7 @@ public:
 	bool                    SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce);
 
 	void setPredictedLabel(int label);
-	void changeButtonColor(int state);
-
-	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
+	
 
 
 private:
@@ -93,7 +99,8 @@ private:
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
-	std::vector<UI_Object> 	UI_Objects;		//UI elements to be drawn
+	std::vector<UI_Hitbox>						UI_Hitboxes;	//list of UI control elements
+	std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
 
 	bool					waitForKey;		//parameter is set when the interface is waiting for a key
 	bool					drawAbsCoord = true;

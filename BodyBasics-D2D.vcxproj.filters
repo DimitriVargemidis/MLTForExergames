@@ -55,6 +55,7 @@
     <ClCompile Include="Filereader.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Hitbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -120,6 +121,7 @@
     <ClInclude Include="UI_Object.h">
       <Filter>UI_data</Filter>
     </ClInclude>
+    <ClInclude Include="UI_Hitbox.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

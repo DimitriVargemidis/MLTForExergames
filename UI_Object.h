@@ -1,6 +1,5 @@
 #pragma once
-#include <Kinect.h>
-#include <Windows.h>
+
 #include <d2d1.h>
 
 
@@ -12,19 +11,25 @@ public:
 	UI_Object();
 	~UI_Object();
 
-	bool checkCoordInside(D2D1_POINT_2F coord);
+	void changeColor(D2D1::ColorF c);
+	void changeColor(float r, float g, float b);
+	D2D1::ColorF getColor();
+
+	void setCenter(D2D1_POINT_2F c);
+	D2D1_POINT_2F getCenter();
+
+	void setWidth( float w);
+	float getWidth();
+
+	void setHeight(float h);
+	float getHeight();
 
 private:
 	D2D1_POINT_2F centerCoordImage;
-	int	widthImage;
-	int heightImage;
+	float	widthImage;
+	float heightImage;
 
-	D2D1_POINT_2F centerCoordActionArea;
-	int	widthActionArea;
-	int heightActionArea;
-
-
-
+	D2D1::ColorF color;
 
 };
 

@@ -19,6 +19,13 @@ m_pCoordinateMapper(NULL),
 m_hWnd(NULL),
 graphics {}
 {
+	std::shared_ptr<UI_Object> testObject = std::make_shared<UI_Object>();
+	UI_Objects.push_back(testObject);
+	UI_Hitboxes.push_back(UI_Hitbox());
+	UI_Hitboxes[0].add_UI_Object(testObject);
+	UI_Hitboxes[0].addInputJoint(JointType_WristRight);
+	UI_Hitboxes[0].addInputJoint(JointType_WristLeft);
+
 }
 
 
@@ -171,7 +178,13 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 
 	std::vector<Frame> * frames = &absframes;
 
-	if (!drawAbsCoord)
+	
+
+	if(drawAbsCoord)
+	{
+		drawUI();
+	}
+	else
 	{
 		frames = &relframes;
 	}
@@ -186,6 +199,7 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 		{
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 			
+			activateHitboxes(jointPoints[i], static_cast<JointType>(i));
 			//code to show coordinates of 3 joints
 			/*
 			if (j == 1)
@@ -511,6 +525,30 @@ void UI::changeButtonColor(int state)
 void UI::drawHandState(HandState handState, const D2D1_POINT_2F & handPosition)
 {
 
+}
+
+void UI::drawUI()
+{
+	for (int i = 0; i < UI_Objects.size(); ++i)
+	{
+		graphics.drawRectangle(UI_Objects[i]->getCenter(), UI_Objects[i]->getWidth(), UI_Objects[i]->getHeight(), UI_Objects[i]->getColor());
+		
+	}
+}
+
+void UI::activateHitboxes(D2D1_POINT_2F jointPoint, JointType type)
+{
+	for (int i = 0; i < UI_Hitboxes.size(); ++i)
+	{
+		if (UI_Hitboxes[i].checkInputJointType(type))
+		{
+			if (UI_Hitboxes[i].checkCoordInside(jointPoint))
+			{
+				UI_Hitboxes[i].Activate();
+			}
+		}
+		
+	}
 }
 
 

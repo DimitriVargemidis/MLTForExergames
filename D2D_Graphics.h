@@ -77,6 +77,8 @@ public:
 	void					changeColor(int colorID);
 	void					changeButtonColor(int state);
 
+	void					drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color);
+
 
 //private:
 	// Direct2D

@@ -44,7 +44,7 @@ Project Model::getProject() {
 }
 
 void Model::train() {
-	project.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
+	activeProject.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
 }
 
 double Model::test(Gesture & gesture) {
@@ -154,6 +154,9 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					//the check whether the projectGesture allready exists is done inside project
 					activeProject.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel));
 
+					//test for save funtion
+					//Filewriter::save(activeProject);
+
 					refresh = false;
 				}
 
@@ -171,6 +174,8 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					//if the model is not yet trained, train it
 					if (!trained)
 					{
+						std::string filename = "1.project";
+						Filereader::readProjectFromFile(filename, &activeProject, &gestureClasses);
 						activeProject.setSVMModel(*(SVMInterface::train(activeProject.getProjectGestures())));
 						trained = true;
 					}

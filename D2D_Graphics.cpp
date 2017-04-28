@@ -451,5 +451,14 @@ void D2D_Graphics::changeButtonColor(int state)
 
 }
 
+void D2D_Graphics::drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color)
+{
+	ID2D1SolidColorBrush* colorBrush;
+	D2D_RECT_F rect = D2D1::RectF(center.x-width/2, center.y - width / 2, center.x + width / 2, center.y + width / 2);
+	m_pRenderTarget->CreateSolidColorBrush(color, &colorBrush);
+	m_pRenderTarget->FillRectangle(rect, colorBrush);
+	SafeRelease(colorBrush);
+}
+
 
 //SELFMADE FUNCTIONS

@@ -38,6 +38,7 @@
     <ClCompile Include="save.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UI_Hitbox.cpp" />
     <ClCompile Include="UI_Object.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UI_Hitbox.h" />
     <ClInclude Include="UI_Object.h" />
   </ItemGroup>
   <ItemGroup>
