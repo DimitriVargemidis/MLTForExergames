@@ -9,12 +9,6 @@
 
 namespace Filereader
 {
-	/*
-	void read(std::string fileName);
-	std::vector<double> readNumbers(std::string & fileName);
-
-	Gesture createGestureFromData(std::vector<double> & data, int nbOfFrames);
-	*/
 	std::vector<double> convertStringToDoubles(std::string & stringToConvert, const std::string & identifier);
 
 	void readProjectFromFile(std::string & fileName, Project * project, std::vector<GestureClass> * gestureClasses);

@@ -6,7 +6,8 @@
 #include "Action.h"
 #include "GestureClass.h"
 
-GestureClass;
+
+class GestureClass;
 
 class ProjectGesture {
 private:
@@ -40,7 +41,7 @@ public:
 	void setProjectGestureID(int ID);
 };
 
-static int appProjectGestureID = 0;
+static int appProjectGestureID;
 static int getAppProjectGestureID();
 
 #endif //PROJECTGESTURE_H

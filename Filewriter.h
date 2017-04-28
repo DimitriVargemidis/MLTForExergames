@@ -6,6 +6,7 @@
 #include "GestureClass.h"
 #include "Project.h"
 
+
 namespace Filewriter
 {
 	const std::string frameString{ "frame" };
@@ -18,6 +19,10 @@ namespace Filewriter
 	const std::string gestureExtension{ ".gest" };
 	const std::string gestureClassExtension{ ".gestclass" };
 	const std::string projectExtension{ ".project" };
+	const std::string projectGestureExtension{ ".progest" };
+
+	const std::string subDirectoryString{ "DATA/" };
+	const std::string subDirectoryNameString{ "DATA" };
 
 	void save(Gesture & gesture);
 	void save(GestureClass & gestureClass);

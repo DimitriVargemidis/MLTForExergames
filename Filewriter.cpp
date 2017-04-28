@@ -98,13 +98,17 @@ void Filewriter::save(Project & project)
 
 void Filewriter::write(std::string & fileName, std::string & data)
 {
-	std::ofstream file(fileName, std::fstream::app); //app: 'append', adds to the same file instead of overwriting.
+	std::ostringstream fNameStream;
+	fNameStream << subDirectoryString << fileName;
+	std::ofstream file(fNameStream.str(), std::fstream::app); //app: 'append', adds to the same file instead of overwriting.
 	file << data << std::endl;
 }
 
 void Filewriter::overwrite(std::string & fileName, std::string & data, bool endWithNewline)
 {
-	std::ofstream file(fileName);
+	std::ostringstream fNameStream;
+	fNameStream << subDirectoryString << fileName;
+	std::ofstream file(fNameStream.str());
 	if (endWithNewline)
 	{
 		file << data << std::endl;

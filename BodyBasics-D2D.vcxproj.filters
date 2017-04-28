@@ -55,6 +55,9 @@
     <ClCompile Include="Filereader.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
+    <ClCompile Include="FilenameChecker.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
     <ClCompile Include="UI_Hitbox.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +125,9 @@
       <Filter>UI_data</Filter>
     </ClInclude>
     <ClInclude Include="UI_Hitbox.h" />
+    <ClInclude Include="FilenameChecker.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

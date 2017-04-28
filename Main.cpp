@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <chrono>
 typedef std::chrono::high_resolution_clock Clock;
@@ -8,12 +7,11 @@ typedef std::chrono::high_resolution_clock Clock;
 #include <iostream>
 #include "resource.h"
 #include "Model.h"
-#include "Frame.h"
 #include "UI.h"
 #include "Console.h"
 #include "Filewriter.h"
 #include "Filereader.h"
-#include "ProjectGesture.h"
+#include "FilenameChecker.h"
 
 #include "Main.h"
 
@@ -30,8 +28,18 @@ int APIENTRY wWinMain(
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
 	Console::useConsole();
+	
+	//Create data directory if it does not exist.
+	std::wstring dirTemp = FilenameChecker::stringToWstring(Filewriter::subDirectoryNameString);
+	LPCWSTR dir = dirTemp.c_str();
+	CreateDirectory(dir, NULL);
 
-	Console::printsl("Initializing... DONE.");
+	//Initialize the IDs depending on the files saved in the DATA directory.
+	appGestureID = FilenameChecker::getHighestIDStored(Filewriter::gestureExtension);
+	appProjectID = FilenameChecker::getHighestIDStored(Filewriter::projectExtension);
+	appGestureClassID = FilenameChecker::getHighestIDStored(Filewriter::gestureClassExtension);
+	appProjectGestureID = FilenameChecker::getHighestIDStored(Filewriter::projectGestureExtension);
+
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -43,7 +51,6 @@ int APIENTRY wWinMain(
 
 Main::Main() : m_pKinectSensor(NULL), m_pBodyFrameReader(NULL)
 {
-
 }
 
 
@@ -202,6 +209,7 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	project.addProjectGesture(projectGesture1);
 	project.addProjectGesture(projectGesture2);
 
+	
 	Console::print("Test print joint: ");
 	Console::print(project.getProjectGestures().at(0).getGestureClass().getGestures().at(0).getFrames().at(0).getJoints().at(0).Position.X);
 	Console::print(project.getProjectGestures().at(0).getGestureClass().getGestures().at(0).getFrames().at(0).getJoints().at(0).Position.Y);
@@ -218,10 +226,14 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 		Console::print("Label: ");
 		Console::printsl(pg.getLabel());
 	}
+	
+	Filewriter::save(project);
+
+	int maxGestID = FilenameChecker::getHighestIDStored(Filewriter::gestureExtension);
+	int maxProjID = FilenameChecker::getHighestIDStored(Filewriter::projectExtension);
+	int maxGClaID = FilenameChecker::getHighestIDStored(Filewriter::gestureClassExtension);
+	int maxPGesID = FilenameChecker::getHighestIDStored(Filewriter::projectGestureExtension);
 	*/
-	//Filewriter::save(project);
-
-
 
 	/*********************************************************************
 
