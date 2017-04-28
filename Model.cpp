@@ -172,8 +172,8 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 					if (!trained)
 					{
 						//Filewriter::save(activeProject);
-						std::string filename = "1.project";
-						Filereader::readProjectFromFile(filename, &activeProject, &gestureClasses);
+						//std::string filename = "1.project";
+						//Filereader::readProjectFromFile(filename, &activeProject, &gestureClasses);
 						activeProject.setSVMModel(*(SVMInterface::train(activeProject.getProjectGestures())));
 						trained = true;
 					}
