@@ -2,11 +2,9 @@
 #include <vector>
 #include <windows.h>
 #include <string>
-
-
+#include <algorithm>
 
 #include "Main.h"
-#include "ProjectGesture.h"
 #include "GestureClass.h"
 #include "Gesture.h"
 #include "Frame.h"
@@ -17,9 +15,15 @@
 #include "Model.h"
 
 
-Model::Model() : activeProject(Project())
+Model::Model()
 {
-	gestureClasses.resize(30);
+	Filereader::loadAllData(&projects, &gestureClasses);
+	if (projects.empty())		//If no project is saved and/or loaded, else do nothing.
+	{
+		projects.push_back(std::make_shared<Project>());
+	}
+	activeProject = projects.back();
+
 	bodyLostLimit = 30;			//the amount of frames that the body is able to be lost
 }
 
@@ -32,33 +36,30 @@ void Model::setView(std::shared_ptr<UI> v)
 	view = v;
 }
 
-void Model::setProject(Project & projectToSet) {
-	if (projectToSet.getProjectGestures().size() == 0) {
-		throw std::invalid_argument("The given project does not contain any ProjectClasses.");
-	}
-	activeProject = projectToSet;
-}
-
-Project Model::getProject() {
+std::shared_ptr<Project> Model::getProject()
+{
 	return activeProject;
 }
 
-void Model::train() {
-	activeProject.setSVMModel(*SVMInterface::train(getProject().getProjectGestures()));
+void Model::train()
+{
+	activeProject->setSVMModel(*(SVMInterface::train(activeProject->getProjectMap())));
+	Filewriter::save(activeProject);
 }
 
-double Model::test(Gesture & gesture) {
-	return SVMInterface::test(getProject().getSVMModel(), gesture);
+double Model::test(Gesture & gesture)
+{
+	return SVMInterface::test(activeProject->getSVMModel(), gesture);
 }
 
 void Model::setActiveLabel(int label)
 {
-	ActiveGestureClassLabel = label;
+	activeGestureClassLabel = label;
 }
 
 int Model::getActiveLabel()
 {
-	return ActiveGestureClassLabel;
+	return activeGestureClassLabel;
 }
 
 void Model::setRefresh(bool refresh)
@@ -91,17 +92,101 @@ bool Model::getTrained()
 	return trained;
 }
 
-void Model::addKeyToActive(WORD keycode, bool hold)
+void Model::addActionToActive(WORD keycode, bool hold)
 {
-	activeProject.getProjectGestureFromLabel(ActiveGestureClassLabel).addAction(keycode, hold);
+	activeProject->addAction(activeGestureClassLabel, keycode, hold);
+}
+
+void Model::addGesture(double label, Gesture gesture)
+{
+	if (activeProject->containsLabel(label))
+	{
+		activeProject->addGesture(label, gesture);
+	}
+	else
+	{
+		gestureClasses.push_back(std::make_shared<GestureClass>(gesture));
+		activeProject->addNew(label, gestureClasses.back());
+	}
+}
+
+void Model::addToFramesBuffer(Frame frame)
+{
 
 }
 
-void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
+std::vector<Frame> Model::getRelevantFramesFromBuffer()
 {
-	//OutputDebugStringW(L"test string");
-	relFrames.clear();	//the frames that are going to be drawn
+	std::vector<Frame>::const_iterator first = framesBuffer.begin();
+	std::vector<Frame>::const_iterator last = framesBuffer.end() - 30;
+	return std::vector<Frame>(first, last);
+}
+
+void Model::addToLabelsBuffer(double label)
+{
+	if (label < 0)
+	{
+		return;
+	}
+
+	labelsBuffer.push_back(label);
+
+	if (labelsBuffer.size() > maxBufferSize)
+	{
+		previousPredictedLabel = predictedLabel;
+		predictedLabel = getMostFrequentLabel();
+
+		if (predictedLabel != previousPredictedLabel)
+		{
+			activeProject->deactivate(predictedLabel);
+		}
+		activeProject->activate(predictedLabel);
+		
+		labelsBuffer.clear();
+	}
+}
+
+double Model::getMostFrequentLabel()
+{
+	std::sort(labelsBuffer.begin(), labelsBuffer.end());
+	double currentDouble = labelsBuffer[0];
+	double mostDouble = labelsBuffer[0];
+	int currentCount = 0;
+	int mostCount = 0;
+	for (auto c : labelsBuffer)
+	{
+		if (c == currentDouble)
+		{
+			currentCount++;
+		}
+		else
+		{
+			if (currentCount > mostCount)
+			{
+				mostDouble = currentDouble;
+				mostCount = currentCount;
+			}
+			currentDouble = c;
+			currentCount = 1;
+		}
+	}
+	return mostDouble;
+}
+
+void Model::displayFrames()
+{
+	relFrames.clear();
 	absFrames.clear();
+
+	for (const auto & keyValue : activeProject->getProjectMap())
+	{
+		relFrames.push_back(keyValue.second.first->getGestures().back().getFrames().back());
+	}
+}
+
+void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
+{
+	displayFrames();
 
 	// go through all the bodies that are being seen now if a body is tracked than it's frame is made and added to the frames vector
 	for (int i = 0; i < nBodyCount; ++i)
@@ -112,146 +197,126 @@ void Model::ProcessBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			BOOLEAN bTracked = false;
 			HRESULT hr = pBody->get_IsTracked(&bTracked);
 
-			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked) //no body is tracked at the moment
+			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked)	//no body is tracked at the moment
 			{
 				currentActiveBody = i;
-				printf("currentActiveBody is %d",i);
 			}
 
 			if (SUCCEEDED(hr) && bTracked && i == currentActiveBody)
 			{
 				Gesture currentGesture;
-				Frame relFrame(pBody);				//create a frame of every tracked body
+				Frame relFrame(pBody);									//create a frame of every tracked body
 				Frame absFrame(pBody, false);
 
 				relFrames.push_back(relFrame);
 				absFrames.push_back(absFrame);
-
-				currentGesture.addFrame(relFrame);
-
-				//ONLY FOR TESTING -- DELETE AFTERWARDS
-				/*
-				if (counter % 30 == 0)
+				
+				if (recording)
 				{
-					oldFrame = newFrame;
-					newFrame = std::make_shared<Frame>(relFrame);
-					Console::printsl(oldFrame->equals(*newFrame));
-					counter = 1;
+					recordGesture(relFrame);
+					return;
 				}
-				else
-				{
-					counter++;
-				}
-				*/
-				//ONLY FOR TESTING -- END
 
-				//the measure button was pressed last	
-				if (refresh && !predict)
-				{
-					//look out no protection against going out of bounds yet!
-					gestureClasses[ActiveGestureClassLabel].addGesture(currentGesture);
-	
-					//the check whether the projectGesture allready exists is done inside project
-					activeProject.addProjectGesture(ProjectGesture(gestureClasses[ActiveGestureClassLabel], ActiveGestureClassLabel));
+				framesBuffer.push_back(relFrame);
 
+				if (refresh && !predict)								//the measure button was pressed last
+				{
+					framesBuffer.clear();
+					recording = true;
+
+					//recordGesture(nTime, nBodyCount, ppBodies);
+					//currentGesture.addFrame(relFrame);
+					//addGesture(activeGestureClassLabel, currentGesture);
+					
+					//adding the last frame of the last gesture of each gestureClass in the vector to the frames vector that is drawn
+					//relFrames.push_back(currentGesture.getFrames().back());
 					refresh = false;
-				}
-
-				//adding the last frame of the last gesture of each gestureClass in the vector to the frames vector that is drawn
-				for (int j = 0; j < gestureClasses.size(); ++j)
-				{
-					if (gestureClasses[j].getGestures().size() != 0)
-					{
-						relFrames.push_back(gestureClasses[j].getGestures().back().getFrames().back());
-					}
 				}
 
 				if (predict)
 				{
-					//if the model is not yet trained, train it
-					if (!trained)
+					if (!trained)						//If the model is not yet trained, train it
 					{
-						//Filewriter::save(activeProject);
-						//std::string filename = "1.project";
-						//Filereader::readProjectFromFile(filename, &activeProject, &gestureClasses);
-						activeProject.setSVMModel(*(SVMInterface::train(activeProject.getProjectGestures())));
+						train();
 						trained = true;
 					}
-
-
-
-					double predictedLabel = SVMInterface::test(activeProject.getSVMModel(), currentGesture);
+					currentGesture.addFrame(relFrame);
+					addToLabelsBuffer(SVMInterface::test(activeProject->getSVMModel(), currentGesture));
 					view->setPredictedLabel(static_cast<int>(predictedLabel));
-
-					auto timeNow = Clock::now();
-					auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - timer).count();
-
-					if (diff > buttondelay)
-					{
-						timer = Clock::now();
-						
-						//code to check the timing = should be OK
-						/*
-						wchar_t buffer[256];
-						wsprintfW(buffer, L"%ld", diff);
-						OutputDebugStringW(L"time between this action and previous action ");
-						OutputDebugStringW(buffer);
-						OutputDebugStringW(L" milliseconds \n");
-						*/
-
-
-						if (lastActiveProjectGesture != nullptr)
-						{
-
-							if (lastActiveProjectGesture->getLabel() != predictedLabel)
-							{
-								//WORD keycode = project.getProjectGestureFromLabel(predictedLabel).getKey();
-								lastActiveProjectGesture->Deactivate();
-								lastActiveProjectGesture = &(activeProject.getProjectGestureFromLabel(predictedLabel));
-							}
-							lastActiveProjectGesture->Activate();
-							view->changeButtonColor(predictedLabel);
-						
-						}
-						else
-						{
-							lastActiveProjectGesture = &(activeProject.getProjectGestureFromLabel(predictedLabel));
-							lastActiveProjectGesture->Activate();
-						}
-					}
-					/*
-					
-					if (keycode != 0)
-					{
-						Keypress::pressKey(keycode);
-						//int a = static_cast<int>(keycode);
-						//wchar_t buffer[256];
-						//wsprintfW(buffer, L"%d", a);
-						//Console::print("Keycode is ");
-						//Console::printsl(buffer);
-					}
-					*/
 				}
 			}
-			else if (i == currentActiveBody)			//if the current tracked body is lost for this frame
+			else if (i == currentActiveBody)			//If the current tracked body is lost for this frame
 			{
-				bodyLostCounter++;						//increment he lostBodyCounter
+				bodyLostCounter++;						//Increment the lostBodyCounter
 				if (bodyLostCounter > bodyLostLimit)	//if the limit is reached reset the currentActiveBody
 				{
 					currentActiveBody = -1;
 					bodyLostCounter = 0;
 				}
 			}
-
-
 		}
 	}
 
 	if (view->checkResource())
 	{
-			view->drawFrames(relFrames, absFrames);
+		view->drawFrames(relFrames, absFrames);
 	}
-	//ADD LATER code to add the 1 Frame from the each gesture class in the current project.
 }
 
+void Model::recordGesture(Frame frame)
+{
+	if (!initialized)
+	{
+		frameNeutral.setFrame(frame);
+		initialized = true;
+		Console::print("Initialized");
+	}
+	
+	relFrames.push_back(frame);
+
+	if (!startedMoving)
+	{
+		if (! frame.equals(frameNeutral))
+		{
+			Console::print("+");
+			startedMoving = true;
+		}
+		else
+		{
+			return;
+		}
+	}
+					
+	framesBuffer.push_back(frame);
+
+	if (framesBuffer.size() > 100 && framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - 100)))
+	{
+		Gesture gesture{getRelevantFramesFromBuffer()};
+		addGesture(activeGestureClassLabel, gesture);
+		recording = false;
+		initialized = false;
+		startedMoving = false;
+		Console::print("Recording stopped");
+	}
+}
+
+
+
+
+//ONLY FOR TESTING -- DELETE AFTERWARDS
+//THIS CODE WILL BE USED FOR DETECTING MOVEMENT
+/*
+if (counter % 30 == 0)
+{
+oldFrame = newFrame;
+newFrame = std::make_shared<Frame>(relFrame);
+Console::printsl(oldFrame->equals(*newFrame));
+counter = 1;
+}
+else
+{
+counter++;
+}
+*/
+//ONLY FOR TESTING -- END
 

@@ -8,6 +8,7 @@ namespace FilenameChecker
 {
 	int getHighestIDStored(std::string extension);
 	std::vector<std::string> getAllFileNames(std::string extension);
+	std::vector<std::string> getAllFileNamesWithoutExtension(std::string & extension);
 	std::wstring stringToWstring(const std::string & s);
 }
 

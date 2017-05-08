@@ -15,6 +15,7 @@ GestureClass::GestureClass(const Gesture gesture) : gestureClassID{ getAppGestur
 }
 
 void GestureClass::addGesture(const Gesture gesture) {
+	/*
 	if (gesture.getNumberOfFrames() == 0) {
 		throw std::invalid_argument("The given gesture does not contain any Frames.");
 	}
@@ -24,10 +25,11 @@ void GestureClass::addGesture(const Gesture gesture) {
 	if ( (gestures.size() != 0) && (gestures.at(0).getNumberOfJointsPerFrame() != gesture.getNumberOfJointsPerFrame()) ) {
 		throw std::invalid_argument("The given gesture cannot belong to this GestureClass (diff nb of Joints).");
 	}
+	*/
 	gestures.push_back(gesture);
 }
 
-std::vector<Gesture> GestureClass::getGestures() {
+std::vector<Gesture> & GestureClass::getGestures() {
 	return gestures;
 }
 
@@ -39,6 +41,16 @@ int GestureClass::getGestureClassID()
 void GestureClass::setGestureClassID(int ID)
 {
 	gestureClassID = ID;
+}
+
+std::string GestureClass::getName()
+{
+	return name;
+}
+
+void GestureClass::setName(std::string nameToSet)
+{
+	name = nameToSet;
 }
 
 int getAppGestureClassID()

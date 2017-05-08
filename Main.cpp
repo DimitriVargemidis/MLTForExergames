@@ -38,8 +38,6 @@ int APIENTRY wWinMain(
 	appGestureID = FilenameChecker::getHighestIDStored(Filewriter::gestureExtension);
 	appProjectID = FilenameChecker::getHighestIDStored(Filewriter::projectExtension);
 	appGestureClassID = FilenameChecker::getHighestIDStored(Filewriter::gestureClassExtension);
-	appProjectGestureID = FilenameChecker::getHighestIDStored(Filewriter::projectGestureExtension);
-
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -73,11 +71,6 @@ void Main::mainCanInitializeKinectSensor()
 	Main::InitializeDefaultSensor();
 }
 
-
-/// <summary>
-/// Initializes the default Kinect sensor
-/// </summary>
-/// <returns>indicates success or failure</returns>
 HRESULT Main::InitializeDefaultSensor()
 {
 	HRESULT hr;
@@ -117,7 +110,6 @@ HRESULT Main::InitializeDefaultSensor()
 
 	if (!m_pKinectSensor || FAILED(hr))
 	{
-		//SetStatusMessage(L"No ready Kinect found!", 10000, true);
 		return E_FAIL;
 	}
 
@@ -137,111 +129,6 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 
 	int rc = ui->Run(hInstance, nCmdShow);
 
-	/*********************************************************************
-
-	============================= TESTS ==================================
-	
-	*********************************************************************/
-
-	//test clocking code 
-	/*
-	auto t1 = Clock::now();
-	Sleep(30);
-	auto t2 = Clock::now();
-
-	long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-
-	wchar_t buffer[256];
-	wsprintfW(buffer, L"%ld", time);
-	OutputDebugStringW(L"time between t1 en t2 ");
-	OutputDebugStringW(buffer);
-	OutputDebugStringW(L" milliseconds \n");
-	*/
-	//end test
-
-	/*
-	std::vector<Joint> joints;
-	Joint j1;
-	j1.Position.X = 1.1;
-	j1.Position.Y = 1.2;
-	j1.Position.Z = 1.3;
-	Joint j2;
-	j2.Position.X = -2.1;
-	j2.Position.Y = 2.2;
-	j2.Position.Z = -2.3;
-	joints.push_back(j1);
-	joints.push_back(j2);
-
-	Frame frame1(joints, false);
-	Frame frame2(joints, false);
-	Frame frame3(joints, false);
-	Frame frame4(joints, false);
-
-	Gesture gesture1;
-	gesture1.addFrame(frame1);
-	gesture1.addFrame(frame2);
-
-	Gesture gesture2;
-	gesture2.addFrame(frame1);
-	gesture2.addFrame(frame2);
-
-	Gesture gesture3;
-	gesture3.addFrame(frame3);
-	gesture3.addFrame(frame4);
-
-	GestureClass gestureClass1;
-	gestureClass1.addGesture(gesture1);
-	gestureClass1.addGesture(gesture2);
-
-	GestureClass gestureClass2;
-	gestureClass2.addGesture(gesture3);
-
-	ProjectGesture projectGesture1(gestureClass1);
-	projectGesture1.setLabel(1.0);
-	projectGesture1.addAction(64, true);
-
-	ProjectGesture projectGesture2(gestureClass2);
-	projectGesture2.setLabel(2.001);
-	projectGesture2.addAction(65, false);
-	projectGesture2.addAction(66, true);
-
-	Project project;
-	project.addProjectGesture(projectGesture1);
-	project.addProjectGesture(projectGesture2);
-
-	
-	Console::print("Test print joint: ");
-	Console::print(project.getProjectGestures().at(0).getGestureClass().getGestures().at(0).getFrames().at(0).getJoints().at(0).Position.X);
-	Console::print(project.getProjectGestures().at(0).getGestureClass().getGestures().at(0).getFrames().at(0).getJoints().at(0).Position.Y);
-	Console::print(project.getProjectGestures().at(0).getGestureClass().getGestures().at(0).getFrames().at(0).getJoints().at(0).Position.Z);
-	Console::print(j1.Position.X);
-	Console::print(j1.Position.Y);
-	Console::print(j1.Position.Z);
-	
-	std::string fileName = "1.project";
-	Project loadedProject = Filereader::readProjectFromFile(fileName);
-
-	for (ProjectGesture pg : loadedProject.getProjectGestures())
-	{
-		Console::print("Label: ");
-		Console::printsl(pg.getLabel());
-	}
-	
-	Filewriter::save(project);
-
-	int maxGestID = FilenameChecker::getHighestIDStored(Filewriter::gestureExtension);
-	int maxProjID = FilenameChecker::getHighestIDStored(Filewriter::projectExtension);
-	int maxGClaID = FilenameChecker::getHighestIDStored(Filewriter::gestureClassExtension);
-	int maxPGesID = FilenameChecker::getHighestIDStored(Filewriter::projectGestureExtension);
-	*/
-
-	/*********************************************************************
-
-	========================= END TESTS ==================================
-
-	*********************************************************************/
-
-
 	while (ui->checkQuitMsg())
 	{
 		Update();
@@ -250,9 +137,6 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	return 0;
 }
 
-/// <summary>
-/// Main processing function
-/// </summary>
 void Main::Update()
 {
 	if (!m_pBodyFrameReader)
@@ -282,7 +166,7 @@ void Main::Update()
 
 		if (SUCCEEDED(hr))
 		{
-			model->ProcessBody(nTime, BODY_COUNT, ppBodies);
+			model->processBody(nTime, BODY_COUNT, ppBodies);
 		}
 
 		for (int i = 0; i < _countof(ppBodies); ++i)

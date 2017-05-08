@@ -9,16 +9,18 @@ Frame::Frame():
 	leftHand { HandState_Open }, rightHand{ HandState_Open }
 {
 	//Set the (absolute) timestamp
-	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::system_clock::now().time_since_epoch()).count());
+	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+	//	std::chrono::system_clock::now().time_since_epoch()).count());
+	setTimestamp(0);
 }
 
 Frame::Frame(std::vector<Joint> jointVector, bool relative):
 	leftHand{HandState_Open},rightHand{HandState_Open}
 {
 	//Set the (absolute) timestamp
-	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::system_clock::now().time_since_epoch()).count());
+	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+	//	std::chrono::system_clock::now().time_since_epoch()).count());
+	setTimestamp(0);
 
 	if (relative)
 	{
@@ -30,8 +32,9 @@ Frame::Frame(std::vector<Joint> jointVector, bool relative):
 Frame::Frame(IBody * body, bool relative)
 {
 	//Set the (absolute) timestamp
-	setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-		std::chrono::system_clock::now().time_since_epoch()).count());
+	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+	//	std::chrono::system_clock::now().time_since_epoch()).count());
+	setTimestamp(0);
 
 	//Get the joints from the given IBody
 	Joint bodyJoints[JointType_Count];
@@ -50,6 +53,11 @@ Frame::Frame(IBody * body, bool relative)
 
 	body->get_HandLeftState(&leftHand);
 	body->get_HandRightState(&rightHand);
+}
+
+void Frame::setFrame(Frame frame)
+{
+	joints = frame.getJoints();
 }
 
 std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints)

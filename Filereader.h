@@ -11,9 +11,14 @@ namespace Filereader
 {
 	std::vector<double> convertStringToDoubles(std::string & stringToConvert, const std::string & identifier);
 
-	void readProjectFromFile(std::string & fileName, Project * project, std::vector<GestureClass> * gestureClasses);
-	void readGestureClassFromFile(std::string & fileName, GestureClass * gestureClass);
+	std::shared_ptr<Project> readProjectFromFile(std::string & fileName, std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
+	std::shared_ptr<GestureClass> readGestureClassFromFile(std::string & fileName);
 	void readGestureFromFile(std::string & fileName, Gesture * gesture);
+
+	void loadAllProjects(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
+	void loadAllGestureClasses(std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
+
+	void loadAllData(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
 }
 
 #endif //FILEREADER_H

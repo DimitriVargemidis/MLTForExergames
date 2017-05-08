@@ -1,3 +1,4 @@
+/*
 #include <stdexcept>
 #include <windows.h>
 
@@ -8,14 +9,15 @@
 
 #include "ProjectGesture.h"
 
-ProjectGesture::ProjectGesture() : gestureClass{ GestureClass() }, projectGestureID{ getAppProjectGestureID() }, label{-1}
+
+ProjectGesture::ProjectGesture() : gestureClass{ &GestureClass() }, projectGestureID{ getAppProjectGestureID() }, label{-1}
 {
 }
 
 //here the reference as GestureClass is useful because the gestureClasses are kept in the model and 
 //When these GestureClasses are changed they are also changed in their projectGestures because they use references to the original object
 // key changed to WORD, the format to enter when pressing a key, see keypress.cpp
-ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, const WORD key, bool holding):
+ProjectGesture::ProjectGesture(GestureClass * gestureClass, const double label, const WORD key, bool holding):
 	gestureClass{ gestureClass }, label{ label }, projectGestureID{ getAppProjectGestureID() }
 {
 	if (key != 0)
@@ -29,11 +31,11 @@ ProjectGesture::ProjectGesture(GestureClass & gestureClass, const double label, 
 	}
 }
 
-ProjectGesture::ProjectGesture(GestureClass & g) : gestureClass{ g }, projectGestureID{ getAppProjectGestureID() }, label{ -1 }
+ProjectGesture::ProjectGesture(GestureClass * g) : gestureClass{ g }, projectGestureID{ getAppProjectGestureID() }, label{ -1 }
 {
 }
 
-GestureClass ProjectGesture::getGestureClass()
+GestureClass * ProjectGesture::getGestureClass()
 {
 	return gestureClass;
 }
@@ -67,14 +69,14 @@ void ProjectGesture::addAction(WORD keycode, bool hold)
 	actions.push_back(a);
 }
 
-/*
+
 void ProjectGesture::setKey(const WORD keyToSet) {
 	//if (keyToSet == 0) {
 	///	throw std::invalid_argument("Key 0x00 is not a valid key.");
 	//}
 	key = keyToSet;
 }
-*/
+
 
 const WORD ProjectGesture::getKey() const
 {
@@ -132,8 +134,19 @@ void ProjectGesture::setProjectGestureID(int ID)
 	projectGestureID = ID;
 }
 
+std::string ProjectGesture::getName()
+{
+	return name;
+}
+
+void ProjectGesture::setName(std::string nameToSet)
+{
+	name = nameToSet;
+}
+
 int getAppProjectGestureID()
 {
 	appProjectGestureID++;
 	return appProjectGestureID;
 }
+*/

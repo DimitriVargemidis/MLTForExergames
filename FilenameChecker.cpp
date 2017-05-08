@@ -8,7 +8,7 @@
 
 int FilenameChecker::getHighestIDStored(std::string extension)
 {
-	std::vector<std::string> filenames = getAllFileNames(extension);
+	std::vector<std::string> filenames = getAllFileNamesWithoutExtension(extension);
 
 	int convertedInt = 0;
 	int maximumInt = 0;
@@ -35,8 +35,6 @@ std::vector<std::string> FilenameChecker::getAllFileNames(std::string extension)
 	HANDLE hFind = ::FindFirstFile(path, &fd);
 	if (hFind != INVALID_HANDLE_VALUE) {
 		do {
-			// read all (real) files in current folder
-			// , delete '!' read other 2 default folder . and ..
 			if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
 				
 				WCHAR * wchar{ fd.cFileName };
@@ -46,16 +44,24 @@ std::vector<std::string> FilenameChecker::getAllFileNames(std::string extension)
 				char DefChar = ' ';
 				WideCharToMultiByte(CP_ACP, 0, wchar, -1, ch, 260, &DefChar, NULL);
 
-				//A std:string  using the char* constructor.
+				//std::string using the char* constructor.
 				std::string ss(ch);
-				ss = ss.substr(0, ss.size()-extension.size());
-
 				names.push_back(ss);
 			}
 		} while (::FindNextFile(hFind, &fd));
 		::FindClose(hFind);
 	}
 	return names;
+}
+
+std::vector<std::string> FilenameChecker::getAllFileNamesWithoutExtension(std::string & extension)
+{
+	std::vector<std::string> filenames = getAllFileNames(extension);
+	for (std::string & s : filenames)
+	{
+		s = s.substr(0, s.size() - extension.size());
+	}
+	return filenames;
 }
 
 std::wstring FilenameChecker::stringToWstring(const std::string& s)
