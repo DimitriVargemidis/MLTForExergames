@@ -10,16 +10,20 @@ class GestureClass {
 private:
 	std::vector<Gesture> gestures;
 	int gestureClassID = 0;
+	std::string name = "GestureClass";
 
 public:
 	GestureClass();
 	GestureClass(const Gesture gesture);
 
 	void addGesture(const Gesture gesture);
-	std::vector<Gesture> getGestures();
+	std::vector<Gesture> & getGestures();
 
 	int getGestureClassID();
 	void setGestureClassID(int ID);
+
+	std::string getName();
+	void setName(std::string nameToSet);
 };
 
 static int appGestureClassID;

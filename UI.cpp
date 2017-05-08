@@ -383,8 +383,8 @@ void UI::processKeyInput(MSG msg)
 		OutputDebugStringW(buffer);
 		OutputDebugStringW(L" \n");
 
-		//model->addKeyToActive(msg.wParam, true); //standard holding for now
-		model->addKeyToActive(msg.wParam, false); //standard holding for now
+		//model->addActionToActive(msg.wParam, true); //standard holding for now
+		model->addActionToActive(msg.wParam, false); //standard holding for now
 
 	}
 	

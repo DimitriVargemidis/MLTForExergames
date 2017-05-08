@@ -11,8 +11,6 @@ typedef std::chrono::high_resolution_clock Clock;
 #include "SVMInterface.h"
 #include "Frame.h"
 
-
-
 class Main;
 class UI;
 class GestureClass;
@@ -21,41 +19,37 @@ class GestureClass;
 class Model 
 {
 private:
-	std::shared_ptr<UI>		view;
+	std::shared_ptr<UI>							view;
+	std::shared_ptr<Project>					activeProject;
 
-	Project activeProject;
-	std::vector<Project> projects;
+	std::vector<std::shared_ptr<Project>>		projects;
+	std::vector<std::shared_ptr<GestureClass>>	gestureClasses;
+	std::vector<double>							labelsBuffer;
+	std::vector<Frame>							framesBuffer;
 
-	std::vector<GestureClass> gestureClasses; //initialised with 2 gesture classes for now
-	ProjectGesture* lastActiveProjectGesture = nullptr; //the ProjectGesture that was last activated
-
-	const int		buttondelay = 0;
-
-
-	int				ActiveGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
+	const int		maxBufferSize = 30;				//The number of labels to be stored in the labels buffer
+	int				activeGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
+	double			predictedLabel = -1;
+	double			previousPredictedLabel = -1;
 	bool			refresh = false;				//boolean if the current frame needs to be added to a gestureclass or not
 	bool			predict = false;				//boolean if the program is in prediction mode or not
 	bool			trained = false;
-
-	std::chrono::time_point<std::chrono::steady_clock>		timer = Clock::now();
-
-	WORD	        lastkey = 0;
+	
+	bool			recording = false;
+	bool			startedMoving = false;
+	bool			initialized = false;
+	Frame			frameNeutral;
 
 	int				currentActiveBody = -1	;	//the index of the body that is being tracked
 	int				bodyLostCounter = 0		;	//The counter that tracked how long the tracked body has been lost
 	int				bodyLostLimit;
 
 	//used in the Processbody function
-	std::vector<Frame> relFrames;					//The vector with frames that are drawn on the screen
-	std::vector<Frame> absFrames;					//The vector with frames that are drawn on the screen
+	std::vector<Frame>		relFrames;			//The vector with frames that are drawn on the screen
+	std::vector<Frame>		absFrames;			//The vector with frames that are drawn on the screen
 
-	IBody* pBody;								//The body that is being processed
-	/*
-	std::shared_ptr<Frame> oldFrame = std::make_shared<Frame>(Frame());
-	std::shared_ptr<Frame> newFrame = std::make_shared<Frame>(Frame());
-	int counter = 1;
-	*/
-	//ONLY FOR TESTING -- END
+	IBody *					pBody;				//The body that is being processed
+	
 
 public:
 	Model();
@@ -63,11 +57,9 @@ public:
 
 	void				setView(std::shared_ptr<UI> v);
 
-	void				setProject(Project & projectToSet);
-	Project				getProject();
+	std::shared_ptr<Project>	getProject();
 	void				train();
 	double				test(Gesture & gesture);
-
 	
 	double				SVMInputData[54];
 	int					SVMInputDataIndex = 0;
@@ -84,11 +76,21 @@ public:
 	void				setTrained(bool train);
 	bool				getTrained();
 
-	void				addKeyToActive(WORD keycode, bool hold);
+	void				addActionToActive(WORD keycode, bool hold);
 	void				deleteKeyFromActive(WORD keycode);
 
-	void				ProcessBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+	void				addGesture(double label, Gesture gesture);
 
+	void				addToFramesBuffer(Frame frame);
+	std::vector<Frame>	getRelevantFramesFromBuffer();
+
+	void				addToLabelsBuffer(double label);
+	double				getMostFrequentLabel();
+
+	void displayFrames();
+
+	void				processBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
+	void				recordGesture(Frame frame);
 };
 
 #endif //MODEL_H

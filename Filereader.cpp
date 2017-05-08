@@ -3,90 +3,13 @@
 #include <sstream>
 #include <iterator>
 
-#include "Console.h"
 #include "Frame.h"
 #include "Gesture.h"
 #include "GestureClass.h"
+#include "FilenameChecker.h"
 #include "Filewriter.h"
 #include "Filereader.h"
 
-/*
-void Filereader::read(std::string fileName)
-{
-	std::ifstream file(fileName);
-	std::string fileLine;
-
-	std::string frameString{"frame"};
-	std::string buttonString{"button"};
-
-	std::vector<GestureClass> gestureClasses(15);
-
-	int numbersPerFrame = Frame::NB_OF_JOINTS * Gesture::DIMENSIONS_PER_JOINT + 1;
-	int numberOfFrames;
-
-	while (std::getline(file, fileLine))
-	{
-		if (!fileLine.compare(0, frameString.size(), frameString))
-		{
-			std::vector<double> data = convertStringToDoubles(fileLine, frameString);
-			numberOfFrames = (data.size() - 1) / numbersPerFrame;
-			if (numbersPerFrame*numberOfFrames + 1 == data.size())
-			{
-				GestureClass gestureClass;
-				createGestureFromData(data, numberOfFrames);
-			}
-		}
-		else if (!fileLine.compare(0, buttonString.size(), buttonString))
-		{
-			std::vector<double> data = convertStringToDoubles(fileLine, buttonString);
-		}
-		else
-		{
-			Console::print("Something went wrong. Can't handle this line.");
-		}
-	}
-}
-
-std::vector<double> Filereader::readNumbers(std::string & fileName)
-{
-	std::ifstream infile(fileName);
-	std::vector<double> data;
-	double number;
-	while (infile >> number)
-	{
-		data.push_back(number);
-	}
-	return data;
-}
-
-Gesture Filereader::createGestureFromData(std::vector<double> & data, int nbOfFrames)
-{
-	Gesture gesture;
-	int jointCounter = 0;
-	int frameShiftCounter = 0;
-	for (int j = 0; j < nbOfFrames; j++)
-	{
-		frameShiftCounter = j * (Frame::NB_OF_JOINTS * Gesture::DIMENSIONS_PER_JOINT + 1);
-		std::vector<Joint> joints;
-		for (int i = 0; i < Frame::NB_OF_JOINTS; i++)
-		{
-			Joint joint{};
-			joint.JointType = static_cast<JointType>(i);
-			joint.TrackingState = TrackingState::TrackingState_Tracked;
-			jointCounter = Gesture::DIMENSIONS_PER_JOINT * i;
-			CameraSpacePoint csp;
-			csp.X = data.at(frameShiftCounter + jointCounter + 1);
-			csp.Y = data.at(frameShiftCounter + jointCounter + 2);
-			csp.Z = data.at(frameShiftCounter + jointCounter + 3);
-			joint.Position = csp;
-			joints.push_back(joint);
-		}
-		Frame frame{joints};
-		gesture.addFrame(frame);
-	}
-	return gesture;
-}
-*/
 
 std::vector<double> Filereader::convertStringToDoubles(std::string & stringToConvert, const std::string & identifier)
 {
@@ -103,10 +26,9 @@ std::vector<double> Filereader::convertStringToDoubles(std::string & stringToCon
 	return data;
 }
 
-void Filereader::readProjectFromFile(std::string & fileName, Project * project, std::vector<GestureClass> * gestureClasses)
+std::shared_ptr<Project> Filereader::readProjectFromFile(std::string & fileName, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
 {
-	//Project project;
-	std::vector<ProjectGesture> projectGestures;
+	std::shared_ptr<Project> project = std::make_shared<Project>();
 
 	std::ostringstream fNameStream;
 	fNameStream << Filewriter::subDirectoryString;
@@ -116,61 +38,70 @@ void Filereader::readProjectFromFile(std::string & fileName, Project * project, 
 
 	while (std::getline(file, fileLine))
 	{
-		if (!fileLine.compare(0, Filewriter::projectGestureString.size(), Filewriter::projectGestureString))
+		if (!fileLine.compare(0, Filewriter::gestureClassString.size(), Filewriter::gestureClassString))
 		{
-			std::vector<double> projectGestureData = convertStringToDoubles(fileLine, Filewriter::projectGestureString);
+			std::vector<double> gestureClassData = convertStringToDoubles(fileLine, Filewriter::gestureClassString);
+			double label = gestureClassData.at(0);
+			int gClassID = gestureClassData.at(1);
 
-			//Get the GestureClass from the file.
-			std::ostringstream stream;
-			stream << projectGestureData.at(1);
-			stream << Filewriter::gestureClassExtension;
-
-			readGestureClassFromFile(stream.str(), &(*gestureClasses)[projectGestureData.at(0)]);
-			(*gestureClasses)[projectGestureData.at(0)].setGestureClassID(projectGestureData.at(1));
-			
-
-			ProjectGesture projectGesture{ (*gestureClasses)[projectGestureData.at(0)] };
-			projectGesture.setLabel(projectGestureData.at(0));
-			project->addProjectGesture(projectGesture);
+			for (int i=0; i < gestureClasses->size(); i++)
+			{
+				if (gestureClasses->at(i)->getGestureClassID() == gClassID)
+				{
+					project->addNew(label, gestureClasses->at(i));
+					break;
+				}
+			}
 		}
-
 		else if (!fileLine.compare(0, Filewriter::actionString.size(), Filewriter::actionString))
 		{
 			std::vector<double> actionData = convertStringToDoubles(fileLine, Filewriter::actionString);
 			double label = actionData.at(0);
+			WORD keycode = actionData.at(1);
+			bool hold = actionData.at(2);
 
-			for (ProjectGesture pg : project->getProjectGestures())
+			if (project->containsLabel(label))
 			{
-				if (pg.getLabel() == label)
-				{
-					pg.addAction(actionData.at(1), actionData.at(2));
-				}
+				project->addAction(label, keycode, hold);
 			}
 		}
-		else
+		else if (!fileLine.compare(0, Filewriter::svmString.size(), Filewriter::svmString))
 		{
-			Console::print("Something went wrong. Can't handle this line.");
-		}
-	}
+			std::vector<double> svmData = convertStringToDoubles(fileLine, Filewriter::svmString);
+			double projectID = svmData.at(0);
 
-	for (ProjectGesture pg : projectGestures)
-	{
-		project->addProjectGesture(pg);
+			std::ostringstream svmStream;
+			svmStream << Filewriter::subDirectoryString;
+			svmStream << projectID;
+			svmStream << Filewriter::svmModelExtension;
+			std::string svmFilename = svmStream.str();
+
+			const char * svmFname = svmFilename.c_str();
+			svm_model loadedSVMModel = *(svm_load_model(svmFname));
+			
+			project->setSVMModel(loadedSVMModel);
+		}
+		else if (!fileLine.compare(0, Filewriter::nameString.size(), Filewriter::nameString))
+		{
+			fileLine.erase(0, Filewriter::nameString.size() + 1);
+			project->setName(fileLine);
+		}
 	}
 
 	int projectID = std::stoi(fileName.substr(0, fileName.size()-Filewriter::projectExtension.size()));
 	project->setProjectID(projectID);
+	return project;
 }
 
-void Filereader::readGestureClassFromFile(std::string & fileName, GestureClass * gestureClass)
+std::shared_ptr<GestureClass> Filereader::readGestureClassFromFile(std::string & fileName)
 {
+	std::shared_ptr<GestureClass> gestureClass = std::make_shared<GestureClass>();
+
 	std::ostringstream fNameStream;
 	fNameStream << Filewriter::subDirectoryString;
 	fNameStream << fileName;
 	std::ifstream file(fNameStream.str());
 	std::string fileLine;
-
-	std::vector<Gesture> gestures;
 
 	while (std::getline(file, fileLine))
 	{
@@ -181,21 +112,22 @@ void Filereader::readGestureClassFromFile(std::string & fileName, GestureClass *
 			std::ostringstream stream;
 			stream << gestureData.at(0);
 			stream << Filewriter::gestureExtension;
+
 			Gesture gesture;
 			readGestureFromFile(stream.str(), &gesture);
 			gesture.setGestureID(gestureData.at(0));
-			gestures.push_back(gesture);
+			gestureClass->addGesture(gesture);
 		}
-		else
+		else if (!fileLine.compare(0, Filewriter::nameString.size(), Filewriter::nameString))
 		{
-			Console::print("Something went wrong. Can't handle this line.");
+			fileLine.erase(0, Filewriter::nameString.size() + 1);
+			gestureClass->setName(fileLine);
 		}
 	}
 
-	for (Gesture g : gestures)
-	{
-		gestureClass->addGesture(g);
-	}
+	int gestureClassID = std::stoi(fileName.substr(0, fileName.size() - Filewriter::gestureClassExtension.size()));
+	gestureClass->setGestureClassID(gestureClassID);
+	return gestureClass;
 }
 
 void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
@@ -231,9 +163,10 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 			frame.setTimestamp(frameData.at(frameData.size()-1));
 			frames.push_back(frame);
 		}
-		else
+		else if (!fileLine.compare(0, Filewriter::nameString.size(), Filewriter::nameString))
 		{
-			Console::print("Something went wrong. Can't handle this line.");
+			fileLine.erase(0, Filewriter::nameString.size() + 1);
+			gesture->setName(fileLine);
 		}
 	}
 
@@ -241,4 +174,30 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 	{
 		gesture->addFrame(f);
 	}
+}
+
+void Filereader::loadAllProjects(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
+{
+	std::vector<std::string> files = FilenameChecker::getAllFileNames(Filewriter::projectExtension);
+	for (std::string & filename : files)
+	{
+		std::shared_ptr<Project> project = readProjectFromFile(filename, gestureClasses);
+		projects->push_back(project);
+	}
+}
+
+void Filereader::loadAllGestureClasses(std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
+{
+	std::vector<std::string> files = FilenameChecker::getAllFileNames(Filewriter::gestureClassExtension);
+	for (std::string & filename : files)
+	{
+		std::shared_ptr<GestureClass> gestureClass = readGestureClassFromFile(filename);
+		gestureClasses->push_back(gestureClass);
+	}
+}
+
+void Filereader::loadAllData(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
+{
+	loadAllGestureClasses(gestureClasses);
+	loadAllProjects(projects, gestureClasses);
 }
