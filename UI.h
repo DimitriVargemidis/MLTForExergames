@@ -2,9 +2,16 @@
 
 #include <vector>
 #include <Kinect.h>
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
 
 #include "UI_Object.h"
+#include "Abstr_UI_Hitbox.h"
 #include "UI_Hitbox.h"
+#include "UI_HitboxSlideButton.h"
+#include "UI_HitboxHoverSlideButton.h"
+#include "UI_HitboxScrolBar.h"
+#include "UI_HitboxLockScrolBar.h"
 
 #include "D2D_Graphics.h"
 
@@ -61,7 +68,7 @@ public:
 
 	void drawUI();
 
-	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type);
+	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
 
 	void changeButtonColor(int state);
 
@@ -99,7 +106,7 @@ private:
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
-	std::vector<UI_Hitbox>						UI_Hitboxes;	//list of UI control elements
+	std::vector<std::shared_ptr<Abstr_UI_Hitbox>>		UI_Hitboxes;	//list of UI control elements
 	std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
 
 	bool					waitForKey;		//parameter is set when the interface is waiting for a key
@@ -111,6 +118,11 @@ private:
 	RECT rct;
 	int width;
 	int height;
+
+	//simple way of making sure 1 hand does not activate multiple drag buttons
+	//Only for right and left hand avaiable this way
+	bool rightHandBusy = false;		//boolean to indicate that the righthand is already controlling a button
+	bool leftHandBusy  = false;		//boolean to indicate that the lefthand is already controlling a button
 
 
 

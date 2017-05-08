@@ -527,7 +527,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 			update_alpha_status(i);
 	}
 
-	// initialize active set (for shrinking)
+	// initialize hover set (for shrinking)
 	{
 		active_set = new int[l];
 		for(int i=0;i<l;i++)
@@ -581,7 +581,7 @@ void Solver::Solve(int l, const QMatrix& Q, const double *p_, const schar *y_,
 		{
 			// reconstruct the whole gradient
 			reconstruct_gradient();
-			// reset active set size and check
+			// reset hover set size and check
 			active_size = l;
 			info("*");
 			if(select_working_set(i,j)!=0)

@@ -1,30 +1,31 @@
 #pragma once
 
-//#include <d2d1.h>
-//#include <vector>
-//#include <memory>
-//#include <Kinect.h>
+#include <d2d1.h>
+#include <vector>
+#include <memory>
+#include <Kinect.h>
+#include <functional>
 
-//#include "ActionTrigger.h"
+#include "ActionTrigger.h"
 
-//#include "UI_Object.h"
+#include "UI_Object.h"
 
-//class Model;
+class Model;
 
-#include "Abstr_UI_Hitbox.h"
+extern void testCallback(int ID);
 
-class UI_Hitbox : public Abstr_UI_Hitbox
+
+class Abstr_UI_Hitbox
 {
 public:
-	UI_Hitbox();
-	UI_Hitbox(float Xcenter, float Ycenter, float width, float height);
-	UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model = -1);
-	~UI_Hitbox();
-	/*
+	Abstr_UI_Hitbox();
+	Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height);
+	Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model= -1);
+	~Abstr_UI_Hitbox();
 
 	void setModel(std::shared_ptr<Model> m);
 	std::shared_ptr<Model> getModel();
-	
+
 	void add_UI_Object(std::shared_ptr<UI_Object> object);
 	void remove_UI_Object(std::shared_ptr<UI_Object> object); //TO DO define function
 	std::vector<std::shared_ptr<UI_Object>> get_UI_Objects();
@@ -39,6 +40,12 @@ public:
 	void setHover(const bool & a, const JointType & joint, const HandState & hand, const D2D1_POINT_2F & jointPoint);
 	bool getHover();
 
+	void setActiveHand(const bool & hand);
+	bool getActiveHand();
+
+	void setActiveHandOutside(const bool & hand);
+	bool getActiveHandOutside();
+
 	void setHoverJoint(JointType joint);
 	JointType getHoverJoint();
 
@@ -50,35 +57,64 @@ public:
 	virtual void ActiveHandOnAction();
 	virtual void ActiveHandOffAction();
 	virtual void ActiveHandHoldAction();
-	*/ 
-	virtual void action(ActionTrigger act, const D2D1_POINT_2F & coord ) override;
-	/*
+
+	virtual void action(ActionTrigger act, const D2D1_POINT_2F & coord) = 0;
+
 	//check whether the right or left hand are controlling this object
-	bool isRightHandActive();
-	bool isLeftHandActive();
+	virtual bool isRightHandActive();
+	virtual bool isLeftHandActive();
 
-	void setCenterCoordActionArea(D2D1_POINT_2F center);
+	virtual void setCenterCoordActionArea(D2D1_POINT_2F center);
 	D2D1_POINT_2F  getCenterCoordActionArea();
-	*/
-	virtual void activateFunction() override;
+	void setWidth(float width);
+	float getWidth();
+	void setHeigth(float height);
+	float getHeight();
 
-	virtual void setLastPoint(D2D1_POINT_2F pos);
-	virtual D2D1_POINT_2F getLastPoint();
-	/*
+	void setOriginalPos(D2D1_POINT_2F pos);
+	D2D1_POINT_2F getOriginalPos();
+
+	virtual void activateFunction() = 0;
 	virtual void deactivateFunction();
+
+	void set_ID_ModelObject(int ID);
+	int	 get_ID_ModelObject();
 
 	void setFunctionActivation(bool function);
 	bool getFunctionActivation();
-	*/
+
+	void setHandLock(bool hand);
+	bool getHandLock();
+
+	void setTotalLock(bool hand);
+	bool getTotalLock();
+
+	void setVisible(bool visual);
+	bool getVisible();
+
+	virtual void setLastPoint(D2D1_POINT_2F pos) = 0;
+	virtual D2D1_POINT_2F getLastPoint() = 0;
+
+	virtual void add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox);
+
+	void moveY(float move);
+	void moveYoriginalPos(float move);
+
+	void moveAbsY(float pos);
+	void moveAbsYoriginalPos(float pos);
+
+	std::function<void(int)> activateFunctionCallback;
 
 private:
-	/*
+
 	std::shared_ptr<Model> model;
+	int ID_ModelObject;				//the id of the model object to which this hitbox is linked, not used when hitbox is not linked to a specific model object
 
 	std::vector<std::shared_ptr<UI_Object>> UI_objects;	//The UI_objects it will affect directly
 	std::vector<JointType> inputJoints;					//The joints that can interact with this hitbox		
 
 	D2D1_POINT_2F centerCoordActionArea;
+	D2D1_POINT_2F originalPos;				//the beginposition of the hitbox
 	float	widthActionArea;
 	float heightActionArea;
 
@@ -92,5 +128,12 @@ private:
 
 	int  InertiaCounter = 0;
 	const int InertiaLimit = 4;
-	*/
+
+	bool handLock = false;			//whether this hitbox has locked the JointType specified in parameter HoverJoint
+	bool totalLock = false;
+	bool visible = true;
+
+
+
 };
+

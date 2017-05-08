@@ -19,13 +19,99 @@ m_pCoordinateMapper(NULL),
 m_hWnd(NULL),
 graphics {}
 {
+	
 	std::shared_ptr<UI_Object> testObject = std::make_shared<UI_Object>();
 	UI_Objects.push_back(testObject);
-	UI_Hitboxes.push_back(UI_Hitbox());
-	UI_Hitboxes[0].add_UI_Object(testObject);
-	UI_Hitboxes[0].addInputJoint(JointType_WristRight);
-	UI_Hitboxes[0].addInputJoint(JointType_WristLeft);
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox(new UI_Hitbox());
+	UI_Hitboxes.push_back(testHitbox);
+	UI_Hitboxes[0]->add_UI_Object(testObject);
+	UI_Hitboxes[0]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[0]->addInputJoint(JointType_HandRight);
+	
+	//object 2 
+	std::shared_ptr<UI_Object> testObject2 = std::make_shared<UI_Object>(100.0,350.0,150.0,150.0, D2D1::ColorF::White);
+	UI_Objects.push_back(testObject2);
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox2(new UI_HitboxSlideButton( 100, 350, 150, 150, 0,100,0,0));
+	UI_Hitboxes.push_back(testHitbox2);
+	UI_Hitboxes[1]->add_UI_Object(testObject2);
+	UI_Hitboxes[1]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[1]->addInputJoint(JointType_HandRight);
+	
 
+	
+	//test scrollbar element 1
+	std::shared_ptr<UI_Object> testObject3 = std::make_shared<UI_Object>(400, 350, 150, 150, D2D1::ColorF::White);
+	
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox3(new UI_HitboxHoverSlideButton(400, 350, 150, 150, 0, 100, 0, 0));
+	UI_Hitboxes.push_back(testHitbox3);
+	UI_Hitboxes[2]->add_UI_Object(testObject3);
+	UI_Hitboxes[2]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[2]->addInputJoint(JointType_HandRight);
+
+	//test scrollbar element 2
+	std::shared_ptr<UI_Object> testObject4 = std::make_shared<UI_Object>(400, 350, 150, 150, D2D1::ColorF::White);
+	
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox4(new UI_HitboxHoverSlideButton(400, 350, 150, 150, 0, 100, 0, 0));
+	UI_Hitboxes.push_back(testHitbox4);
+	UI_Hitboxes[3]->add_UI_Object(testObject4);
+	UI_Hitboxes[3]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[3]->addInputJoint(JointType_HandRight);
+	
+
+	//object 3
+	std::shared_ptr<UI_Object> testObject5 = std::make_shared<UI_Object>(550, 350, 150, 500, D2D1::ColorF::Red);
+	UI_Objects.push_back(testObject5);
+	std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(550, 250, 150, 100, D2D1::ColorF::Blue);
+	UI_Objects.push_back(selectedBox);
+	std::shared_ptr<UI_Object> topfiller = std::make_shared<UI_Object>(550, 50, 150, 100, D2D1::ColorF::Black);
+	std::shared_ptr<UI_Object> bottomfiller = std::make_shared<UI_Object>(550, 650, 150, 100, D2D1::ColorF::Black);
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox5(new UI_HitboxLockScrolBar(550, 350, 150, 500, 0, 0, 1000, 1000));
+	UI_Hitboxes.push_back(testHitbox5);
+	UI_Hitboxes[4]->add_UI_Object(testObject5);
+	UI_Hitboxes[4]->add_UI_Object(topfiller);
+	UI_Hitboxes[4]->add_UI_Object(bottomfiller);
+	UI_Hitboxes[4]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[4]->addInputJoint(JointType_HandRight);
+	UI_Hitboxes[4]->add_UI_Element(testHitbox3);
+	UI_Hitboxes[4]->add_UI_Element(testHitbox4);
+
+	//test scrollbar element 3
+	std::shared_ptr<UI_Object> testObject6 = std::make_shared<UI_Object>(400, 350, 150, 150, D2D1::ColorF::White);
+
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox6(new UI_HitboxHoverSlideButton(400, 350, 150, 150, 0, 100, 0, 0));
+	UI_Hitboxes.push_back(testHitbox6);
+	UI_Hitboxes[5]->add_UI_Object(testObject6);
+	UI_Hitboxes[5]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[5]->addInputJoint(JointType_HandRight);
+	UI_Hitboxes[4]->add_UI_Element(testHitbox6);
+
+	//test scrollbar element 4
+	std::shared_ptr<UI_Object> testObject7 = std::make_shared<UI_Object>(400, 350, 150, 150, D2D1::ColorF::White);
+
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400, 350, 150, 150, 0, 100, 0, 0));
+	UI_Hitboxes.push_back(testHitbox7);
+	UI_Hitboxes[6]->add_UI_Object(testObject7);
+	UI_Hitboxes[6]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[6]->addInputJoint(JointType_HandRight);
+	UI_Hitboxes[4]->add_UI_Element(testHitbox7);
+
+	//test scrollbar element 5
+	std::shared_ptr<UI_Object> testObject8 = std::make_shared<UI_Object>(400, 350, 150, 150, D2D1::ColorF::White);
+
+	std::shared_ptr<Abstr_UI_Hitbox> testHitbox8(new UI_HitboxHoverSlideButton(400, 350, 150, 150, 0, 100, 0, 0));
+	UI_Hitboxes.push_back(testHitbox8);
+	UI_Hitboxes[7]->add_UI_Object(testObject8);
+	UI_Hitboxes[7]->addInputJoint(JointType_HandLeft);
+	UI_Hitboxes[7]->addInputJoint(JointType_HandRight);
+	UI_Hitboxes[4]->add_UI_Element(testHitbox8);
+
+	UI_Objects.push_back(testObject3);
+	UI_Objects.push_back(testObject4);
+	UI_Objects.push_back(testObject6);
+	UI_Objects.push_back(testObject7);
+	UI_Objects.push_back(testObject8);
+	UI_Objects.push_back(bottomfiller);
+	//UI_Objects.push_back(topfiller);
 }
 
 
@@ -199,7 +285,10 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 		{
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 			
-			activateHitboxes(jointPoints[i], static_cast<JointType>(i));
+			if (j == 0)
+			{
+				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
+			}
 			//code to show coordinates of 3 joints
 			/*
 			if (j == 1)
@@ -241,6 +330,11 @@ void UI::setMain(std::shared_ptr<Main>  m)
 void UI::setModel(std::shared_ptr<Model> m)
 {
 	model = m;
+
+	for (int i = 0; i < UI_Hitboxes.size(); i++)
+	{
+		UI_Hitboxes[i]->setModel(m);
+	}
 }
 
 /// <summary>
@@ -319,7 +413,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			}
 
 		}
-		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//add the current gesture to the active gestureclass
+		if (IDC_measure_4 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//add the current gesture to the hover gestureclass
 		{
 				model->setRefresh(true);
 
@@ -531,21 +625,74 @@ void UI::drawUI()
 {
 	for (int i = 0; i < UI_Objects.size(); ++i)
 	{
-		graphics.drawRectangle(UI_Objects[i]->getCenter(), UI_Objects[i]->getWidth(), UI_Objects[i]->getHeight(), UI_Objects[i]->getColor());
+		if (UI_Objects[i]->getVisibele())
+		{
+			graphics.drawRectangle(UI_Objects[i]->getCenter(), UI_Objects[i]->getWidth(), UI_Objects[i]->getHeight(), UI_Objects[i]->getColor());
+		}
 		
 	}
 }
 
-void UI::activateHitboxes(D2D1_POINT_2F jointPoint, JointType type)
+void UI::activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)
 {
+	//debug code to show the coordinates of each had in screen coordinates
+	if (type == JointType_HandRight)
+	{
+		SetDlgItemInt(m_hWnd, IDC_RIGHT_X, jointPoint.x, TRUE);
+		SetDlgItemInt(m_hWnd, IDC_RIGHT_Y, jointPoint.y, TRUE);
+	}
+	if (type == JointType_HandLeft)
+	{
+		SetDlgItemInt(m_hWnd, IDC_LEFT_X, jointPoint.x, TRUE);
+		SetDlgItemInt(m_hWnd, IDC_LEFT_Y, jointPoint.y, TRUE);
+	}
+
 	for (int i = 0; i < UI_Hitboxes.size(); ++i)
 	{
-		if (UI_Hitboxes[i].checkInputJointType(type))
+		if (UI_Hitboxes[i]->checkInputJointType(type) && !(UI_Hitboxes[i]->getTotalLock()))
 		{
-			if (UI_Hitboxes[i].checkCoordInside(jointPoint))
+			if (UI_Hitboxes[i]->checkCoordInside(jointPoint))
 			{
-				UI_Hitboxes[i].Activate();
+				//if (!(UI_Hitboxes[i].getHover()))
+				//{
+				//NOW only works for right and left hand !
+				if (type == JointType_HandRight && !rightHandBusy)
+				{
+					UI_Hitboxes[i]->setHover(true,type, rightHand, jointPoint);
+					rightHandBusy = UI_Hitboxes[i]->isRightHandActive();
+					
+
+				}
+				else if(type == JointType_HandLeft && !leftHandBusy)
+				{
+					UI_Hitboxes[i]->setHover(true, type, leftHand, jointPoint);
+					leftHandBusy = UI_Hitboxes[i]->isLeftHandActive();
+				}
+					
+					//UI_Hitboxes[i].setHoverJoint(type);
+					//printf("activate");
+				//}
+				
 			}
+			else// if(UI_Hitboxes[i]->getHover())
+			{
+				//if (UI_Hitboxes[i].getHover() && UI_Hitboxes[i].getHoverJoint() == type)
+				//{
+					//UI_Hitboxes[i]->setHover(false,type,leftHand, jointPoint);
+					if (type == JointType_HandRight)
+					{
+						UI_Hitboxes[i]->setHover(false, type, rightHand, jointPoint);
+						rightHandBusy = UI_Hitboxes[i]->isRightHandActive();
+					}
+					else
+					{
+						UI_Hitboxes[i]->setHover(false, type, leftHand, jointPoint);
+						leftHandBusy = UI_Hitboxes[i]->isLeftHandActive();
+					}
+					//printf("DEactivate!!!");
+				//}
+			}
+			
 		}
 		
 	}

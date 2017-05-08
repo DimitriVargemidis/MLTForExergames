@@ -67,6 +67,18 @@
 #define IDC_ADD_KEY                     1067
 #define IDC_ADD_KEY_INFO                1068
 #define IDC_REL_ABS                     1069
+#define IDC_LBL_MEAS_COUNT2             1070
+#define IDC_MEAS_COUNT2                 1071
+#define IDC_LBL_MEAS_COUNT3             1072
+#define IDC_MEAS_COUNT3                 1073
+#define IDC_MEAS_COUNT4                 1074
+#define IDC_RIGHT_X                     1075
+#define IDC_RIGHT_Y                     1076
+#define IDC_RIGHT_Z                     1077
+#define IDC_LEFT_X                      1078
+#define IDC_LEFT_Y                      1079
+#define IDC_MEAS_COUNT10                1080
+#define IDC_LEFT_Z                      1080
 
 // Next default values for new objects
 // 

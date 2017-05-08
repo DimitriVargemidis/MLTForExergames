@@ -46,9 +46,6 @@
     <ClCompile Include="save.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Object.cpp">
-      <Filter>UI_data</Filter>
-    </ClCompile>
     <ClCompile Include="Filewriter.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
@@ -58,7 +55,30 @@
     <ClCompile Include="FilenameChecker.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Hitbox.cpp" />
+    <ClCompile Include="UI_Object.cpp">
+      <Filter>UI_data\View</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Hitbox.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_HitboxSlideButton.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstr_UI_Hitbox.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstr_UI_HitboxSlideButton.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_HitboxScrolBar.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_HitboxHoverSlideButton.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_HitboxLockScrolBar.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -121,12 +141,33 @@
     <ClInclude Include="Filereader.h">
       <Filter>libraries</Filter>
     </ClInclude>
-    <ClInclude Include="UI_Object.h">
-      <Filter>UI_data</Filter>
-    </ClInclude>
-    <ClInclude Include="UI_Hitbox.h" />
     <ClInclude Include="FilenameChecker.h">
       <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Object.h">
+      <Filter>UI_data\View</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_HitboxSlideButton.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Hitbox.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionTrigger.h" />
+    <ClInclude Include="Abstr_UI_HitboxSlideButton.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Abstr_UI_Hitbox.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_HitboxScrolBar.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_HitboxHoverSlideButton.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_HitboxLockScrolBar.h">
+      <Filter>UI_data\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +182,12 @@
     </Filter>
     <Filter Include="model_subclasses">
       <UniqueIdentifier>{1a742d66-b7f8-42bf-b10b-b29048bc9a07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI_data\Controller">
+      <UniqueIdentifier>{536a4a2f-f90c-4a76-9553-a3736a513813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI_data\View">
+      <UniqueIdentifier>{7a26aeb1-77ea-4ec3-bef6-d15000bd47e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -8,8 +8,15 @@ UI_Object::UI_Object():
 	//temporary hard coded object
 	centerCoordImage.x = 100;
 	centerCoordImage.y = 200;
-	widthImage = 100;
-	heightImage = 100;
+	widthImage = 150;
+	heightImage = 150;
+}
+
+UI_Object::UI_Object(float Xcenter, float Ycenter, float width, float height, D2D1::ColorF col) :
+	widthImage{ width }, heightImage{ height }, color{col}
+{
+	centerCoordImage.x = Xcenter;
+	centerCoordImage.y = Ycenter;
 }
 
 
@@ -60,6 +67,26 @@ void UI_Object::setHeight(float h)
 float UI_Object::getHeight()
 {
 	return heightImage;
+}
+
+void UI_Object::moveY(float move)
+{
+	centerCoordImage.y = centerCoordImage.y + move;
+}
+
+void UI_Object::moveYabs(float pos)
+{
+	centerCoordImage.y = pos;
+}
+
+void UI_Object::setVisible(const bool & visual)
+{
+	visible = visual;
+}
+
+const int UI_Object::getVisibele()
+{
+	return visible;
 }
 
 
