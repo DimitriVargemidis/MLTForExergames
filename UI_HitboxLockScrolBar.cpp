@@ -1,12 +1,12 @@
+#include "UI.h"
+
 #include "UI_HitboxLockScrolBar.h"
-
-
 
 UI_HitboxLockScrolBar::UI_HitboxLockScrolBar()
 {
 }
 
-UI_HitboxLockScrolBar::UI_HitboxLockScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int)> callback, int ID_Model):
+UI_HitboxLockScrolBar::UI_HitboxLockScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	UI_HitboxScrolBar{ Xcenter, Ycenter, width, height, left, right, up, down, activation, callback, ID_Model}, selectedHitbox{ 0 }
 
 {

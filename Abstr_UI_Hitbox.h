@@ -6,25 +6,28 @@
 #include <Kinect.h>
 #include <functional>
 
+#include "UI_CallbackFunctions.h"
 #include "ActionTrigger.h"
 
 #include "UI_Object.h"
+#include "Model.h"
 
-class Model;
-
-extern void testCallback(int ID);
-
+class UI;
 
 class Abstr_UI_Hitbox
 {
 public:
 	Abstr_UI_Hitbox();
 	Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height);
-	Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model= -1);
+	Abstr_UI_Hitbox(	float Xcenter, float Ycenter, float width, float height, 
+						std::function<void(int, int, std::shared_ptr<Model> ,std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model= -1);
 	~Abstr_UI_Hitbox();
 
 	void setModel(std::shared_ptr<Model> m);
 	std::shared_ptr<Model> getModel();
+
+	void setUI(std::shared_ptr<UI> m);
+	std::shared_ptr<UI> getUI();
 
 	void add_UI_Object(std::shared_ptr<UI_Object> object);
 	void remove_UI_Object(std::shared_ptr<UI_Object> object); //TO DO define function
@@ -103,11 +106,13 @@ public:
 	void moveAbsY(float pos);
 	void moveAbsYoriginalPos(float pos);
 
-	std::function<void(int)> activateFunctionCallback;
+	std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> activateFunctionCallback;
 
 private:
 
-	std::shared_ptr<Model> model;
+	std::shared_ptr<Model> model = nullptr;
+	std::shared_ptr<UI> UI_ptr = nullptr;
+
 	int ID_ModelObject;				//the id of the model object to which this hitbox is linked, not used when hitbox is not linked to a specific model object
 
 	std::vector<std::shared_ptr<UI_Object>> UI_objects;	//The UI_objects it will affect directly

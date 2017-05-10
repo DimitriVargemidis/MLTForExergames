@@ -53,6 +53,18 @@ void GestureClass::setName(std::string nameToSet)
 	name = nameToSet;
 }
 
+void GestureClass::DeleteGestureWithID(int ID)
+{
+	for (int i = 0; i < gestures.size(); i++)
+	{
+		if (gestures[i].getGestureID() == ID)
+		{		
+				gestures.erase(gestures.begin() + i);
+				return;
+		}
+	}
+}
+
 int getAppGestureClassID()
 {
 	appGestureClassID++;

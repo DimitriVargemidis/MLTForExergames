@@ -211,7 +211,7 @@ void D2D_Graphics::DrawBody(const std::vector<Joint> pJoints, const std::vector<
 		}
 	}
 
-
+	/*
 
 	//SELFMADE CODE
 	//simple button 
@@ -237,7 +237,7 @@ void D2D_Graphics::DrawBody(const std::vector<Joint> pJoints, const std::vector<
 	m_pRenderTarget->FillRectangle(right, m_pBrushRightButton);
 	m_pRenderTarget->FillEllipse(Abutton, m_pBrushAButton);
 
-
+	*/
 
 
 	//END SELFMADE
@@ -458,6 +458,31 @@ void D2D_Graphics::drawRectangle(D2D1_POINT_2F center, float width, float height
 	m_pRenderTarget->CreateSolidColorBrush(color, &colorBrush);
 	m_pRenderTarget->FillRectangle(rect, colorBrush);
 	SafeRelease(colorBrush);
+}
+
+void D2D_Graphics::drawText(std::string text)
+{
+/*
+	IDWriteTextFormat *pTextFormat_;
+
+	if (SUCCEEDED(hr))
+	{
+		hr = pDWriteFactory_->CreateTextFormat(
+			L"Gabriola",
+			NULL,
+			DWRITE_FONT_WEIGHT_REGULAR,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			72.0f,
+			L"en-us",
+			&pTextFormat_
+		);
+	}
+
+	m_pRenderTarget->DrawTextW(text, text.size(), )
+
+	SafeRelease(pTextFormat_);
+	*/
 }
 
 

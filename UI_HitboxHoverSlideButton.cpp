@@ -1,3 +1,5 @@
+#include "UI.h"
+
 #include "UI_HitboxHoverSlideButton.h"
 
 
@@ -6,7 +8,7 @@ UI_HitboxHoverSlideButton::UI_HitboxHoverSlideButton()
 {
 }
 
-UI_HitboxHoverSlideButton::UI_HitboxHoverSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int)> callback, int ID_Model):
+UI_HitboxHoverSlideButton::UI_HitboxHoverSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	Abstr_UI_HitboxSlideButton {Xcenter, Ycenter, width, height, left, right, up, down, activation, callback, ID_Model}
 {
 }
@@ -96,4 +98,6 @@ void UI_HitboxHoverSlideButton::moveUpAction(D2D1_POINT_2F ref, float move)
 
 void UI_HitboxHoverSlideButton::activateFunction()
 {
+	setFunctionActivation(true);
+	activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
 }

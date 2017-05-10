@@ -1,13 +1,13 @@
+#include "UI.h"
+
 #include "UI_HitboxScrolBar.h"
-
-
 
 UI_HitboxScrolBar::UI_HitboxScrolBar() :
 	Abstr_UI_HitboxSlideButton()
 {
 }
 
-UI_HitboxScrolBar::UI_HitboxScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int)> callback, int ID_Model):
+UI_HitboxScrolBar::UI_HitboxScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 Abstr_UI_HitboxSlideButton {Xcenter, Ycenter, width, height, left, right, up, down, activation, callback, ID_Model}
 {
 	delayMoveLimit = height_UI_Element*0.25; //the delay before the scroll starts is 75% of the height of 1 UI_element
@@ -194,7 +194,7 @@ bool UI_HitboxScrolBar::isLeftHandActive()
 void UI_HitboxScrolBar::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 {
 
-	hitbox->setWidth(width_UI_Element/2);
+	hitbox->setWidth(width_UI_Element);
 	hitbox->setHeigth(height_UI_Element);
 	//UI_elements.push_back(hitbox);
 	UI_elements.push_back(hitbox);

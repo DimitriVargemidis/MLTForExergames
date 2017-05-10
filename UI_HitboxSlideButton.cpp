@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "UI.h"
 
 #include "UI_HitboxSlideButton.h"
 
@@ -7,7 +8,7 @@ UI_HitboxSlideButton::UI_HitboxSlideButton():
 {
 }
 
-UI_HitboxSlideButton::UI_HitboxSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int)> callback, int ID_Model):
+UI_HitboxSlideButton::UI_HitboxSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	Abstr_UI_HitboxSlideButton{ Xcenter,Ycenter,width,height,left,right,up,down,activation,callback,ID_Model}
 {
 }
@@ -206,10 +207,10 @@ void UI_HitboxSlideButton::checkActivationCriteria()
 */
 void UI_HitboxSlideButton::activateFunction()
 {
-	activateFunctionCallback(get_ID_ModelObject());
-	printf("activated? \n");
+	activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+	//printf("activated? \n");
 	//getModel()->setRefresh(true);
-	//setFunctionActivation(true);
+	setFunctionActivation(true);
 }
 void UI_HitboxSlideButton::moveLeftAction(D2D1_POINT_2F ref, float move)
 {

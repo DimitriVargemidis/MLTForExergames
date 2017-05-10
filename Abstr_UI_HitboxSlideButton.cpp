@@ -1,3 +1,5 @@
+#include "UI.h"
+
 #include "Abstr_UI_HitboxSlideButton.h"
 
 
@@ -15,7 +17,7 @@ Abstr_UI_HitboxSlideButton::Abstr_UI_HitboxSlideButton():
 
 
 
-Abstr_UI_HitboxSlideButton::Abstr_UI_HitboxSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int)> callback, int ID_Model):
+Abstr_UI_HitboxSlideButton::Abstr_UI_HitboxSlideButton(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	Abstr_UI_Hitbox {Xcenter, Ycenter, width, height,callback,ID_Model}, dragging{ false }, lastPoint{ NULL },
 	ActivationPoint{ activation }, endLeft{ left }, endRight{ right }, endDown{ down }, endUp{ up }
 {
@@ -131,28 +133,46 @@ void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 		if (endLeft > 0)
 		{
 			if ((endLeft*ActivationPoint) < ((getOriginalPos()).x - center.x))
-				activateFunction();
+			{
+				//activateFunction();
+				setFunctionActivation(true);
+				activateFunctionCallback(get_ID_ModelObject(),0, getModel(), getUI());
+				
+			}
 			//	printf("move left to x = %f  \n", newPos.x);
 		}
 		if (endRight > 0)
 		{
 			if ((endRight*ActivationPoint) < (center.x - (getOriginalPos()).x))
-				activateFunction();
+			{
+				//activateFunction();
+				setFunctionActivation(true);
+				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+				
+			}
 
 			//	printf("move right to x = %f  \n", newPos.x);
 		}
 		if (endDown > 0)
 		{
 			if ((endDown*ActivationPoint) < (center.y - (getOriginalPos()).y))
-				activateFunction();
-
+			{
+				//activateFunction();
+				setFunctionActivation(true);
+				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+			
+			}
 			//	printf("move down to y = %f  \n", newPos.y);
 		}
 		if (endUp > 0)
 		{
 			if ((endUp*ActivationPoint) < ((getOriginalPos()).y - center.y))
-				activateFunction();
+			{
+				//activateFunction();
+				setFunctionActivation(true);
+				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
 
+			}
 			//	printf("move up to y = %f  \n", newPos.y);
 		}
 	}

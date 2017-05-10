@@ -3,14 +3,16 @@
 #include <vector>
 #include <memory>
 
-#include "ActionTrigger.h"
+#include "Model.h"
+
 
 
 namespace UI_CallbackFunctions
 {
-	typedef void (CALLBACK *UI_Action)(const ActionTrigger act, std::vector<std::shared_ptr<UI_Object>> UI_Objects, UI_Hitbox *hitbox);
+	void testCallback(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI);
+
+	void deleteGesture(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI);
 
 
-	void CALLBACK dragButton(const ActionTrigger act, std::vector<std::shared_ptr<UI_Object>> UI_Objects, UI_Hitbox *hitbox);
 };
 

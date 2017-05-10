@@ -3,17 +3,17 @@
 
 #include "Abstr_UI_Hitbox.h"
 
-void testCallback(int ID)
-{
-	printf("test callback succesfull !");
-}
+#include "UI.h"
 
 
 Abstr_UI_Hitbox::Abstr_UI_Hitbox():
 widthActionArea {150}, heightActionArea{ 150 }
 {
-	centerCoordActionArea.x = 100;
+	centerCoordActionArea.x = 100 +250;
 	centerCoordActionArea.y = 200;
+
+	activateFunctionCallback = UI_CallbackFunctions::testCallback;
+	ID_ModelObject = -1;
 }
 
 Abstr_UI_Hitbox::Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height):
@@ -22,12 +22,16 @@ Abstr_UI_Hitbox::Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, floa
 	centerCoordActionArea.x = Xcenter;
 	centerCoordActionArea.y = Ycenter;
 
-	activateFunctionCallback = [](int) { printf("no particular action defined = wrong constructor used"); };
+	activateFunctionCallback = UI_CallbackFunctions::testCallback;
 	ID_ModelObject = -1;
 	
 }
 
-Abstr_UI_Hitbox::Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model):
+std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> blabla();
+
+
+
+Abstr_UI_Hitbox::Abstr_UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	widthActionArea{ width }, heightActionArea{ height }, ID_ModelObject{ID_Model}
 {
 	centerCoordActionArea.x = Xcenter;
@@ -483,6 +487,16 @@ void Abstr_UI_Hitbox::setModel(std::shared_ptr<Model> m)
 std::shared_ptr<Model> Abstr_UI_Hitbox::getModel()
 {
 	return model;
+}
+
+void Abstr_UI_Hitbox::setUI(std::shared_ptr<UI> m)
+{
+	UI_ptr = m;
+}
+
+std::shared_ptr<UI> Abstr_UI_Hitbox::getUI()
+{
+	return UI_ptr;
 }
 
 void Abstr_UI_Hitbox::add_UI_Object(std::shared_ptr<UI_Object> object)

@@ -1,5 +1,6 @@
 
 #include "Model.h"
+#include "UI.h"
 
 #include "UI_Hitbox.h"
 
@@ -9,13 +10,8 @@ UI_Hitbox::UI_Hitbox():
 	
 }
 
-UI_Hitbox::UI_Hitbox(float Xcenter, float Ycenter, float width, float height):
-	Abstr_UI_Hitbox(Xcenter,Ycenter,width,height)
-{
-	
-}
 
-UI_Hitbox::UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model):
+UI_Hitbox::UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
 	Abstr_UI_Hitbox(Xcenter, Ycenter, width, height,callback,ID_Model)
 {
 }
@@ -320,8 +316,8 @@ void UI_Hitbox::activateFunction()
 {
 	if (!getFunctionActivation())
 	{
-		getModel()->setRefresh(true);
-		setFunctionActivation(true);
+			setFunctionActivation(true);
+			activateFunctionCallback(get_ID_ModelObject(),0, getModel(),getUI());
 	}
 }
 void UI_Hitbox::setLastPoint(D2D1_POINT_2F pos)

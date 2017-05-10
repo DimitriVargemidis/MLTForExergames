@@ -6,18 +6,20 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 #include "UI_Object.h"
+#include "UI_CallbackFunctions.h"
 #include "Abstr_UI_Hitbox.h"
 #include "UI_Hitbox.h"
 #include "UI_HitboxSlideButton.h"
 #include "UI_HitboxHoverSlideButton.h"
 #include "UI_HitboxScrolBar.h"
 #include "UI_HitboxLockScrolBar.h"
+#include "Abstr_Screen.h"
 
 #include "D2D_Graphics.h"
 
-class BodyBasics;
+//class BodyBasics;
 class Main;
-class D2D_Graphics;
+//class D2D_Graphics;
 class Frame;
 
 
@@ -66,8 +68,9 @@ public:
 	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
 	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
 
+	//to Abstr_Screen
 	void drawUI();
-
+	//to Abstr_Screen
 	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
 
 	void changeButtonColor(int state);
@@ -93,7 +96,7 @@ public:
 
 	void setPredictedLabel(int label);
 	
-
+	void fillScrolbar(int ID);
 
 private:
 	
@@ -106,8 +109,11 @@ private:
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
+	//to Abstr_Screen
 	std::vector<std::shared_ptr<Abstr_UI_Hitbox>>		UI_Hitboxes;	//list of UI control elements
 	std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
+
+	std::shared_ptr<Abstr_Screen>	Screen;		//UI elements to be drawn
 
 	bool					waitForKey;		//parameter is set when the interface is waiting for a key
 	bool					drawAbsCoord = true;
@@ -119,6 +125,7 @@ private:
 	int width;
 	int height;
 
+	//to Abstr_Screen
 	//simple way of making sure 1 hand does not activate multiple drag buttons
 	//Only for right and left hand avaiable this way
 	bool rightHandBusy = false;		//boolean to indicate that the righthand is already controlling a button
