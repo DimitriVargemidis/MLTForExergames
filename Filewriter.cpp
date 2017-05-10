@@ -109,7 +109,6 @@ void Filewriter::save(Gesture & gesture)
 			frameSStream << joint.Position.Y << " ";
 			frameSStream << joint.Position.Z << " ";
 		}
-		frameSStream << frame.getTimestamp();
 		frameLine.append(frameSStream.str());
 
 		write(fileName, frameLine);

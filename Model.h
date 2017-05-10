@@ -27,7 +27,9 @@ private:
 	std::vector<double>							labelsBuffer;
 	std::vector<Frame>							framesBuffer;
 
+	const int		bodyLostLimit = 30;				//The amount of frames that the body is able to be lost
 	const int		maxBufferSize = 30;				//The number of labels to be stored in the labels buffer
+	const int		notMovingFrameDelay = 30;
 	int				activeGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
 	double			predictedLabel = -1;
 	double			previousPredictedLabel = -1;
@@ -42,7 +44,6 @@ private:
 
 	int				currentActiveBody = -1	;	//the index of the body that is being tracked
 	int				bodyLostCounter = 0		;	//The counter that tracked how long the tracked body has been lost
-	int				bodyLostLimit;
 
 	//used in the Processbody function
 	std::vector<Frame>		relFrames;			//The vector with frames that are drawn on the screen
@@ -59,7 +60,7 @@ public:
 
 	std::shared_ptr<Project>	getProject();
 	void				train();
-	double				test(Gesture & gesture);
+	double				test(Frame & frame);
 	
 	double				SVMInputData[54];
 	int					SVMInputDataIndex = 0;
@@ -77,12 +78,10 @@ public:
 	bool				getTrained();
 
 	void				addActionToActive(WORD keycode, bool hold);
-	void				deleteKeyFromActive(WORD keycode);
 
 	void				addGesture(double label, Gesture gesture);
 
-	void				addToFramesBuffer(Frame frame);
-	std::vector<Frame>	getRelevantFramesFromBuffer();
+	std::vector<Frame>	getRelevantFramesFromBuffer(int offset);
 
 	void				addToLabelsBuffer(double label);
 	double				getMostFrequentLabel();

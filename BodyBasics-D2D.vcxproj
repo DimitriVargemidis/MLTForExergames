@@ -39,7 +39,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="ProjectGesture.cpp" />
-    <ClCompile Include="save.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UI_CallbackFunctions.cpp" />
@@ -80,7 +79,6 @@
     <ClInclude Include="Project.h" />
     <ClInclude Include="ProjectGesture.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="save.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
     <ClInclude Include="UI.h" />

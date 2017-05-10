@@ -1,21 +1,24 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include "Kinect.h"
 #include <vector>
+
+#include "Kinect.h"
+#include "libsvm-3.21\svm.h"
 
 
 class Frame {
 private:
-	const float THRESHOLD_EQUALS = 0.20;
+	const float THRESHOLD_EQUALS = 0.10;
 
 	HandState rightHand;
 	HandState leftHand;
 	std::vector<Joint> joints;
-	double timestamp = 0;	//Stores the moment on which the frame is created.
 
 public:
+	const static int DIMENSIONS_PER_JOINT = 3;
 	const static int NB_OF_JOINTS = 25;
+	const static int FRAME_DIMENSIONS = DIMENSIONS_PER_JOINT * NB_OF_JOINTS;
 
 	Frame();
 	Frame(std::vector<Joint> jointVector, bool relative = true);
@@ -29,14 +32,13 @@ public:
 	const std::vector<Joint> & getJoints() const;
 	const int getNumberOfJoints() const;
 
-	const double getTimestamp() const;
-	void setTimestamp(double timestampToSet);
-
 	const HandState getRightHand() const;
 	void setRightHand(HandState right);
 
 	const HandState getLeftHand() const;
 	void setLeftHand(HandState left);
+
+	svm_node * toArray() const;
 
 };
 

@@ -1,5 +1,6 @@
 #include "GestureClass.h"
 #include "Gesture.h"
+#include "Frame.h"
 #include "Action.h"
 #include "SVMInterface.h"
 
@@ -26,11 +27,14 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 	//Set problem
 	svm_problem prob;
 
-	//Get and set the problem size (= number of gestures that were input)
+	//Get and set the problem size (= number of frames that were input)
 	int problemSize{0};
 	for (const auto & keyValue : projectMap)
 	{
-		problemSize = problemSize + keyValue.second.first->getGestures().size();
+		for(const Gesture & gesture : keyValue.second.first->getGestures())
+		{
+			problemSize = problemSize + gesture.getFrames().size();
+		}
 	}
 
 	prob.l = problemSize;
@@ -41,22 +45,20 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 	int rowCount{0};
 
 	for (const auto & keyValue : projectMap) {
-
-		const double thresholdFraction = 1.0 / 3.0;
-		const double decimalsConstant = 10.0;
-		const double baseOffset = 1.0 / decimalsConstant;
 		double fraction = 0;
-		int counter = 1;
-		double labelOffset = 0;
+		int counter = 0;
+		int labelOffset = 0;
+		for (const Gesture & g : keyValue.second.first->getGestures()) {
+			for (const Frame & f : g.getFrames())
+			{
+				fraction = counter / ((double)g.getFrames().size());
+				labelOffset = (int)(fraction / thresholdFraction);
+				counter++;
 
-		for (Gesture & g : keyValue.second.first->getGestures()) {
-			//fraction = counter / g.getFrames().size();
-			labelOffset = ((int)(fraction / thresholdFraction)) / decimalsConstant;
-			labels[rowCount] = keyValue.first + labelOffset + baseOffset;
-			counter++;
-			
-			x[rowCount] = g.toArray();
-			rowCount++;
+				labels[rowCount] = keyValue.first + labelOffset;
+				x[rowCount] = f.toArray();
+				rowCount++;
+			}
 		}
 	}
 	prob.y = labels;
@@ -69,8 +71,8 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 	return model;
 }
 
-double SVMInterface::test(svm_model & model, Gesture & gesture) {
-	svm_node * testnode = gesture.toArray();
+double SVMInterface::test(svm_model & model, Frame & frame) {
+	svm_node * testnode = frame.toArray();
 	double resultLabel = svm_predict(& model, testnode);
 	
 	delete[] testnode;

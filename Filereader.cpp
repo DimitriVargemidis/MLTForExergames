@@ -152,7 +152,7 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 				joint.JointType = static_cast<JointType>(i);
 				joint.TrackingState = TrackingState::TrackingState_Tracked;
 				CameraSpacePoint csp;
-				int indexJump = i * Gesture::DIMENSIONS_PER_JOINT;
+				int indexJump = i * Frame::DIMENSIONS_PER_JOINT;
 				csp.X = frameData.at(indexJump);
 				csp.Y = frameData.at(indexJump + 1);
 				csp.Z = frameData.at(indexJump + 2);
@@ -160,7 +160,6 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 				joints.push_back(joint);
 			}
 			Frame frame{joints, false};
-			frame.setTimestamp(frameData.at(frameData.size()-1));
 			frames.push_back(frame);
 		}
 		else if (!fileLine.compare(0, Filewriter::nameString.size(), Filewriter::nameString))
