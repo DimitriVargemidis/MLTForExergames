@@ -6,13 +6,17 @@
 #include "libsvm-3.21\svm.h"
 
 #include "GestureClass.h"
+#include "Frame.h"
 
 
 namespace SVMInterface {
-	const int DIMENSIONS_PER_JOINT = 3;
+
+	const int		nbOfLabelDivisions{ 8 };
+	const double	thresholdFraction{ 1.0 / nbOfLabelDivisions };
+	const double	decimalsConstant{ 10.0 };
 
 	svm_model * train(std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap);
-	double test(svm_model & model, Gesture & gesture);
+	double test(svm_model & model, Frame & frame);
 };
 
 #endif //SVMINTERFACE_H

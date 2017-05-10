@@ -18,13 +18,11 @@
 Model::Model()
 {
 	Filereader::loadAllData(&projects, &gestureClasses);
-	if (projects.empty())		//If no project is saved and/or loaded, else do nothing.
+	if (projects.empty())		//If no project is loaded, else do nothing.
 	{
 		projects.push_back(std::make_shared<Project>());
 	}
 	activeProject = projects.back();
-
-	bodyLostLimit = 30;			//the amount of frames that the body is able to be lost
 }
 
 Model::~Model()
@@ -44,12 +42,14 @@ std::shared_ptr<Project> Model::getProject()
 void Model::train()
 {
 	activeProject->setSVMModel(*(SVMInterface::train(activeProject->getProjectMap())));
+	Console::print("SVM trained");
 	Filewriter::save(activeProject);
+	Console::print("Project saved");
 }
 
-double Model::test(Gesture & gesture)
+double Model::test(Frame & frame)
 {
-	return SVMInterface::test(activeProject->getSVMModel(), gesture);
+	return SVMInterface::test(activeProject->getSVMModel(), frame);
 }
 
 void Model::setActiveLabel(int label)
@@ -110,40 +110,23 @@ void Model::addGesture(double label, Gesture gesture)
 	}
 }
 
-void Model::addToFramesBuffer(Frame frame)
-{
-
-}
-
-std::vector<Frame> Model::getRelevantFramesFromBuffer()
+std::vector<Frame> Model::getRelevantFramesFromBuffer(int offset)
 {
 	std::vector<Frame>::const_iterator first = framesBuffer.begin();
-	std::vector<Frame>::const_iterator last = framesBuffer.end() - 30;
+	std::vector<Frame>::const_iterator last = framesBuffer.end() - offset;
 	return std::vector<Frame>(first, last);
 }
 
 void Model::addToLabelsBuffer(double label)
 {
-	if (label < 0)
+	if (label <= 0)
 	{
 		return;
 	}
 
 	labelsBuffer.push_back(label);
 
-	if (labelsBuffer.size() > maxBufferSize)
-	{
-		previousPredictedLabel = predictedLabel;
-		predictedLabel = getMostFrequentLabel();
-
-		if (predictedLabel != previousPredictedLabel)
-		{
-			activeProject->deactivate(predictedLabel);
-		}
-		activeProject->activate(predictedLabel);
-		
-		labelsBuffer.clear();
-	}
+	
 }
 
 double Model::getMostFrequentLabel()
@@ -153,7 +136,7 @@ double Model::getMostFrequentLabel()
 	double mostDouble = labelsBuffer[0];
 	int currentCount = 0;
 	int mostCount = 0;
-	for (auto c : labelsBuffer)
+	for (const auto & c : labelsBuffer)
 	{
 		if (c == currentDouble)
 		{
@@ -175,6 +158,11 @@ double Model::getMostFrequentLabel()
 
 void Model::displayFrames()
 {
+	if (view->checkResource())
+	{
+		view->drawFrames(relFrames, absFrames);
+	}
+
 	relFrames.clear();
 	absFrames.clear();
 
@@ -186,9 +174,7 @@ void Model::displayFrames()
 
 void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
-	displayFrames();
-
-	// go through all the bodies that are being seen now if a body is tracked than it's frame is made and added to the frames vector
+	//Go through all the bodies that are being seen now. If a body is tracked, its frame is made and added to the frames vector
 	for (int i = 0; i < nBodyCount; ++i)
 	{
 		pBody = ppBodies[i];
@@ -197,15 +183,14 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			BOOLEAN bTracked = false;
 			HRESULT hr = pBody->get_IsTracked(&bTracked);
 
-			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked)	//no body is tracked at the moment
+			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked)	//No body is tracked at the moment
 			{
 				currentActiveBody = i;
 			}
 
 			if (SUCCEEDED(hr) && bTracked && i == currentActiveBody)
 			{
-				Gesture currentGesture;
-				Frame relFrame(pBody);									//create a frame of every tracked body
+				Frame relFrame(pBody);					//Create a frame of every tracked body
 				Frame absFrame(pBody, false);
 
 				relFrames.push_back(relFrame);
@@ -214,22 +199,15 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 				if (recording)
 				{
 					recordGesture(relFrame);
-					return;
+					break;
 				}
 
 				framesBuffer.push_back(relFrame);
 
-				if (refresh && !predict)								//the measure button was pressed last
+				if (refresh && !predict)				//The measure button was pressed last
 				{
 					framesBuffer.clear();
 					recording = true;
-
-					//recordGesture(nTime, nBodyCount, ppBodies);
-					//currentGesture.addFrame(relFrame);
-					//addGesture(activeGestureClassLabel, currentGesture);
-					
-					//adding the last frame of the last gesture of each gestureClass in the vector to the frames vector that is drawn
-					//relFrames.push_back(currentGesture.getFrames().back());
 					refresh = false;
 				}
 
@@ -240,15 +218,15 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						train();
 						trained = true;
 					}
-					currentGesture.addFrame(relFrame);
-					addToLabelsBuffer(SVMInterface::test(activeProject->getSVMModel(), currentGesture));
-					view->setPredictedLabel(static_cast<int>(predictedLabel));
+					addToLabelsBuffer(SVMInterface::test(activeProject->getSVMModel(), relFrame));
+					view->setPredictedLabel(labelsBuffer.back());
+					labelsBuffer.clear();
 				}
 			}
 			else if (i == currentActiveBody)			//If the current tracked body is lost for this frame
 			{
 				bodyLostCounter++;						//Increment the lostBodyCounter
-				if (bodyLostCounter > bodyLostLimit)	//if the limit is reached reset the currentActiveBody
+				if (bodyLostCounter > bodyLostLimit)	//If the limit is reached, reset the currentActiveBody
 				{
 					currentActiveBody = -1;
 					bodyLostCounter = 0;
@@ -256,11 +234,7 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			}
 		}
 	}
-
-	if (view->checkResource())
-	{
-		view->drawFrames(relFrames, absFrames);
-	}
+	displayFrames();
 }
 
 void Model::recordGesture(Frame frame)
@@ -269,7 +243,7 @@ void Model::recordGesture(Frame frame)
 	{
 		frameNeutral.setFrame(frame);
 		initialized = true;
-		Console::print("Initialized");
+		Console::print("Initialized recording");
 	}
 	
 	relFrames.push_back(frame);
@@ -278,7 +252,7 @@ void Model::recordGesture(Frame frame)
 	{
 		if (! frame.equals(frameNeutral))
 		{
-			Console::print("+");
+			Console::print("Motion detected -- start recording frames");
 			startedMoving = true;
 		}
 		else
@@ -289,9 +263,10 @@ void Model::recordGesture(Frame frame)
 					
 	framesBuffer.push_back(frame);
 
-	if (framesBuffer.size() > 100 && framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - 100)))
+	if (framesBuffer.size() > notMovingFrameDelay &&
+		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - notMovingFrameDelay)))
 	{
-		Gesture gesture{getRelevantFramesFromBuffer()};
+		Gesture gesture{getRelevantFramesFromBuffer(notMovingFrameDelay)};
 		addGesture(activeGestureClassLabel, gesture);
 		recording = false;
 		initialized = false;
@@ -299,24 +274,3 @@ void Model::recordGesture(Frame frame)
 		Console::print("Recording stopped");
 	}
 }
-
-
-
-
-//ONLY FOR TESTING -- DELETE AFTERWARDS
-//THIS CODE WILL BE USED FOR DETECTING MOVEMENT
-/*
-if (counter % 30 == 0)
-{
-oldFrame = newFrame;
-newFrame = std::make_shared<Frame>(relFrame);
-Console::printsl(oldFrame->equals(*newFrame));
-counter = 1;
-}
-else
-{
-counter++;
-}
-*/
-//ONLY FOR TESTING -- END
-

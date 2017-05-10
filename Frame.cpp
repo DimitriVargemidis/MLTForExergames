@@ -1,27 +1,15 @@
 #include <Kinect.h>
-#include <chrono>
 #include <cmath>
 
 #include "Frame.h"
 
 
-Frame::Frame():
-	leftHand { HandState_Open }, rightHand{ HandState_Open }
+Frame::Frame() : leftHand{ HandState_Open }, rightHand{ HandState_Open }
 {
-	//Set the (absolute) timestamp
-	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-	//	std::chrono::system_clock::now().time_since_epoch()).count());
-	setTimestamp(0);
 }
 
-Frame::Frame(std::vector<Joint> jointVector, bool relative):
-	leftHand{HandState_Open},rightHand{HandState_Open}
+Frame::Frame(std::vector<Joint> jointVector, bool relative) : leftHand{ HandState_Open },rightHand{ HandState_Open }
 {
-	//Set the (absolute) timestamp
-	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-	//	std::chrono::system_clock::now().time_since_epoch()).count());
-	setTimestamp(0);
-
 	if (relative)
 	{
 		jointVector = convertToRelativeToJoint(JointType_SpineMid, jointVector);
@@ -31,11 +19,6 @@ Frame::Frame(std::vector<Joint> jointVector, bool relative):
 
 Frame::Frame(IBody * body, bool relative)
 {
-	//Set the (absolute) timestamp
-	//setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(
-	//	std::chrono::system_clock::now().time_since_epoch()).count());
-	setTimestamp(0);
-
 	//Get the joints from the given IBody
 	Joint bodyJoints[JointType_Count];
 	body -> GetJoints(_countof(bodyJoints), bodyJoints);
@@ -141,16 +124,6 @@ const int Frame::getNumberOfJoints() const
 	return joints.size();
 }
 
-const double Frame::getTimestamp() const
-{
-	return timestamp;
-}
-
-void Frame::setTimestamp(double timestampToSet)
-{
-	timestamp = timestampToSet;
-}
-
 const HandState Frame::getRightHand() const
 {
 	return rightHand;
@@ -169,4 +142,25 @@ const HandState Frame::getLeftHand() const
 void Frame::setLeftHand(HandState left)
 {
 	leftHand = left;
+}
+
+svm_node * Frame::toArray() const
+{
+	svm_node * rawArray{ new svm_node[FRAME_DIMENSIONS + 1] };
+	int indexCount{ 0 };
+	for (int i = 0; i < NB_OF_JOINTS; i++) {
+		rawArray[indexCount].index = indexCount;
+		rawArray[indexCount].value = getJoints().at(i).Position.X;
+		indexCount = indexCount + 1;
+		rawArray[indexCount].index = indexCount;
+		rawArray[indexCount].value = getJoints().at(i).Position.Y;
+		indexCount = indexCount + 1;
+		rawArray[indexCount].index = indexCount;
+		rawArray[indexCount].value = getJoints().at(i).Position.Z;
+		indexCount = indexCount + 1;
+	}
+	
+	rawArray[indexCount].index = -1;
+	rawArray[indexCount].value = 0;
+	return rawArray;
 }

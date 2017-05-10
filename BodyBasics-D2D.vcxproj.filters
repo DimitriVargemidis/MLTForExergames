@@ -43,9 +43,6 @@
       <Filter>libraries</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp" />
-    <ClCompile Include="save.cpp">
-      <Filter>libraries</Filter>
-    </ClCompile>
     <ClCompile Include="Filewriter.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
@@ -132,9 +129,6 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Console.h" />
-    <ClInclude Include="save.h">
-      <Filter>libraries</Filter>
-    </ClInclude>
     <ClInclude Include="Filewriter.h">
       <Filter>libraries</Filter>
     </ClInclude>
