@@ -6,7 +6,7 @@ UI_Object::UI_Object():
 	color{D2D1::ColorF::White}
 {
 	//temporary hard coded object
-	centerCoordImage.x = 100;
+	centerCoordImage.x = 100+250;
 	centerCoordImage.y = 200;
 	widthImage = 150;
 	heightImage = 150;

@@ -29,6 +29,8 @@ public:
 
 	std::string getName();
 	void setName(std::string nameToSet);
+
+	
 };
 
 static int appGestureID;

@@ -24,6 +24,8 @@ public:
 
 	std::string getName();
 	void setName(std::string nameToSet);
+
+	void DeleteGestureWithID(int ID);
 };
 
 static int appGestureClassID;

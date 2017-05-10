@@ -86,6 +86,8 @@ public:
 	void				addToLabelsBuffer(double label);
 	double				getMostFrequentLabel();
 
+	std::shared_ptr<GestureClass>		getGestureClassByID(const int & ID);
+
 	void displayFrames();
 
 	void				processBody(INT64 nTime, int nBodyCount, IBody** ppBodies);

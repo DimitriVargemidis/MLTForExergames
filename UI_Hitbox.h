@@ -13,12 +13,14 @@
 
 #include "Abstr_UI_Hitbox.h"
 
+class UI;
+
 class UI_Hitbox : public Abstr_UI_Hitbox
 {
 public:
 	UI_Hitbox();
-	UI_Hitbox(float Xcenter, float Ycenter, float width, float height);
-	UI_Hitbox(float Xcenter, float Ycenter, float width, float height, std::function<void(int)> callback, int ID_Model = -1);
+	UI_Hitbox(	float Xcenter, float Ycenter, float width, float height,
+				std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model = -1);
 	~UI_Hitbox();
 	/*
 

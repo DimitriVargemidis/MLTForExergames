@@ -173,6 +173,15 @@ double Model::getMostFrequentLabel()
 	return mostDouble;
 }
 
+std::shared_ptr<GestureClass>	 Model::getGestureClassByID(const int & ID)
+{
+	for (int i = 0; i < gestureClasses.size(); i++)
+	{
+		if (gestureClasses[i]->getGestureClassID() == ID)
+			return gestureClasses[i];
+	}
+}
+
 void Model::displayFrames()
 {
 	if (view->checkResource())

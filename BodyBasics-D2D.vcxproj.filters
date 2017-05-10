@@ -76,6 +76,10 @@
     <ClCompile Include="UI_HitboxLockScrolBar.cpp">
       <Filter>UI_data\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="Abstr_Screen.cpp" />
+    <ClCompile Include="UI_CallbackFunctions.cpp">
+      <Filter>UI_data\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -161,6 +165,10 @@
       <Filter>UI_data\Controller</Filter>
     </ClInclude>
     <ClInclude Include="UI_HitboxLockScrolBar.h">
+      <Filter>UI_data\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Abstr_Screen.h" />
+    <ClInclude Include="UI_CallbackFunctions.h">
       <Filter>UI_data\Controller</Filter>
     </ClInclude>
   </ItemGroup>

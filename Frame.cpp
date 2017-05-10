@@ -73,12 +73,14 @@ std::vector<Joint> Frame::convertToNearAbsToJoint(_JointType center, std::vector
 {
 	std::vector<Joint> transformedJoints(joints.size());
 
+	float Xcenter = joints[center].Position.X;
+
 	for (int j = 0; j < joints.size(); ++j)
 	{
 		//Convert to coordinates relative to the spine
 		CameraSpacePoint still = joints[j].Position;
-
-		//still.X = 0.0;
+	
+		still.X = Xcenter;
 		still.Y = 0.3;
 		still.Z = 2.6;
 

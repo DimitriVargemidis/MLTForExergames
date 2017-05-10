@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Abstr_Screen.cpp" />
     <ClCompile Include="Abstr_UI_Hitbox.cpp" />
     <ClCompile Include="Abstr_UI_HitboxSlideButton.cpp" />
     <ClCompile Include="BodyBasics.cpp" />
@@ -40,6 +41,7 @@
     <ClCompile Include="ProjectGesture.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UI_CallbackFunctions.cpp" />
     <ClCompile Include="UI_Hitbox.cpp" />
     <ClCompile Include="UI_HitboxHoverSlideButton.cpp" />
     <ClCompile Include="UI_HitboxLockScrolBar.cpp" />
@@ -54,6 +56,7 @@
     <ResourceCompile Include="BodyBasics.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Abstr_Screen.h" />
     <ClInclude Include="Abstr_UI_Hitbox.h" />
     <ClInclude Include="Abstr_UI_HitboxSlideButton.h" />
     <ClInclude Include="BodyBasics.h" />
@@ -79,6 +82,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UI_CallbackFunctions.h" />
     <ClInclude Include="UI_Hitbox.h" />
     <ClInclude Include="UI_HitboxHoverSlideButton.h" />
     <ClInclude Include="UI_HitboxLockScrolBar.h" />

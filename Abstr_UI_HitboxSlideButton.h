@@ -1,5 +1,8 @@
 #pragma once
 #include "Abstr_UI_Hitbox.h"
+
+class UI;
+
 class Abstr_UI_HitboxSlideButton: 
 	public Abstr_UI_Hitbox
 {
@@ -7,7 +10,7 @@ public:
 	Abstr_UI_HitboxSlideButton();
 	Abstr_UI_HitboxSlideButton(float Xcenter, float Ycenter, float width, float height,
 		float left = 100.0, float right = 0.0, float up = 0.0, float down = 0.0, float activation = 0.5,
-		std::function<void(int)> callback = [](int) { printf("no particular action defined = wrong constructor used"); } , int ID_Model = -1);
+		std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model = -1);
 	~Abstr_UI_HitboxSlideButton();
 
 	//action executed when a condition is met, to be overrided by the child

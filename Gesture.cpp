@@ -74,6 +74,7 @@ void Gesture::setName(std::string nameToSet)
 	name = nameToSet;
 }
 
+
 int getAppGestureID()
 {
 	appGestureID++;
