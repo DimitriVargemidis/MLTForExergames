@@ -45,14 +45,14 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 	int rowCount{0};
 
 	for (const auto & keyValue : projectMap) {
-		double fraction = 0;
-		int counter = 0;
-		int labelOffset = 0;
 		for (const Gesture & g : keyValue.second.first->getGestures()) {
+			double fraction = 0;
+			int counter = 0;
+			int labelOffset = 0;
 			for (const Frame & f : g.getFrames())
 			{
 				fraction = counter / ((double)g.getFrames().size());
-				labelOffset = (int)(fraction / thresholdFraction);
+				labelOffset = (int)(fraction / THRESHOLD_FRACTION);
 				counter++;
 
 				labels[rowCount] = keyValue.first + labelOffset;
@@ -73,6 +73,7 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 
 double SVMInterface::test(svm_model & model, Frame & frame) {
 	svm_node * testnode = frame.toArray();
+
 	double resultLabel = svm_predict(& model, testnode);
 	
 	delete[] testnode;

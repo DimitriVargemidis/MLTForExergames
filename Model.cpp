@@ -119,13 +119,30 @@ std::vector<Frame> Model::getRelevantFramesFromBuffer(int offset)
 
 void Model::addToLabelsBuffer(double label)
 {
-	if (label <= 0)
+	if (label < 1)
 	{
 		return;
 	}
 
 	labelsBuffer.push_back(label);
+	predictedLabel = label;
+	/*
+	for (const auto & item : activeProject->getProjectMap())
+	{
+		if (item.first == (SVMInterface::NB_OF_LABEL_DIVISIONS - 1))
+		{
+			for (int i = labelsBuffer.size(); i > 0; i--)
+			{
+				if (labelsBuffer.at(i) == SVMInterface::NB_OF_LABEL_DIVISIONS - 2)
+				{
+					for (int j = i; j > 0; j--)
+					{
 
+					}
+				}
+			}
+		}
+	}*/
 	
 }
 
@@ -219,8 +236,8 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						trained = true;
 					}
 					addToLabelsBuffer(SVMInterface::test(activeProject->getSVMModel(), relFrame));
-					view->setPredictedLabel(labelsBuffer.back());
-					labelsBuffer.clear();
+					view->setPredictedLabel(predictedLabel);
+					labelsBuffer.clear(); //##################################################################
 				}
 			}
 			else if (i == currentActiveBody)			//If the current tracked body is lost for this frame
