@@ -23,12 +23,6 @@
     <ClCompile Include="UI.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
-    <ClCompile Include="GUI.cpp">
-      <Filter>UI_data</Filter>
-    </ClCompile>
-    <ClCompile Include="DUI.cpp">
-      <Filter>UI_data</Filter>
-    </ClCompile>
     <ClCompile Include="D2D_Graphics.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
@@ -105,12 +99,6 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>UI_data</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>UI_data</Filter>
-    </ClInclude>
-    <ClInclude Include="DUI.h">
       <Filter>UI_data</Filter>
     </ClInclude>
     <ClInclude Include="D2D_Graphics.h">
