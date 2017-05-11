@@ -9,22 +9,22 @@
 
 namespace Filewriter
 {
-	const std::string frameString{ "frame" };
-	const std::string gestureString{ "gesture" };
-	const std::string gestureClassString{ "gestclass" };
-	const std::string actionString{ "action" };
-	const std::string labelString{ "label" };
-	const std::string nameString{ "name" };
-	const std::string dateString{ "date" };
-	const std::string svmString{ "svm" };
+	const std::string FRAME_STRING{ "frame" };
+	const std::string GESTURE_STRING{ "gesture" };
+	const std::string GESTURECLASS_STRING{ "gestclass" };
+	const std::string ACTION_STRING{ "action" };
+	const std::string LABEL_STRING{ "label" };
+	const std::string NAME_STRING{ "name" };
+	const std::string DATE_STRING{ "date" };
+	const std::string SVM_STRING{ "svm" };
 
-	const std::string gestureExtension{ ".gest" };
-	const std::string gestureClassExtension{ ".gestclass" };
-	const std::string projectExtension{ ".project" };
-	const std::string svmModelExtension{ ".svmmodel" };
+	const std::string GESTURE_EXTENSION{ ".gest" };
+	const std::string GESTURECLASS_EXTENSION{ ".gestclass" };
+	const std::string PROJECT_EXTENSION{ ".project" };
+	const std::string SVM_MODEL_EXTENSION{ ".svmmodel" };
 
-	const std::string subDirectoryString{ "DATA/" };
-	const std::string subDirectoryNameString{ "DATA" };
+	const std::string SUBDIRECTORY_STRING{ "DATA/" };
+	const std::string SUBDIRECTORY_NAME_STRING{ "DATA" };
 
 	void save(std::shared_ptr<Project> & project);
 	void save(std::shared_ptr<GestureClass> & gestureClass);

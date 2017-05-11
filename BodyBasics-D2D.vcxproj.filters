@@ -17,9 +17,6 @@
     <ClCompile Include="Project.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectGesture.cpp">
-      <Filter>model_subclasses</Filter>
-    </ClCompile>
     <ClCompile Include="GestureClass.cpp">
       <Filter>model_subclasses</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="Project.h">
-      <Filter>model_subclasses</Filter>
-    </ClInclude>
-    <ClInclude Include="ProjectGesture.h">
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="GestureClass.h">

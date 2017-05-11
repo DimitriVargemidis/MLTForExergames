@@ -15,11 +15,14 @@ private:
 	int				projectID = 0;
 	std::string		name = "Project";
 	bool			trainedSVM = false;
+	int				longestGestureSize = 1;
 
-	std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> projectMap;
-	std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>::iterator projectMapIt;
+	std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> projectMap;
+	std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>::iterator projectMapIt;
 
 public:
+	const double	GESTURE_SIZE_MARGIN = 1.3;
+
 	Project();
 
 	void setSVMModel(svm_model & modelToSet);
@@ -29,25 +32,28 @@ public:
 	void setProjectID(int ID);
 	
 	std::string getName();
-	void setName(std::string nameToSet);
+	void setName(std::string & nameToSet);
 
-	std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & getProjectMap();
+	std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & getProjectMap();
 
-	void addNew(double label, std::shared_ptr<GestureClass> gestureClass = nullptr, std::vector<Action> actions = std::vector<Action>());
-	void replaceGestureClass(double label, std::shared_ptr<GestureClass> gestureClass = nullptr);
-	void addGesture(double label, Gesture gesture);
-	void replaceActions(double label, std::vector<Action> actions = std::vector<Action>());
-	void addAction(double label, Action action);
-	void addAction(double label, WORD keycode, bool hold);
-	bool containsLabel(double label);
+	void addNew(int label, std::shared_ptr<GestureClass> gestureClass = nullptr, std::vector<Action> & actions = std::vector<Action>());
+	void replaceGestureClass(int label, std::shared_ptr<GestureClass> gestureClass = nullptr);
+	void addGesture(int label, Gesture & gesture);
+	void replaceActions(int label, std::vector<Action> & actions = std::vector<Action>());
+	void addAction(int label, Action & action);
+	void addAction(int label, WORD keycode, bool hold);
+	bool containsLabel(int label);
 
-	std::shared_ptr<GestureClass> getGestureClass(double label);
-	std::vector<Action> getActions(double label);
+	std::shared_ptr<GestureClass> getGestureClass(int label);
+	std::vector<Action> & getActions(int label);
 
 	bool hasTrainedSVM();
 
-	void activate(double label);
-	void deactivate(double label);
+	int getLongestGestureSize();
+	void setLongestGestureSize();
+
+	void activate(int label);
+	void deactivate(int label);
 };
 
 static int appProjectID;

@@ -15,21 +15,22 @@ private:
 
 public:
 
+	const int POSTURE_THRESHOLD = 20;
+
 	Gesture(Frame & frameToAdd);
-	Gesture(std::vector<Frame> framesToAdd = std::vector<Frame>());
+	Gesture(std::vector<Frame> & framesToAdd = std::vector<Frame>());
+
 	const std::vector<Frame> & getFrames() const;
 	void addFrame(Frame & frameToAdd);
 	void clearFrames();
 	const int getNumberOfFrames() const;
-	const int getNumberOfJointsPerFrame() const;
 	const bool isPosture() const;
 
 	int getGestureID();
 	void setGestureID(int ID);
 
 	std::string getName();
-	void setName(std::string nameToSet);
-
+	void setName(std::string & nameToSet);
 	
 };
 

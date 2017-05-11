@@ -3,8 +3,6 @@
 
 #include <memory>
 #include <iostream>
-#include <chrono>
-typedef std::chrono::high_resolution_clock Clock;
 
 #include "stdafx.h"
 #include "Project.h"
@@ -24,19 +22,19 @@ private:
 
 	std::vector<std::shared_ptr<Project>>		projects;
 	std::vector<std::shared_ptr<GestureClass>>	gestureClasses;
-	std::vector<double>							labelsBuffer;
+	std::vector<int>							labelsBuffer;
 	std::vector<Frame>							framesBuffer;
 
-	const int		bodyLostLimit = 30;				//The amount of frames that the body is able to be lost
-	const int		maxBufferSize = 30;				//The number of labels to be stored in the labels buffer
-	const int		notMovingFrameDelay = 30;
+	const int		BODY_LOST_LIMIT = 30;				//The amount of frames that the body is able to be lost
+	const int		NOT_MOVING_FRAME_DELAY = 38;
+
 	int				activeGestureClassLabel = 0;	//temporary label to identify which gestureclass this gesture belongs to
-	double			predictedLabel = -1;
-	double			previousPredictedLabel = -1;
+	int				predictedLabel = -1;
+	int				previousPredictedLabel = -1;
 	bool			refresh = false;				//boolean if the current frame needs to be added to a gestureclass or not
 	bool			predict = false;				//boolean if the program is in prediction mode or not
 	bool			trained = false;
-	
+
 	bool			recording = false;
 	bool			startedMoving = false;
 	bool			initialized = false;
@@ -45,13 +43,12 @@ private:
 	int				currentActiveBody = -1	;	//the index of the body that is being tracked
 	int				bodyLostCounter = 0		;	//The counter that tracked how long the tracked body has been lost
 
-	//used in the Processbody function
+	//Used in the Processbody function
 	std::vector<Frame>		relFrames;			//The vector with frames that are drawn on the screen
 	std::vector<Frame>		absFrames;			//The vector with frames that are drawn on the screen
 
 	IBody *					pBody;				//The body that is being processed
 	
-
 public:
 	Model();
 	~Model();
@@ -60,38 +57,30 @@ public:
 
 	std::shared_ptr<Project>	getProject();
 	void				train();
-	double				test(Frame & frame);
-	
-	double				SVMInputData[54];
-	int					SVMInputDataIndex = 0;
+	int					test(Frame & frame);
 
 	void				setActiveLabel(int label);
-	int					getActiveLabel();
-	
 	void				setRefresh(bool refresh);
-	bool				getRefresh();
-
 	void				setPredict(bool refresh);
-	bool				getPredict();
-
 	void				setTrained(bool train);
-	bool				getTrained();
 
 	void				addActionToActive(WORD keycode, bool hold);
-
-	void				addGesture(double label, Gesture gesture);
+	void				addGesture(int label, Gesture gesture);
 
 	std::vector<Frame>	getRelevantFramesFromBuffer(int offset);
 
-	void				addToLabelsBuffer(double label);
-	double				getMostFrequentLabel();
+	void				addToLabelsBuffer(int label);
+	bool				isGestureExecuted(int offsetLabel, int posInBuffer, int recursiveCounter, int badCounter);
+	void				resizeLabelsBuffer();
+	void				predictAndExecute(int label);
 
 	std::shared_ptr<GestureClass>		getGestureClassByID(const int & ID);
 
 	void displayFrames();
 
 	void				processBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
-	void				recordGesture(Frame frame);
+	void				recordGesture(Frame & frame);
+	void				addRecordedGesture();
 };
 
 #endif //MODEL_H
