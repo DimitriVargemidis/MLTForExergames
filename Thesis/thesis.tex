@@ -1,0 +1,87 @@
+%%%%%%%%%%%%%%%%%%%%
+% Thesis main file %
+%%%%%%%%%%%%%%%%%%%%
+%\documentclass[11pt,a4paper]{report} 										% niet recto-verso
+\documentclass[11pt,a4paper,twoside,openright]{report} 		% recto-verso
+
+\usepackage[a4paper,left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}		% om niet ascii karakters rechtstreeks te kunnen ingeven
+%\usepackage[utf8]{inputenc}		% commentarieer deze regel uit als je utf8 encoded files gebruikt in plaats van latin1
+\usepackage{natbib}
+\usepackage{listings}         	% voor het weergeven van broncode
+\usepackage{verbatim}						% weergeven van code, commando's, ...
+\usepackage{hyperref}						% maak PDF van de thesis navigeerbaar
+\usepackage{url}								% URL's invoegen in tekst met behulp van \url{http://}
+\usepackage[small,bf,hang]{caption}	% om de captions wat te verbeteren
+\usepackage[final]{pdfpages}		% gebruikt voor het invoegen van het artikel in pdf-formaat
+\usepackage{pslatex}						% andere lettertype's dan de standaard types
+\usepackage{sectsty}						% aanpassen van de fonts van sections en chapters
+
+\allsectionsfont{\sffamily}
+\chapterfont{\raggedleft\sffamily}
+
+\usepackage{float}							% De optie H voor de plaatsing van figuren op de plaats waar je ze invoegt. bvb. \begin{figure}[H]
+\usepackage{longtable}					% tabellen die over meerdere pagina's gespreid worden
+%\usepackage[times]{quotchap}		% indien je fancy hoofdstuktitels wil
+%\usepackage[none]{hyphenat}
+%\usepackage{latexsym}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+
+\usepackage{fiiw_groepT_eng}
+
+\acknowledgementspagetrue
+\acknowledgements{preface}
+\abstractpagetrue
+\abstracts{abstract}
+\listoffigurespagetrue
+\listoftablespagetrue
+\listofsymbolspagetrue
+\listofsymbols{symbols}
+
+\opleiding{Elektronica-ICT}
+\afdeling{Internet computing}
+
+\title{Design and implementation of\phantom{tj}\\
+a user interface for controlling computer games\phantom{tj}\\
+using a Kinect camera as part of\phantom{tj}\\
+physical therapy}
+\subtitle{ }
+
+\forenameA{Christiaan}
+\surnameA{Vanbergen}
+\forenameB{Dimitri}
+\surnameB{Vargemidis}
+\academicyear{2016 - 2017}
+
+\promotorA[Promotor]{prof.\ dr.\ ir.\ L.\ Geurts}
+\promotorB[Co-promotor]{ir.\ K.\ Vanderloock}
+
+\begin{document}
+\selectlanguage{english}
+\preface
+
+\input{chapter1}
+\input{chapter2}
+\input{chapter3}
+\input{chapter4}
+\input{chapter5}
+\input{chapter6}
+\input{chapter7}
+
+\appendix
+\input{appendix1}
+
+% Bijlage met daarin het wetenschappelijk artikel
+%\chapter{Beschrijving van deze masterproef in de vorm van een wetenschappelijk artikel}
+%\includepdf{artikel.pdf}
+
+% Bijlage met daarin de poster
+%\chapter{Poster}
+%\includepdf{poster.pdf}
+
+\includepdf{back_fiiw_groepT_eng.pdf}
+
+\end{document}
