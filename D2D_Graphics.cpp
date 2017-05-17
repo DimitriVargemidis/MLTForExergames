@@ -1,42 +1,17 @@
 #include <vector>
-
-
 #include "stdafx.h"
 #include "resource.h"
 
 #include "D2D_Graphics.h"
 
-static const float c_JointThickness = 3.0f;
-static const float c_TrackedBoneThickness = 6.0f;
-static const float c_InferredBoneThickness = 1.0f;
-static const float c_HandSize = 30.0f;
 
-
-D2D_Graphics::D2D_Graphics():
-m_pD2DFactory(NULL),
-m_pRenderTarget(NULL),
-m_pBrushJointTracked(NULL),
-m_pBrushJointInferred(NULL),
-m_pBrushBoneTracked(NULL),
-m_pBrushBoneInferred(NULL),
-m_pBrushHandClosed(NULL),
-m_pBrushHandOpen(NULL),
-m_pBrushHandLasso(NULL),
-m_pBrushUpButton(NULL),
-m_pBrushDownButton(NULL),
-m_pBrushRightButton(NULL),
-m_pBrushLeftButton(NULL),
-m_pBrushAButton(NULL)
-
+D2D_Graphics::D2D_Graphics()
 {
-
 }
-
 
 D2D_Graphics::~D2D_Graphics()
 {
 }
-
 
 ID2D1HwndRenderTarget * D2D_Graphics::GetRenderTarget()
 {
@@ -48,10 +23,8 @@ void D2D_Graphics::SetRenderTarget(ID2D1HwndRenderTarget * renderTarget)
 	m_pRenderTarget = renderTarget;
 }
 
-/// <summary>
-/// Ensure necessary Direct2d resources are created
-/// </summary>
-/// <returns>S_OK if successful, otherwise an error code</returns>
+// Ensure necessary Direct2d resources are created
+// Returns: S_OK if successful, otherwise an error code</returns>
 HRESULT D2D_Graphics::EnsureDirect2DResources(HWND m_hWnd)
 {
 	HRESULT hr = S_OK;
@@ -68,7 +41,7 @@ HRESULT D2D_Graphics::EnsureDirect2DResources(HWND m_hWnd)
 		rtProps.pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE);
 		rtProps.usage = D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE;
 
-		// Create a Hwnd render target, in order to render to the window set in initialize
+		//Create a Hwnd render target, in order to render to the window set in initialize
 		hr = m_pD2DFactory->CreateHwndRenderTarget(
 			rtProps,
 			D2D1::HwndRenderTargetProperties(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), size),
@@ -77,7 +50,6 @@ HRESULT D2D_Graphics::EnsureDirect2DResources(HWND m_hWnd)
 
 		if (FAILED(hr))
 		{
-			//SetStatusMessage(L"Couldn't create Direct2D render target!", 10000, true);
 			return hr;
 		}
 
@@ -98,20 +70,37 @@ HRESULT D2D_Graphics::EnsureDirect2DResources(HWND m_hWnd)
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
 
-		for (int i = 0; i < 5; ++i)
-		{
-			//buttonC
-		}
+		m_pBodyColor = D2D1::ColorF(D2D1::ColorF::DarkGreen, 1.f);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green, 1.f), &m_pBodyBrush);
 
+		ID2D1GradientStopCollection * pGradientStops = NULL;
 
+		D2D1_GRADIENT_STOP gradientStops[2];
+		gradientStops[0].color = D2D1::ColorF(D2D1::ColorF::LightGreen, 1.f);
+		gradientStops[0].position = 0.0f;
+		gradientStops[1].color = m_pBodyColor;
+		gradientStops[1].position = 1.0f;
+
+		m_pRenderTarget->CreateGradientStopCollection(
+			gradientStops,
+			2,
+			D2D1_GAMMA_2_2,
+			D2D1_EXTEND_MODE_CLAMP,
+			&pGradientStops
+		);
+
+		m_pRenderTarget->CreateLinearGradientBrush(
+			D2D1::LinearGradientBrushProperties(
+				D2D1::Point2F(0,0),
+				D2D1::Point2F(1152, 813)),
+			pGradientStops,
+			&m_pBodyGradient
+		);
 	}
-
 	return hr;
 }
 
-/// <summary>
-/// Dispose Direct2d resources 
-/// </summary>
+//Dispose Direct2d resources 
 void D2D_Graphics::DiscardDirect2DResources()
 {
 	SafeRelease(m_pRenderTarget);
@@ -131,15 +120,22 @@ void D2D_Graphics::DiscardDirect2DResources()
 	SafeRelease(m_pBrushAButton);
 }
 
+void D2D_Graphics::InitD2D()
+{
+	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+}
 
+void D2D_Graphics::CleanD2D()
+{
+	DiscardDirect2DResources();
+	SafeRelease(m_pD2DFactory);
+}
 
-/// <summary>
-/// Converts a body point to screen space
-/// </summary>
-/// <param name="bodyPoint">body point to tranform</param>
-/// <param name="width">width (in pixels) of output buffer</param>
-/// <param name="height">height (in pixels) of output buffer</param>
-/// <returns>point in screen-space</returns>
+//Converts a body point to screen space
+//"bodyPoint": body point to tranform
+//"width": width (in pixels) of output buffer
+//"height": height (in pixels) of output buffer
+//Returns: point in screen-space
 D2D1_POINT_2F D2D_Graphics::BodyToScreen(const CameraSpacePoint& bodyPoint, int width, int height, ICoordinateMapper* m_pCoordinateMapper, int cDepthWidth, int cDepthHeight)
 {
 	// Calculate the body's position on the screen
@@ -152,253 +148,203 @@ D2D1_POINT_2F D2D_Graphics::BodyToScreen(const CameraSpacePoint& bodyPoint, int 
 	return D2D1::Point2F(screenPointX, screenPointY);
 }
 
-/// <summary>
-/// Draws a body 
-/// </summary>
-/// <param name="pJoints">joint data</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
+//Draws a body 
+//"pJoints": joint data
+//"pJointPoints": joint positions converted to screen space
 void D2D_Graphics::DrawBody(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, const int colorID)
 {
-	// Draw the bones
 	changeColor(colorID);
-
-	// Torso
-	DrawBone(pJoints, pJointPoints, JointType_Head, JointType_Neck);
-	DrawBone(pJoints, pJointPoints, JointType_Neck, JointType_SpineShoulder);
-	DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_SpineMid);
-	DrawBone(pJoints, pJointPoints, JointType_SpineMid, JointType_SpineBase);
-	DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_ShoulderRight);
-	DrawBone(pJoints, pJointPoints, JointType_SpineShoulder, JointType_ShoulderLeft);
-	DrawBone(pJoints, pJointPoints, JointType_SpineBase, JointType_HipRight);
-	DrawBone(pJoints, pJointPoints, JointType_SpineBase, JointType_HipLeft);
-
-	// Right Arm    
-	DrawBone(pJoints, pJointPoints, JointType_ShoulderRight, JointType_ElbowRight);
-	DrawBone(pJoints, pJointPoints, JointType_ElbowRight, JointType_WristRight);
-	DrawBone(pJoints, pJointPoints, JointType_WristRight, JointType_HandRight);
-	DrawBone(pJoints, pJointPoints, JointType_HandRight, JointType_HandTipRight);
-	DrawBone(pJoints, pJointPoints, JointType_WristRight, JointType_ThumbRight);
-
-	// Left Arm
-	DrawBone(pJoints, pJointPoints, JointType_ShoulderLeft, JointType_ElbowLeft);
-	DrawBone(pJoints, pJointPoints, JointType_ElbowLeft, JointType_WristLeft);
-	DrawBone(pJoints, pJointPoints, JointType_WristLeft, JointType_HandLeft);
-	DrawBone(pJoints, pJointPoints, JointType_HandLeft, JointType_HandTipLeft);
-	DrawBone(pJoints, pJointPoints, JointType_WristLeft, JointType_ThumbLeft);
-
-	// Right Leg
-	DrawBone(pJoints, pJointPoints, JointType_HipRight, JointType_KneeRight);
-	DrawBone(pJoints, pJointPoints, JointType_KneeRight, JointType_AnkleRight);
-	DrawBone(pJoints, pJointPoints, JointType_AnkleRight, JointType_FootRight);
-
-	// Left Leg
-	DrawBone(pJoints, pJointPoints, JointType_HipLeft, JointType_KneeLeft);
-	DrawBone(pJoints, pJointPoints, JointType_KneeLeft, JointType_AnkleLeft);
-	DrawBone(pJoints, pJointPoints, JointType_AnkleLeft, JointType_FootLeft);
 
 	// Draw the joints
 	for (int i = 0; i < JointType_Count; ++i)
 	{
-		D2D1_ELLIPSE ellipse = D2D1::Ellipse(pJointPoints[i], c_JointThickness, c_JointThickness);
-
-		if (pJoints[i].TrackingState == TrackingState_Inferred)
+		if (i == JointType_KneeLeft || i == JointType_KneeRight || i == JointType_ElbowLeft || i == JointType_ElbowRight
+			|| i == JointType_ShoulderLeft || i == JointType_ShoulderRight)
 		{
-			m_pRenderTarget->FillEllipse(ellipse, m_pBrushJointInferred);
-		}
-		else if (pJoints[i].TrackingState == TrackingState_Tracked)
-		{
-			m_pRenderTarget->FillEllipse(ellipse, m_pBrushJointTracked);
+			D2D1_ELLIPSE ellipse = D2D1::Ellipse(pJointPoints[i], c_JointThickness, c_JointThickness);
+			m_pRenderTarget->FillEllipse(ellipse, m_pBodyGradient);
 		}
 	}
 
-	/*
+	drawHead(pJointPoints);
 
-	//SELFMADE CODE
-	//simple button 
-	int Xoffset = 100;
-	int size = 50;
-	int Xpos = 400;
-	int Ypos = 450;
+	// Right Arm    
+	DrawBone(pJoints, pJointPoints, JointType_ShoulderRight, JointType_ElbowRight, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_ElbowRight, JointType_WristRight, c_BoneThickness);
+	drawHand(pJointPoints[JointType_HandRight]);
+	
+	// Left Arm
+	DrawBone(pJoints, pJointPoints, JointType_ShoulderLeft, JointType_ElbowLeft, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_ElbowLeft, JointType_WristLeft, c_BoneThickness);
+	drawHand(pJointPoints[JointType_HandLeft]);
+	
+	// Right Leg
+	DrawBone(pJoints, pJointPoints, JointType_HipRight, JointType_KneeRight, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_KneeRight, JointType_AnkleRight, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_AnkleRight, JointType_FootRight, c_BoneThickness);
 
-	D2D_RECT_F measureButton = D2D1::RectF(1000, 1000, 1200, 1200);
-	D2D_RECT_F up = D2D1::RectF(Xpos + size + Xoffset, Ypos, Xpos + size + size + Xoffset, Ypos + size);
-	D2D_RECT_F left = D2D1::RectF(Xpos + Xoffset, Ypos + size, Xpos + size + Xoffset, Ypos + size + size);
-	D2D_RECT_F down = D2D1::RectF(Xpos + size + Xoffset, Ypos + size + size, Xpos + size + size + Xoffset, Ypos + size + size + size);
-	D2D_RECT_F right = D2D1::RectF(Xpos + size + size + Xoffset, Ypos + size, Xpos + size + size + size + Xoffset, Ypos + size + size);
-	D2D1_POINT_2F APos;
-	APos.x = 150;
-	APos.y = 550;
-	D2D1_ELLIPSE Abutton = D2D1::Ellipse(APos, 75, 75);
+	// Left Leg
+	DrawBone(pJoints, pJointPoints, JointType_HipLeft, JointType_KneeLeft, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_KneeLeft, JointType_AnkleLeft, c_BoneThickness);
+	DrawBone(pJoints, pJointPoints, JointType_AnkleLeft, JointType_FootLeft, c_BoneThickness);
 
-
-	m_pRenderTarget->FillRectangle(up, m_pBrushUpButton);
-	m_pRenderTarget->FillRectangle(down, m_pBrushDownButton);
-	m_pRenderTarget->FillRectangle(left, m_pBrushLeftButton);
-	m_pRenderTarget->FillRectangle(right, m_pBrushRightButton);
-	m_pRenderTarget->FillEllipse(Abutton, m_pBrushAButton);
-
-	*/
-
-
-	//END SELFMADE
+	drawTorso(pJointPoints);
 }
 
-/// <summary>
-/// Draws one bone of a body (joint to joint)
-/// </summary>
-/// <param name="pJoints">joint data</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
-/// <param name="pJointPoints">joint positions converted to screen space</param>
-/// <param name="joint0">one joint of the bone to draw</param>
-/// <param name="joint1">other joint of the bone to draw</param>
-void D2D_Graphics::DrawBone(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, JointType joint0, JointType joint1)
+//Draws one bone of a body (joint to joint)
+//"pJoints": joint data
+//"pJointPoints": joint positions converted to screen space
+//"pJointPoints": joint positions converted to screen space
+//"joint0": one joint of the bone to draw
+//"joint1": other joint of the bone to draw
+void D2D_Graphics::DrawBone(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, JointType joint0, JointType joint1, float boneThickness)
 {
 
 	TrackingState joint0State = pJoints[joint0].TrackingState;
 	TrackingState joint1State = pJoints[joint1].TrackingState;
 
 	// If we can't find either of these joints, exit
-	if ((joint0State == TrackingState_NotTracked) || (joint1State == TrackingState_NotTracked))
+	if ((joint0State == TrackingState_NotTracked) || (joint1State == TrackingState_NotTracked) ||
+		(joint1State == TrackingState_Inferred) || (joint1State == TrackingState_Inferred))
 	{
 		return;
 	}
 
-	// Don't draw if both points are inferred
-	if ((joint0State == TrackingState_Inferred) && (joint1State == TrackingState_Inferred))
-	{
-		return;
-	}
+	m_pRenderTarget->DrawLine(pJointPoints[joint0], pJointPoints[joint1], m_pBodyGradient, boneThickness);
+}
 
-	// We assume all drawn bones are inferred unless BOTH joints are tracked
-	if ((joint0State == TrackingState_Tracked) && (joint1State == TrackingState_Tracked))
+void D2D_Graphics::drawTorso(const std::vector<D2D1_POINT_2F> pJointPoints)
+{
+	HRESULT hr = m_pD2DFactory->CreatePathGeometry(&m_pTorso);
+	if (SUCCEEDED(hr))
 	{
-		m_pRenderTarget->DrawLine(pJointPoints[joint0], pJointPoints[joint1], m_pBrushBoneTracked, c_TrackedBoneThickness);
-	}
-	else
-	{
-		m_pRenderTarget->DrawLine(pJointPoints[joint0], pJointPoints[joint1], m_pBrushBoneInferred, c_InferredBoneThickness);
+		ID2D1GeometrySink * pSink = NULL;
+
+		hr = m_pTorso->Open(&pSink);
+		if (SUCCEEDED(hr))
+		{
+			pSink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+			pSink->BeginFigure(
+				pJointPoints[JointType_ShoulderLeft],
+				D2D1_FIGURE_BEGIN_FILLED
+			);
+			D2D1_POINT_2F points[] = {
+				D2D1::Point2F(pJointPoints[JointType_ShoulderLeft].x - 5, pJointPoints[JointType_ShoulderLeft].y - 10),
+				D2D1::Point2F(pJointPoints[JointType_SpineShoulder].x, pJointPoints[JointType_SpineShoulder].y - 10),
+				D2D1::Point2F(pJointPoints[JointType_ShoulderRight].x + 5, pJointPoints[JointType_ShoulderRight].y - 10),
+				D2D1::Point2F(pJointPoints[JointType_HipRight].x + 10, pJointPoints[JointType_HipRight].y + 12),
+				D2D1::Point2F(pJointPoints[JointType_HipLeft].x - 10, pJointPoints[JointType_HipLeft].y + 12),
+			};
+			pSink->AddLines(points, ARRAYSIZE(points));
+			pSink->EndFigure(D2D1_FIGURE_END_CLOSED);
+		}
+		hr = pSink->Close();
+
+
+		m_pRenderTarget->FillGeometry(m_pTorso, m_pBodyGradient);
+
+		if (pSink != NULL)
+		{
+			pSink->Release();
+			pSink = NULL;
+		}
 	}
 }
 
+void D2D_Graphics::drawHead(const std::vector<D2D1_POINT_2F> pJointPoints)
+{
+	D2D1_ELLIPSE ellipse = D2D1::Ellipse(pJointPoints[JointType_Head], 45, 45);
+	m_pRenderTarget->FillEllipse(&ellipse, m_pBodyGradient);
+}
 
-/// <summary>
-/// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
-/// </summary>
-/// <param name="handState">state of the hand</param>
-/// <param name="handPosition">position of the hand</param>
-void D2D_Graphics::DrawHand(HandState handState, const D2D1_POINT_2F& handPosition)
+//Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
+//handState": state of the hand
+//"handPosition": position of the hand
+void D2D_Graphics::drawHand(const D2D1_POINT_2F & handPosition)
 {
 	D2D1_ELLIPSE ellipse = D2D1::Ellipse(handPosition, c_HandSize, c_HandSize);
+	m_pRenderTarget->FillEllipse(ellipse, m_pBodyGradient);
+}
 
-	switch (handState)
+void D2D_Graphics::drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color)
+{
+	ID2D1SolidColorBrush* colorBrush;
+	D2D_RECT_F rect = D2D1::RectF(center.x - width / 2, center.y - height / 2, center.x + width / 2, center.y + height / 2);
+	m_pRenderTarget->CreateSolidColorBrush(color, &colorBrush);
+	m_pRenderTarget->FillRectangle(rect, colorBrush);
+	SafeRelease(colorBrush);
+}
+
+void D2D_Graphics::drawText(std::string text)
+{
+	/*
+	IDWriteTextFormat *pTextFormat_;
+
+	if (SUCCEEDED(hr))
 	{
-	case HandState_Closed:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandClosed);
-		break;
-
-	case HandState_Open:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandOpen);
-		break;
-
-	case HandState_Lasso:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandLasso);
-		break;
+	hr = pDWriteFactory_->CreateTextFormat(
+	L"Gabriola",
+	NULL,
+	DWRITE_FONT_WEIGHT_REGULAR,
+	DWRITE_FONT_STYLE_NORMAL,
+	DWRITE_FONT_STRETCH_NORMAL,
+	72.0f,
+	L"en-us",
+	&pTextFormat_
+	);
 	}
+
+	m_pRenderTarget->DrawTextW(text, text.size(), )
+
+	SafeRelease(pTextFormat_);
+	*/
 }
 
-
-void D2D_Graphics::InitD2D()
-{
-	// Init Direct2D
-	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
-}
-
-void D2D_Graphics::CleanD2D()
-{
-	DiscardDirect2DResources();
-	SafeRelease(m_pD2DFactory);
-}
-
-//limited to 15 different color
+//limited to 15 different colors
 void D2D_Graphics::changeColor(int colorID)
 {
-	
 	switch (colorID)
 	{
 	case 0:
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushJointInferred);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
-
 		break;
 	case 1:
-		
-
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f , 0.0f , 0.0f), &m_pBrushJointTracked);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f ), &m_pBrushBoneTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBrushJointTracked);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBrushBoneTracked);
 		break;
 	case 2:
-		
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushBoneTracked);
 		break;
 	case 3:
-
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 0.0f, 1.0f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 0.0f, 1.0f), &m_pBrushBoneTracked);
 		break;
 	case 4:
-
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
 		break;
 	case 5:
-
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 1.0f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 1.0f, 1.0f), &m_pBrushBoneTracked);
 		break;
-
 	case 6:
-	
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 1.0f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 1.0f), &m_pBrushBoneTracked);
 		break;
 	case 7:
-
-
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.5f, 0.5f, 0.5f), &m_pBrushJointTracked);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.5f, 0.5f, 0.5f), &m_pBrushBoneTracked);
 		break;
 	}
-	
-
-	/*
-	if (colorID < 15)
-	{
-		float c = colorID*0.05; //the change in the color from skelet to skelet
-
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f + c, 0.75f - c, 0.25f + c), &m_pBrushJointTracked);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f + c, 1.0f - c, 0.0f + c), &m_pBrushBoneTracked);
-	}
-	else
-	{
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.25f, 0.75f, 0.25f), &m_pBrushJointTracked);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0.0f, 1.0f, 0.0f), &m_pBrushBoneTracked);
-	}
-	*/
 }
 
 void D2D_Graphics::changeButtonColor(int state)
 {
-
-
 	ID2D1SolidColorBrush** buttonColor;
 
 	switch (state)
@@ -413,7 +359,7 @@ void D2D_Graphics::changeButtonColor(int state)
 	case 3:
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushUpButton);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushDownButton);
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red , 0.5f), &m_pBrushLeftButton);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushLeftButton);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushAButton);
 		break;
@@ -445,45 +391,5 @@ void D2D_Graphics::changeButtonColor(int state)
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Blue, 0.5f), &m_pBrushRightButton);
 		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red, 0.5f), &m_pBrushAButton);
 		break;
-
-
 	}
-
 }
-
-void D2D_Graphics::drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color)
-{
-	ID2D1SolidColorBrush* colorBrush;
-	D2D_RECT_F rect = D2D1::RectF(center.x-width/2, center.y - height / 2, center.x + width / 2, center.y + height / 2);
-	m_pRenderTarget->CreateSolidColorBrush(color, &colorBrush);
-	m_pRenderTarget->FillRectangle(rect, colorBrush);
-	SafeRelease(colorBrush);
-}
-
-void D2D_Graphics::drawText(std::string text)
-{
-/*
-	IDWriteTextFormat *pTextFormat_;
-
-	if (SUCCEEDED(hr))
-	{
-		hr = pDWriteFactory_->CreateTextFormat(
-			L"Gabriola",
-			NULL,
-			DWRITE_FONT_WEIGHT_REGULAR,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			72.0f,
-			L"en-us",
-			&pTextFormat_
-		);
-	}
-
-	m_pRenderTarget->DrawTextW(text, text.size(), )
-
-	SafeRelease(pTextFormat_);
-	*/
-}
-
-
-//SELFMADE FUNCTIONS
