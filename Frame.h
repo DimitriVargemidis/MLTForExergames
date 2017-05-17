@@ -9,19 +9,18 @@
 
 class Frame {
 private:
-	const float THRESHOLD_EQUALS = 0.10;
-
 	HandState rightHand;
 	HandState leftHand;
 	std::vector<Joint> joints;
 
 public:
+	const float THRESHOLD_EQUALS = 0.12;
 	const static int DIMENSIONS_PER_JOINT = 3;
 	const static int NB_OF_JOINTS = 25;
 	const static int FRAME_DIMENSIONS = DIMENSIONS_PER_JOINT * NB_OF_JOINTS;
 
 	Frame();
-	Frame(std::vector<Joint> jointVector, bool relative = true);
+	Frame(std::vector<Joint> & jointVector, bool relative = true);
 	Frame(IBody * body, bool relative = true);
 
 	void setFrame(Frame frame);

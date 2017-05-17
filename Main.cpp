@@ -33,14 +33,14 @@ int APIENTRY wWinMain(
 	Console::useConsole();
 	
 	//Create data directory if it does not exist.
-	std::wstring dirTemp = FilenameChecker::stringToWstring(Filewriter::subDirectoryNameString);
+	std::wstring dirTemp = FilenameChecker::stringToWstring(Filewriter::SUBDIRECTORY_NAME_STRING);
 	LPCWSTR dir = dirTemp.c_str();
 	CreateDirectory(dir, NULL);
 
 	//Initialize the IDs depending on the files saved in the DATA directory.
-	appGestureID = FilenameChecker::getHighestIDStored(Filewriter::gestureExtension);
-	appProjectID = FilenameChecker::getHighestIDStored(Filewriter::projectExtension);
-	appGestureClassID = FilenameChecker::getHighestIDStored(Filewriter::gestureClassExtension);
+	appGestureID = FilenameChecker::getHighestIDStored(Filewriter::GESTURE_EXTENSION);
+	appProjectID = FilenameChecker::getHighestIDStored(Filewriter::PROJECT_EXTENSION);
+	appGestureClassID = FilenameChecker::getHighestIDStored(Filewriter::GESTURECLASS_EXTENSION);
 
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);

@@ -8,7 +8,7 @@ Frame::Frame() : leftHand{ HandState_Open }, rightHand{ HandState_Open }
 {
 }
 
-Frame::Frame(std::vector<Joint> jointVector, bool relative) : leftHand{ HandState_Open },rightHand{ HandState_Open }
+Frame::Frame(std::vector<Joint> & jointVector, bool relative) : leftHand{ HandState_Open },rightHand{ HandState_Open }
 {
 	if (relative)
 	{

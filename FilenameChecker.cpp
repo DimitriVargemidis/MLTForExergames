@@ -27,7 +27,7 @@ std::vector<std::string> FilenameChecker::getAllFileNames(std::string extension)
 {
 	std::vector<std::string> names;
 	
-	std::string tempPath = Filewriter::subDirectoryString + "*" + extension;
+	std::string tempPath = Filewriter::SUBDIRECTORY_STRING + "*" + extension;
 	std::wstring strTemp = stringToWstring(tempPath);
 	LPCWSTR path = strTemp.c_str();
 

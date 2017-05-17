@@ -44,10 +44,11 @@ void Model::train()
 	activeProject->setSVMModel(*(SVMInterface::train(activeProject->getProjectMap())));
 	Console::print("SVM trained");
 	Filewriter::save(activeProject);
-	Console::print("Project saved");
+	Console::printsl(" -- Project saved");
+	activeProject->setLongestGestureSize();
 }
 
-double Model::test(Frame & frame)
+int Model::test(Frame & frame)
 {
 	return SVMInterface::test(activeProject->getSVMModel(), frame);
 }
@@ -57,19 +58,9 @@ void Model::setActiveLabel(int label)
 	activeGestureClassLabel = label;
 }
 
-int Model::getActiveLabel()
-{
-	return activeGestureClassLabel;
-}
-
 void Model::setRefresh(bool refresh)
 {
 	this->refresh = refresh;
-}
-
-bool Model::getRefresh()
-{
-	return refresh;
 }
 
 void Model::setPredict(bool refresh)
@@ -77,29 +68,9 @@ void Model::setPredict(bool refresh)
 	this->predict = refresh;
 }
 
-bool Model::getPredict()
-{
-	return predict;
-}
-
 void Model::setTrained(bool train)
 {
 	trained = train;
-}
-
-bool Model::getTrained()
-{
-	return trained;
-}
-
-void Model::setRecording(bool record)
-{
-	recording = record;
-}
-
-bool Model::getRecording()
-{
-	return recording;
 }
 
 void Model::addActionToActive(WORD keycode, bool hold)
@@ -107,7 +78,7 @@ void Model::addActionToActive(WORD keycode, bool hold)
 	activeProject->addAction(activeGestureClassLabel, keycode, hold);
 }
 
-void Model::addGesture(double label, Gesture gesture)
+void Model::addGesture(int label, Gesture gesture)
 {
 	if (activeProject->containsLabel(label))
 	{
@@ -123,68 +94,103 @@ void Model::addGesture(double label, Gesture gesture)
 
 std::vector<Frame> Model::getRelevantFramesFromBuffer(int offset)
 {
-	std::vector<Frame>::const_iterator first = framesBuffer.begin();
-	std::vector<Frame>::const_iterator last = framesBuffer.end() - offset;
-	return std::vector<Frame>(first, last);
+	return std::vector<Frame>(framesBuffer.begin(), framesBuffer.end() - offset);
 }
 
-void Model::addToLabelsBuffer(double label)
+void Model::addToLabelsBuffer(int label)
 {
-	if (label < 1)
-	{
-		return;
-	}
-
 	labelsBuffer.push_back(label);
-	predictedLabel = label;
-	/*
-	for (const auto & item : activeProject->getProjectMap())
-	{
-		if (item.first == (SVMInterface::NB_OF_LABEL_DIVISIONS - 1))
-		{
-			for (int i = labelsBuffer.size(); i > 0; i--)
-			{
-				if (labelsBuffer.at(i) == SVMInterface::NB_OF_LABEL_DIVISIONS - 2)
-				{
-					for (int j = i; j > 0; j--)
-					{
 
-					}
-				}
-			}
-		}
-	}*/
-	
+	if (labelsBuffer.size() > activeProject->getLongestGestureSize())
+	{
+		resizeLabelsBuffer();
+	}
 }
 
-double Model::getMostFrequentLabel()
+bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
 {
-	std::sort(labelsBuffer.begin(), labelsBuffer.end());
-	double currentDouble = labelsBuffer[0];
-	double mostDouble = labelsBuffer[0];
-	int currentCount = 0;
-	int mostCount = 0;
-	for (const auto & c : labelsBuffer)
+	//The base label exists and is linked to a posture, so the posture has been executed.
+	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().begin()->isPosture())
 	{
-		if (c == currentDouble)
+		return true;
+	}
+
+	//Done enough recursive checks to confirm the gesture has been executed.
+	if (recursiveCounter >= SVMInterface::NB_OF_LABEL_DIVISIONS)
+	{
+		return true;
+	}
+
+	int nextLabelToCheck = checkLabel - 1;
+	for (int i = posInBuffer; i >= 0; i--)
+	{
+		if (labelsBuffer.at(i) == nextLabelToCheck)
 		{
-			currentCount++;
-		}
-		else
-		{
-			if (currentCount > mostCount)
-			{
-				mostDouble = currentDouble;
-				mostCount = currentCount;
-			}
-			currentDouble = c;
-			currentCount = 1;
+			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter + 1, 0);
 		}
 	}
-	return mostDouble;
+
+	//A label that is one less than the last label found cannot be found in the buffer, but the
+	//gesture may still have been executed, so keep checking for the next one.
+	if (badCounter > 0)
+	{
+		return false;
+	}
+
+	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter + 1, badCounter + 1);
 }
 
-std::shared_ptr<GestureClass>	 Model::getGestureClassByID(const int & ID)
+void Model::resizeLabelsBuffer()
+{
+	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
+}
+
+void Model::predictAndExecute(int label)
+{
+	//Find out what base label the given label belongs to.
+	int baseLabel = -1;
+	if (activeProject->containsLabel(label))
+	{
+		baseLabel = label;
+	}
+	else
+	{
+		for (int i = SVMInterface::NB_OF_LABEL_DIVISIONS; i > 0; i--)
+		{
+			if (activeProject->containsLabel(label - i))
+			{
+				baseLabel = label - i;
+				break;
+			}
+		}
+	}
+
+	if (isGestureExecuted(label, labelsBuffer.size() - 1, 1, 0))
+	{
+		previousPredictedLabel = predictedLabel;
+		predictedLabel = baseLabel;
+	
+		Console::print("Predicted label: ");
+		Console::printsl(predictedLabel);
+		labelsBuffer.clear();
+
+		if (previousPredictedLabel < 0)
+		{
+			activeProject->activate(predictedLabel);
+		}
+		else if (previousPredictedLabel != predictedLabel)
+		{
+			activeProject->deactivate(previousPredictedLabel);
+			activeProject->activate(predictedLabel);
+		}
+		else if (previousPredictedLabel == predictedLabel)
+		{
+			activeProject->activate(predictedLabel);
+		}
+	}
+}
+
+std::shared_ptr<GestureClass> Model::getGestureClassByID(const int & ID)
 {
 	for (int i = 0; i < gestureClasses.size(); i++)
 	{
@@ -193,7 +199,7 @@ std::shared_ptr<GestureClass>	 Model::getGestureClassByID(const int & ID)
 			if (gestureClasses[i]->getGestureClassID() == ID)
 				return gestureClasses[i];
 		}
-		
+		return nullptr;
 	}
 
 	//give the last gestureClass back
@@ -305,15 +311,16 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 						train();
 						trained = true;
 					}
-					addToLabelsBuffer(SVMInterface::test(activeProject->getSVMModel(), relFrame));
-					view->setPredictedLabel(predictedLabel);
-					labelsBuffer.clear(); //##################################################################
+					int label = SVMInterface::test(activeProject->getSVMModel(), relFrame);
+					addToLabelsBuffer(label);
+					predictAndExecute(label);
+					view->setPredictedLabel(label);
 				}
 			}
 			else if (i == currentActiveBody)			//If the current tracked body is lost for this frame
 			{
 				bodyLostCounter++;						//Increment the lostBodyCounter
-				if (bodyLostCounter > bodyLostLimit)	//If the limit is reached, reset the currentActiveBody
+				if (bodyLostCounter > BODY_LOST_LIMIT)	//If the limit is reached, reset the currentActiveBody
 				{
 					currentActiveBody = -1;
 					bodyLostCounter = 0;
@@ -331,7 +338,7 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 	displayFrames();
 }
 
-void Model::recordGesture(Frame frame)
+void Model::recordGesture(Frame & frame)
 {
 	if (!initialized)
 	{
@@ -341,6 +348,7 @@ void Model::recordGesture(Frame frame)
 	}
 	
 	relFrames.push_back(frame);
+	framesBuffer.push_back(frame);
 
 	if (!startedMoving)
 	{
@@ -348,27 +356,27 @@ void Model::recordGesture(Frame frame)
 		{
 			Console::print("Motion detected -- start recording frames");
 			startedMoving = true;
+			framesBuffer.clear();
+		}
+		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY)
+		{
+			Console::print("Standing still -- posture recorded");
+			addRecordedGesture();
 		}
 		else
 		{
 			return;
 		}
 	}
-					
-	framesBuffer.push_back(frame);
 
-	if (framesBuffer.size() > notMovingFrameDelay &&
-		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - notMovingFrameDelay)))
+	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&
+		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY)))
 	{
-		Gesture gesture{getRelevantFramesFromBuffer(notMovingFrameDelay)};
-		addGesture(activeGestureClassLabel, gesture);
-		recording = false;
-		initialized = false;
-		startedMoving = false;
-		Console::print("Recording stopped");
-		updateUI = true;
+		addRecordedGesture();
 	}
 }
+
+	
 
 bool Model::getCountDownInit()
 {
@@ -390,3 +398,13 @@ bool Model::getUpdateUI()
 	return updateUI;
 }
 
+void Model::addRecordedGesture()
+{
+	Gesture gesture{ getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-10) };
+	addGesture(activeGestureClassLabel, gesture);
+	recording = false;
+	initialized = false;
+	startedMoving = false;
+	framesBuffer.clear();
+	Console::print("Recording stopped");
+}

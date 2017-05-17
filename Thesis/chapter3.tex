@@ -1,0 +1,73 @@
+\chapter{Design}
+
+The properties of the application are chosen in function of solving the problem discussed in the introduction. The focus is on simplifying the setup process for the therapist, while still providing all tools needed for the patients to play a game using gesture input.\\
+
+The developed application can roughly be split up into three major parts. Firstly, the graphical user interface allows the therapist to interact with the application, providing him with feedback and feedforward on inputting exercises for the patients. Secondly, gesture recognition is done as part of machine learning using support vector machines (SVM). Thirdly, all other back-end software connects the first two parts and provides a structure in which all data is managed and stored.
+
+
+\section{Properties of the application}
+
+The developed application can be seen as the link between the physical exercises and a game.\\
+
+The physical therapist comes up with exercises that fit the needs of a patient. He uses the Kinect camera to interact with the application via a graphical user interface (GUI). Next, the therapist lets the application record what exercises need to be done by the patient. Using all of the recorded exercises, an SVM model is created, which is used to evaluate what exercise is performed by the patient while playing a game.\\
+
+The therapist assigns a keyboard button to each of the exercise. This means that when the patient mimics one of the therapist's exercises, a keyboard button is pressed. If this application is running in the background while a computer game is opened in an active window, performing an exercise and thus indirectly pressing a button interacts with the game.\\
+
+INCLUDE FIGURE SHOWING A GENERAL OVERVIEW OF\\
+THE APPLICATION STRUCTURE IN BROADER CONTEXT\\
+
+By mapping exercises to keyboard buttons, a vast majority of available games can be played using gesture-based input. It is however limited to button presses, pointing with the cursor like when using a mouse is not supported.\\
+
+%KLAD
+Application is for Windows only, C$++$\\
+
+%KLAD
+The application has to be flexible enough to support exercises that are unknown beforehand; same with the games played.
+
+\begin{itemize}
+\item Op voorhand ongekende oefeningen
+\item Op voorhand ongekende game
+\item Systeem $=$ link tussen oefening en game
+\item \ldots
+\end{itemize}
+
+
+\section{Graphical user interface}
+
+\begin{itemize}
+\item Klassendiagramma voor GUI
+\item Algemene/schematische beschrijving van de voorgestelde oplossing.
+\item Procesbeschrijving, opties tussen verschillende types van interfaces (mime/dirigent)
+\item (Experimentele manier om tot prototype te komen door gesprek met kinesist (?))
+\item GUI $+$ bespreking
+\item \ldots
+\end{itemize}
+
+
+\section{Back-end software}
+
+\begin{itemize}
+\item Klassendiagramma van de code (niet voor GUI)
+\item Uitleg structuur
+\item \ldots
+\end{itemize}
+
+
+\section{Gesture recognition}
+
+In order to provide enough flexibility concerning the type of exercises, SVM is used. SVM supports supervised machine learning and its use encompasses two modes: train and predict.\\
+
+A model can be trained with a given set of data and a label to classify and identify the gesture. The amount of numbers in one data set is referred to as the number of features. It is possible to train the same gesture more than once. In that case, the same label is given along the data to indicate that the given data is related to the same gesture. That way, there is a set of gestures that appear to be the same, but actually have small variations due to noise during the measurement of the gesture or slightly varying execution of the gesture. When a model is created, a data set of a gesture can be entered to predict which recorded gesture has to most resemblance with the entered one. Predicting a gesture means that the label is returned of the gesture As a result of using multiple data sets for the same gesture, the model can predict more accurately what gesture is performed.\\
+
+However, there are drawbacks to using SVM. Firstly, while inputting repeats of the same gesture helps with predicting the gesture after a model is created, recording these gestures means that it takes more time for the therapist to perform them all. Secondly, even when all different gestures are each trained multiple times
+
+%KLAD
+Downside: multiple trainings, always returns a label to the most similar gesture\\
+
+As stated in the previous section, a gesture consists of multiple frames. Each frame contains 25 joints and each joint consists of an x, y and z component. This results in a total of 75 features that are being considered for each frame.\\
+
+Two approaches are considered when it comes down to learning how to recognize gestures.\\
+
+The first one is to add a time stamp to each frame as an extra feature, indicating the time relative to the first frame of the gesture. This results in having 76 features per frame. If performing a gesture takes about 3 seconds and is captured at a rate of 30 frames per second, this amounts to 2280 features for a 3-second gesture. In other words, the number of features of one entry depends on the length of the gesture. The entire gesture is classified as a single gesture.\\
+
+The second approach is to split up one gesture into a number of smaller gestures and classify each of them differently.

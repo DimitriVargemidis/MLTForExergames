@@ -5,17 +5,17 @@
 #include "SVMInterface.h"
 
 
-svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap) {
+svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap) {
 	//Set parameters
 	svm_parameter param;
 	param.svm_type = C_SVC;
 	param.kernel_type = RBF;
 	param.degree = 3;
-	param.gamma = 0.5;
+	param.gamma = 0.1;//0.5 or 0.01
 	param.coef0 = 0;
 	param.nu = 0.5;
 	param.cache_size = 100;
-	param.C = 1;
+	param.C = 10;//1
 	param.eps = 1e-3;
 	param.p = 0.1;
 	param.shrinking = 1;
@@ -51,10 +51,12 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 			int labelOffset = 0;
 			for (const Frame & f : g.getFrames())
 			{
-				fraction = counter / ((double)g.getFrames().size());
-				labelOffset = (int)(fraction / THRESHOLD_FRACTION);
-				counter++;
-
+				if (!g.isPosture())
+				{
+					fraction = counter / ((double)g.getFrames().size());
+					labelOffset = (int)(fraction / THRESHOLD_FRACTION);
+					counter++;
+				}
 				labels[rowCount] = keyValue.first + labelOffset;
 				x[rowCount] = f.toArray();
 				rowCount++;
@@ -71,10 +73,10 @@ svm_model * SVMInterface::train(std::map<double, std::pair<std::shared_ptr<Gestu
 	return model;
 }
 
-double SVMInterface::test(svm_model & model, Frame & frame) {
+int SVMInterface::test(svm_model & model, Frame & frame) {
 	svm_node * testnode = frame.toArray();
 
-	double resultLabel = svm_predict(& model, testnode);
+	int resultLabel = svm_predict(& model, testnode);
 	
 	delete[] testnode;
 

@@ -35,47 +35,47 @@ std::string Project::getName()
 	return name;
 }
 
-void Project::setName(std::string nameToSet)
+void Project::setName(std::string & nameToSet)
 {
 	name = nameToSet;
 }
 
-std::map<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>& Project::getProjectMap()
+std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>& Project::getProjectMap()
 {
 	return projectMap;
 }
 
-void Project::addNew(double label, std::shared_ptr<GestureClass> gestureClass, std::vector<Action> actions)
+void Project::addNew(int label, std::shared_ptr<GestureClass> gestureClass, std::vector<Action> & actions)
 {
-	projectMap.insert(std::pair<double, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>(
+	projectMap.insert(std::pair<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>>(
 		label, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>(gestureClass, actions)));
 }
 
-void Project::replaceGestureClass(double label, std::shared_ptr<GestureClass> gestureClass)
+void Project::replaceGestureClass(int label, std::shared_ptr<GestureClass> gestureClass)
 {
 	projectMapIt = projectMap.find(label);
 	projectMapIt->second.first = gestureClass;
 }
 
-void Project::addGesture(double label, Gesture gesture)
+void Project::addGesture(int label, Gesture & gesture)
 {
 	projectMapIt = projectMap.find(label);
 	projectMapIt->second.first->addGesture(gesture);
 }
 
-void Project::replaceActions(double label, std::vector<Action> actions)
+void Project::replaceActions(int label, std::vector<Action> & actions)
 {
 	projectMapIt = projectMap.find(label);
 	projectMapIt->second.second = actions;
 }
 
-void Project::addAction(double label, Action action)
+void Project::addAction(int label, Action & action)
 {
 	projectMapIt = projectMap.find(label);
 	projectMapIt->second.second.push_back(action);
 }
 
-void Project::addAction(double label, WORD keycode, bool hold)
+void Project::addAction(int label, WORD keycode, bool hold)
 {
 	Action action;
 	action.keycode = keycode;
@@ -86,19 +86,19 @@ void Project::addAction(double label, WORD keycode, bool hold)
 	projectMapIt->second.second.push_back(action);
 }
 
-bool Project::containsLabel(double label)
+bool Project::containsLabel(int label)
 {
 	projectMapIt = projectMap.find(label);
 	return projectMapIt == projectMap.end() ? false : true;
 }
 
-std::shared_ptr<GestureClass> Project::getGestureClass(double label)
+std::shared_ptr<GestureClass> Project::getGestureClass(int label)
 {
 	projectMapIt = projectMap.find(label);
 	return projectMapIt->second.first;
 }
 
-std::vector<Action> Project::getActions(double label)
+std::vector<Action> & Project::getActions(int label)
 {
 	projectMapIt = projectMap.find(label);
 	return projectMapIt->second.second;
@@ -109,7 +109,28 @@ bool Project::hasTrainedSVM()
 	return trainedSVM;
 }
 
-void Project::activate(double label)
+int Project::getLongestGestureSize()
+{
+	return longestGestureSize;
+}
+
+void Project::setLongestGestureSize()
+{
+	for (const auto & key : projectMap)
+	{
+		for (const auto & gesture : key.second.first->getGestures())
+		{
+			int gestureSize = gesture.getFrames().size();
+			if (gestureSize > longestGestureSize)
+			{
+				longestGestureSize = gestureSize;
+			}
+		}
+	}
+	longestGestureSize = longestGestureSize * GESTURE_SIZE_MARGIN;
+}
+
+void Project::activate(int label)
 {
 	if (containsLabel(label))
 	{
@@ -131,7 +152,7 @@ void Project::activate(double label)
 	}
 }
 
-void Project::deactivate(double label)
+void Project::deactivate(int label)
 {
 	if (containsLabel(label))
 	{

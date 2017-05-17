@@ -9,7 +9,7 @@ Gesture::Gesture(Frame & frameToAdd) : gestureID{ getAppGestureID() }
 	addFrame(frameToAdd);
 }
 
-Gesture::Gesture(std::vector<Frame> framesToAdd) : gestureID{ getAppGestureID() }, frames{ framesToAdd }
+Gesture::Gesture(std::vector<Frame> & framesToAdd) : gestureID{ getAppGestureID() }, frames{ framesToAdd }
 {
 }
 
@@ -44,14 +44,9 @@ const int Gesture::getNumberOfFrames() const
 	return frames.size();
 }
 
-const int Gesture::getNumberOfJointsPerFrame() const
-{
-	return frames.at(0).getNumberOfJoints();
-}
-
 const bool Gesture::isPosture() const
 {
-	return (getNumberOfFrames() == 1);
+	return frames.size() < POSTURE_THRESHOLD;
 }
 
 int Gesture::getGestureID()
@@ -69,7 +64,7 @@ std::string Gesture::getName()
 	return name;
 }
 
-void Gesture::setName(std::string nameToSet)
+void Gesture::setName(std::string & nameToSet)
 {
 	name = nameToSet;
 }

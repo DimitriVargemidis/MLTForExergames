@@ -15,16 +15,16 @@ private:
 
 public:
 	GestureClass();
-	GestureClass(const Gesture gesture);
+	GestureClass(const Gesture & gesture);
 
-	void addGesture(const Gesture gesture);
+	void addGesture(const Gesture & gesture);
 	std::vector<Gesture> & getGestures();
 
 	int getGestureClassID();
 	void setGestureClassID(int ID);
 
 	std::string getName();
-	void setName(std::string nameToSet);
+	void setName(std::string & nameToSet);
 
 	void DeleteGestureWithID(int ID);
 	std::shared_ptr<Gesture>  getGestureWithID(const int ID);

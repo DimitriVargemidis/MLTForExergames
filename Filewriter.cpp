@@ -11,10 +11,10 @@ void Filewriter::save(std::shared_ptr<Project> & project)
 	std::ostringstream sstream;
 	sstream << project->getProjectID();
 	std::string fileName = sstream.str();
-	fileName.append(projectExtension);
+	fileName.append(PROJECT_EXTENSION);
 	overwrite(fileName, std::string());
 
-	std::string nameLine = Filewriter::nameString + " " + project->getName();
+	std::string nameLine = Filewriter::NAME_STRING + " " + project->getName();
 	write(fileName, nameLine);
 
 	if (project->hasTrainedSVM())
@@ -22,7 +22,7 @@ void Filewriter::save(std::shared_ptr<Project> & project)
 		save(project->getSVMModel(), project->getProjectID());
 
 		std::ostringstream svmStream;
-		svmStream << Filewriter::svmString << " ";
+		svmStream << Filewriter::SVM_STRING << " ";
 		svmStream << project->getProjectID();
 		std::string svmLine = svmStream.str();
 		write(fileName, svmLine);
@@ -33,7 +33,7 @@ void Filewriter::save(std::shared_ptr<Project> & project)
 		save(keyValue.second.first);
 
 		std::string projectLine;
-		projectLine.append(gestureClassString);
+		projectLine.append(GESTURECLASS_STRING);
 		projectLine.append(" ");
 
 		std::ostringstream projectSStream;
@@ -46,7 +46,7 @@ void Filewriter::save(std::shared_ptr<Project> & project)
 		for (const Action & action : keyValue.second.second)
 		{
 			std::string actionLine;
-			actionLine.append(actionString);
+			actionLine.append(ACTION_STRING);
 			actionLine.append(" ");
 
 			std::ostringstream actionSStream;
@@ -65,10 +65,10 @@ void Filewriter::save(std::shared_ptr<GestureClass> & gestureClass)
 	std::ostringstream sstream;
 	sstream << gestureClass->getGestureClassID();
 	std::string fileName = sstream.str();
-	fileName.append(Filewriter::gestureClassExtension);
+	fileName.append(Filewriter::GESTURECLASS_EXTENSION);
 	overwrite(fileName, std::string());
 
-	std::string nameLine = Filewriter::nameString + " " + gestureClass->getName();
+	std::string nameLine = Filewriter::NAME_STRING + " " + gestureClass->getName();
 	write(fileName, nameLine);
 
 	for (Gesture & gesture : gestureClass->getGestures())
@@ -76,7 +76,7 @@ void Filewriter::save(std::shared_ptr<GestureClass> & gestureClass)
 		save(gesture);
 
 		std::string gestureLine;
-		gestureLine.append(Filewriter::gestureString);
+		gestureLine.append(Filewriter::GESTURE_STRING);
 		gestureLine.append(" ");
 
 		std::ostringstream gestureSStream;
@@ -91,16 +91,16 @@ void Filewriter::save(Gesture & gesture)
 	std::ostringstream sstream;
 	sstream << gesture.getGestureID();
 	std::string fileName = sstream.str();
-	fileName.append(gestureExtension);
+	fileName.append(GESTURE_EXTENSION);
 	overwrite(fileName, std::string());
 
-	std::string nameLine = Filewriter::nameString + " " + gesture.getName();
+	std::string nameLine = Filewriter::NAME_STRING + " " + gesture.getName();
 	write(fileName, nameLine);
 
 	for (const Frame & frame : gesture.getFrames())
 	{
 		std::string frameLine;
-		frameLine.append(frameString);
+		frameLine.append(FRAME_STRING);
 		frameLine.append(" ");
 		std::ostringstream frameSStream;
 		for (const Joint & joint : frame.getJoints())
@@ -118,9 +118,9 @@ void Filewriter::save(Gesture & gesture)
 void Filewriter::save(svm_model & svmModel, int projectID)
 {
 	std::ostringstream sstream;
-	sstream << Filewriter::subDirectoryString;
+	sstream << Filewriter::SUBDIRECTORY_STRING;
 	sstream << projectID;
-	sstream << Filewriter::svmModelExtension;
+	sstream << Filewriter::SVM_MODEL_EXTENSION;
 	std::string filename = sstream.str();
 	
 	char fname[25];
@@ -132,7 +132,7 @@ void Filewriter::save(svm_model & svmModel, int projectID)
 void Filewriter::write(std::string & fileName, std::string & data)
 {
 	std::ostringstream fNameStream;
-	fNameStream << subDirectoryString << fileName;
+	fNameStream << SUBDIRECTORY_STRING << fileName;
 	std::ofstream file(fNameStream.str(), std::fstream::app); //app: 'append', adds to the same file instead of overwriting.
 	file << data << std::endl;
 }
@@ -140,7 +140,7 @@ void Filewriter::write(std::string & fileName, std::string & data)
 void Filewriter::overwrite(std::string & fileName, std::string & data, bool endWithNewline)
 {
 	std::ostringstream fNameStream;
-	fNameStream << subDirectoryString << fileName;
+	fNameStream << SUBDIRECTORY_STRING << fileName;
 	std::ofstream file(fNameStream.str());
 	if (endWithNewline)
 	{
