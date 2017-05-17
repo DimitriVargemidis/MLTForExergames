@@ -31,7 +31,7 @@ public:
 
 	void MoveHitbox(const D2D1_POINT_2F & coord);
 
-	virtual void checkActivationCriteria();
+	virtual float checkActivationCriteria();
 	virtual void activateFunction() override = 0;
 
 	void setLastPoint(D2D1_POINT_2F pos) override;

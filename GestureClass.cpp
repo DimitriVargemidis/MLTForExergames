@@ -57,12 +57,25 @@ void GestureClass::DeleteGestureWithID(int ID)
 {
 	for (int i = 0; i < gestures.size(); i++)
 	{
-		if (gestures[i].getGestureID() == ID)
-		{		
+			if (gestures[i].getGestureID() == ID)
+			{
 				gestures.erase(gestures.begin() + i);
 				return;
+			}
+	}
+}
+
+std::shared_ptr<Gesture>   GestureClass::getGestureWithID(const int ID)
+{
+	for (int i = 0; i < gestures.size(); i++)
+	{
+		if (gestures[i].getGestureID() == ID)
+		{
+			return std::make_shared<Gesture>(gestures[i]);
 		}
 	}
+	//return the last if nothing is found
+	return nullptr;
 }
 
 int getAppGestureClassID()

@@ -149,7 +149,7 @@ void UI_HitboxLockScrolBar::lock_UI_Elements()
 
 	D2D1_POINT_2F	scrolcenter = getCenterCoordActionArea();
 	float			scrolHeight = getHeight();
-	float			UI_Height = getHeight_UI_element();
+	float			UI_Height = (getHeight_UI_element());
 	float			Ypos_1 = scrolcenter.y - scrolHeight / 2 + UI_Height/2;
 	D2D1_POINT_2F	UI_center;					//parameter that will temporarily keep the center coordinates of each UI_element
 
@@ -163,7 +163,7 @@ void UI_HitboxLockScrolBar::lock_UI_Elements()
 		if (i > selectedHitbox + 1)
 		{
 			//UI_elements[i]->moveAbsY(Ypos_1 - UI_Height*( i- (selectedHitbox+1) ));
-			UI_elements[i]->moveAbsYoriginalPos(Ypos_1 - UI_Height*(i - (selectedHitbox + 1)));
+			UI_elements[i]->moveAbsYoriginalPos(Ypos_1 - (UI_Height)*(i - (selectedHitbox + 1)));
 			UI_elements[i]->setCenterCoordActionArea(getOriginalPos());
 
 			//deactivate any active states of the hitbox

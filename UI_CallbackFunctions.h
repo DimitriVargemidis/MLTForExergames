@@ -13,6 +13,8 @@ namespace UI_CallbackFunctions
 
 	void deleteGesture(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI);
 
+	void recordGesture(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI);
 
+	void updateHitboxes(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI);
 };
 

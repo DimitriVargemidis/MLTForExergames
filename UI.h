@@ -6,7 +6,11 @@
 typedef std::chrono::high_resolution_clock Clock;
 
 #include "UI_Object.h"
+#include "UI_TextObject.h"
+#include "UI_FramesObject.h"
+#include "UI_BitmapObject.h"
 #include "UI_CallbackFunctions.h"
+#include "UI_Update_CallbackFunctions.h"
 #include "Abstr_UI_Hitbox.h"
 #include "UI_Hitbox.h"
 #include "UI_HitboxSlideButton.h"
@@ -14,6 +18,7 @@ typedef std::chrono::high_resolution_clock Clock;
 #include "UI_HitboxScrolBar.h"
 #include "UI_HitboxLockScrolBar.h"
 #include "Abstr_Screen.h"
+#include "recordScreen.h"
 
 #include "D2D_Graphics.h"
 
@@ -25,6 +30,12 @@ class Frame;
 
 // This class is both UI and Controller because the way the events in the UI are processed make them hard to seperate
 // see main window creation and callback method MessageRouter
+/*
+#ifndef GRAPHICS 
+#define GRAPHICS
+	D2D_Graphics			graphics;
+#endif
+	*/
 
 class UI
 {
@@ -65,18 +76,19 @@ public:
 	bool checkResource();
 	
 	//both absolute and relative frames are given to the ui the ui will decide which one will be drawn where
-	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
+	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes); //duplicate
 	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
 
-	//to Abstr_Screen
-	void drawUI();
-	//to Abstr_Screen
-	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
+	void updateHitboxes();  //duplicate
 
 	void changeButtonColor(int state);
 
 	void setMain(std::shared_ptr<Main> m);
-	void setModel(std::shared_ptr<Model> m);
+	void setModel(std::shared_ptr<Model> m); 
+
+	void createScreen(); //duplicate
+
+	void scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, float multiplier);//move
 
 
 	/// <summary>
@@ -96,7 +108,17 @@ public:
 
 	void setPredictedLabel(int label);
 	
-	void fillScrolbar(int ID);
+
+	void setRightHandBusy(const bool & busy);	
+	const bool & getRightHandBusy();			
+
+	void setLeftHandBusy(const bool & busy);	
+	const bool & getLeftHandBusy();	
+
+	void setScreen(const std::shared_ptr<Abstr_Screen> & scr);
+	const std::shared_ptr<Abstr_Screen> & getScreen();
+
+
 
 private:
 	
@@ -104,14 +126,15 @@ private:
 	INT64                   m_nNextStatusTime;
 
 	HWND*					hWndApp;
-	HWND                    m_hWnd;
-	D2D_Graphics			graphics;
+	//HWND                    m_hWnd;
+	//D2D_Graphics			graphics;
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
 	//to Abstr_Screen
 	std::vector<std::shared_ptr<Abstr_UI_Hitbox>>		UI_Hitboxes;	//list of UI control elements
-	std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
+	//std::shared_ptr<UI_HitboxLockScrolBar> scrollbarHitbox = nullptr;	//A seperate pointer to a scrollbar for easy access
+	//std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
 
 	std::shared_ptr<Abstr_Screen>	Screen;		//UI elements to be drawn
 

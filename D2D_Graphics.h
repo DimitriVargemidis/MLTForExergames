@@ -2,41 +2,20 @@
 
 #pragma once
 
+#pragma comment(lib, "dwrite")
+
 #include <Kinect.h>
 #include <memory>
 #include <vector>
+#include <dwrite.h>
 #include "resource.h"
-
-enum DWRITE_FONT_WEIGHT {
-	DWRITE_FONT_WEIGHT_THIN = 100,
-	DWRITE_FONT_WEIGHT_EXTRA_LIGHT = 200,
-	DWRITE_FONT_WEIGHT_ULTRA_LIGHT = 200,
-	DWRITE_FONT_WEIGHT_LIGHT = 300,
-	DWRITE_FONT_WEIGHT_SEMI_LIGHT = 350,
-	DWRITE_FONT_WEIGHT_NORMAL = 400,
-	DWRITE_FONT_WEIGHT_REGULAR = 400,
-	DWRITE_FONT_WEIGHT_MEDIUM = 500,
-	DWRITE_FONT_WEIGHT_DEMI_BOLD = 600,
-	DWRITE_FONT_WEIGHT_SEMI_BOLD = 600,
-	DWRITE_FONT_WEIGHT_BOLD = 700,
-	DWRITE_FONT_WEIGHT_EXTRA_BOLD = 800,
-	DWRITE_FONT_WEIGHT_ULTRA_BOLD = 800,
-	DWRITE_FONT_WEIGHT_BLACK = 900,
-	DWRITE_FONT_WEIGHT_HEAVY = 900,
-	DWRITE_FONT_WEIGHT_EXTRA_BLACK = 950,
-	DWRITE_FONT_WEIGHT_ULTRA_BLACK = 950
-
-};
-
-
-
 
 class D2D_Graphics
 {
 public:
 	D2D_Graphics();
 	~D2D_Graphics();
-
+	;
 	ID2D1HwndRenderTarget* GetRenderTarget();
 
 	void SetRenderTarget(ID2D1HwndRenderTarget* renderTarget);
@@ -101,11 +80,25 @@ public:
 	void					changeButtonColor(int state);
 
 	void					drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color);
-	void					drawText(std::string text);
+	void					drawText(std::wstring text, D2D1_POINT_2F center, float width = 100, float height = 50, D2D1::ColorF color = D2D1::ColorF::AliceBlue, float fontSize = 50, DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT_CENTER);
 
-//private:
+	ID2D1Bitmap	*			createBitmap(std::wstring filename, int srcWidth, int srcHeight);
+	void					drawBitmap(RGBQUAD * image, int srcWidth, int srcHeight, D2D1_POINT_2F center, float width, float height);
+	void					drawBitmap(ID2D1Bitmap * bitmap, D2D1_POINT_2F center, float width, float height);
+
+	void					scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, float multiplier);
+	void					scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, const float startWidth, const float startHeight, const float endWidth, const float endHeight, const float absXpos = -1, const float absYpos = -1);
+
+
+private:
+
+
 	// Direct2D
 	ID2D1Factory*           m_pD2DFactory;
+
+	// Direct2D Text resources
+	IDWriteTextFormat*		m_pTextFormat;
+	IDWriteFactory*			m_pDWriteFactory;
 
 	// Body/hand drawing
 	ID2D1HwndRenderTarget*  m_pRenderTarget;
@@ -123,6 +116,8 @@ public:
 	ID2D1SolidColorBrush*   m_pBrushRightButton;
 	ID2D1SolidColorBrush*   m_pBrushLeftButton;
 	ID2D1SolidColorBrush*   m_pBrushAButton;
+
+
 
 
 

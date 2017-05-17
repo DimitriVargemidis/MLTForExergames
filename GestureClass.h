@@ -2,6 +2,7 @@
 #define GESTURECLASS_H
 
 #include <vector>
+#include <memory>
 
 
 class Gesture;
@@ -26,6 +27,7 @@ public:
 	void setName(std::string nameToSet);
 
 	void DeleteGestureWithID(int ID);
+	std::shared_ptr<Gesture>  getGestureWithID(const int ID);
 };
 
 static int appGestureClassID;

@@ -11,6 +11,29 @@ void UI_CallbackFunctions::testCallback(int ID, int HitBoxIndex, std::shared_ptr
 
 void UI_CallbackFunctions::deleteGesture(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI)
 {
-	//model->getGestureClassByID(ID)->DeleteGestureWithID(ID);
-	printf("implement the delete function! ! \n");
+	std::shared_ptr<GestureClass> gestureClass = model->getGestureClassByID(UI->getScreen()->getGestureClassID());
+	if (gestureClass != nullptr)
+	{
+		gestureClass->DeleteGestureWithID(ID);
+		model->setUpdatUI(true);
+	}	
+	else
+	{
+		printf("no gestureClass with that ID !!\n");
+	}
+	
+}
+
+void UI_CallbackFunctions::recordGesture(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI)
+{
+	UI->getScreen()->setShowRecordScreen(true);
+	UI->getScreen()->setDrawAbsCoord(false);
+	model->setRefresh(true);
+	
+	
+}
+
+void UI_CallbackFunctions::updateHitboxes(int ID, int HitBoxIndex, std::shared_ptr<Model> model, std::shared_ptr<UI> UI)
+{
+	model->setUpdatUI(true);
 }

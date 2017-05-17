@@ -1,20 +1,36 @@
+#include <string>
+
 #include "UI.h"
+#include "Gesture.h"
 
 #include "UI_HitboxScrolBar.h"
+
+extern D2D_Graphics graphics;
 
 UI_HitboxScrolBar::UI_HitboxScrolBar() :
 	Abstr_UI_HitboxSlideButton()
 {
 }
 
-UI_HitboxScrolBar::UI_HitboxScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model):
-Abstr_UI_HitboxSlideButton {Xcenter, Ycenter, width, height, left, right, up, down, activation, callback, ID_Model}
+UI_HitboxScrolBar::UI_HitboxScrolBar(float Xcenter, float Ycenter, float width, float height, float left, float right, float up, float down, float activation, std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback, int ID_Model) :
+	Abstr_UI_HitboxSlideButton{ Xcenter, Ycenter, width, height, left, right, up, down, activation, callback, ID_Model }, 
+	topFiller{Xcenter, Ycenter -height, width_UI_Element, height, D2D1::ColorF::White},
+	bottomFiller{ Xcenter, Ycenter + height, width_UI_Element, height, D2D1::ColorF::White }
 {
 	delayMoveLimit = height_UI_Element*0.25; //the delay before the scroll starts is 75% of the height of 1 UI_element
 }
 
 UI_HitboxScrolBar::~UI_HitboxScrolBar()
 {
+}
+
+void UI_HitboxScrolBar::setModel(std::shared_ptr<Model> m)
+{
+	Abstr_UI_Hitbox::setModel(m);
+	for (int i = 0; i < UI_elements.size(); ++i)
+	{
+		UI_elements[i]->setModel(m);
+	}
 }
 
 void UI_HitboxScrolBar::moveLeftAction(D2D1_POINT_2F ref, float move)
@@ -203,26 +219,29 @@ void UI_HitboxScrolBar::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 	{
 		D2D1_POINT_2F center= getCenterCoordActionArea();
 	
-		center.y = (center.y - getHeight() / 2) + (height_UI_Element / 2 + j*height_UI_Element);
+		center.y = (center.y - getHeight() / 2) + (height_UI_Element / 2 + j*(height_UI_Element));
 		center.x -=  XoffsetDisplay; 
 		
 	
 		hitbox->setCenterCoordActionArea(center);
 		hitbox->setOriginalPos(center);
+		hitbox->setXoffset(0);
 
 		//Every iteration a new vector is not Ideal
 		std::vector<std::shared_ptr<UI_Object>> & UI_Objects = hitbox->get_UI_Objects();
 		
-		for (int j = 0; j < UI_Objects.size(); j++)
+		UI_Objects[0]->setCenter(center);
+		UI_Objects[0]->setHeight(height_UI_Element-10);
+		UI_Objects[0]->setWidth(width_UI_Element-10);
+
+		for (int j = 1; j < UI_Objects.size(); j++)
 		{
 			UI_Objects[j]->setCenter(center);
-			UI_Objects[j]->setHeight(height_UI_Element-10);
-			UI_Objects[j]->setWidth(width_UI_Element);
+			UI_Objects[j]->setHeight(height_UI_Element-30);
+			UI_Objects[j]->setWidth(width_UI_Element-30);
 		}
 
 	}
-
-	
 
 }
 
@@ -261,9 +280,96 @@ float UI_HitboxScrolBar::getHeight_UI_element()
 	return height_UI_Element;
 }
 
+void UI_HitboxScrolBar::setWidth_UI_element(float width)
+{
+	width_UI_Element = width;
+}
+
+float UI_HitboxScrolBar::getWidth_UI_element()
+{
+	return width_UI_Element;
+}
+
 std::vector<std::shared_ptr<Abstr_UI_Hitbox>> UI_HitboxScrolBar::get_UI_Elements()
 {
 	return UI_elements;
+}
+
+void UI_HitboxScrolBar::clear_UI_elements()
+{
+	UI_elements.clear();
+}
+
+void UI_HitboxScrolBar::draw()
+{
+	Abstr_UI_Hitbox::draw();
+	for (int i = 0; i < UI_elements.size(); ++i)
+	{
+		UI_elements[i]->draw();
+	}
+
+	graphics.drawRectangle(topFiller.getCenter(), topFiller.getWidth(), topFiller.getHeight(), topFiller.getColor());
+	graphics.drawRectangle(bottomFiller.getCenter(), bottomFiller.getWidth(), bottomFiller.getHeight(), bottomFiller.getColor());
+}
+
+void UI_HitboxScrolBar::attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)
+{
+	Abstr_UI_Hitbox::attemptInteraction(jointPoint, type, leftHand, rightHand);
+
+	for (int i = 0; i < UI_elements.size(); ++i)
+	{
+		UI_elements[i]->attemptInteraction(jointPoint, type, leftHand, rightHand);
+	}
+
+}
+//for now it is hardcoded but the idea is to use callbackfunction on your hitboxes to define this behavior
+void UI_HitboxScrolBar::updateData()
+{
+	Abstr_UI_Hitbox::updateData();
+
+	for (int i = 0; i < UI_elements.size(); ++i)
+	{
+		UI_elements[i]->updateData();
+	}
+	
+	/*
+		//std::shared_ptr<UI> shared_ptr_this(this);
+		std::shared_ptr<GestureClass> ActiveGestureClass = getModel()->getGestureClassByID(get_ID_ModelObject());
+		std::vector<Gesture> gestures = ActiveGestureClass->getGestures();
+
+		/*
+		std::shared_ptr<UI_Object> background = std::make_shared<UI_Object>(550 + 250, 350, 150, 500, D2D1::ColorF::Red);
+		//UI_Objects.push_back(testObject5);
+		std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(550 + 250, 250, 150, 100, D2D1::ColorF::Blue);
+		//UI_Objects.push_back(selectedBox);
+
+		add_UI_Object(background);
+		add_UI_Object(selectedBox);
+		*/
+	/*
+		int gestureID;
+
+		//for (int i = gestures.size()-1; i >= 0; i--)
+		for (int i = 0; i < gestures.size(); i++)
+		{
+			gestureID = gestures[i].getGestureID();
+
+
+			std::shared_ptr<UI_Object> testObject7 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
+			std::shared_ptr<UI_Object> text1 = std::make_shared<UI_TextObject>(400 + 250 - 30, 350, 75, 150, D2D1::ColorF::Black, std::to_wstring(i + 1), 20);
+			//std::shared_ptr<UI_Object> text = std::make_shared<UI_TextObject>(400 + 250+30, 350, 75, 150, D2D1::ColorF::Black,(std::to_wstring(gestureID)),20);
+			std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0, 0.5, UI_CallbackFunctions::deleteGesture, gestures[i].getGestureID()));
+
+			testHitbox7->add_UI_Object(testObject7);
+			//testHitbox7->add_UI_Object(text);
+			testHitbox7->add_UI_Object(text1);
+			testHitbox7->addInputJoint(JointType_HandLeft);
+			testHitbox7->addInputJoint(JointType_HandRight);
+			testHitbox7->setUI(getUI());
+
+			add_UI_Element(testHitbox7);
+		}
+		*/
 }
 
 

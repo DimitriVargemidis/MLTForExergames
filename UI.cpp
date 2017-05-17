@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <Winuser.h>
 #include <memory>
+#include <string>
 
 #include "stdafx.h"
 #include "D2D_Graphics.h"
@@ -12,119 +13,19 @@
 
 #include "UI.h"
 
-
-
+D2D_Graphics			graphics;
+HWND                    m_hWnd;
 
 UI::UI() :
-m_pCoordinateMapper(NULL),
-m_hWnd(NULL),
-graphics {}
+m_pCoordinateMapper(NULL)//,
+//m_hWnd(NULL)
+//graphics {}
 {
+	//const static std::shared_ptr<D2D_Graphics> graphicStaticPtr(&graphics);
+	//const static std::shared_ptr<UI> UI_static_ptr(this);
 	
-	std::shared_ptr<UI> shared_ptr_this(this);
-
-	std::shared_ptr<UI_Object> testObject = std::make_shared<UI_Object>();
-	UI_Objects.push_back(testObject);
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox(new UI_Hitbox());
-	UI_Hitboxes.push_back(testHitbox);
-	UI_Hitboxes[0]->add_UI_Object(testObject);
-	UI_Hitboxes[0]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[0]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[0]->setUI(shared_ptr_this);
-	
-	//object 2 
-	std::shared_ptr<UI_Object> testObject2 = std::make_shared<UI_Object>(100.0 + 250,350.0,150.0,150.0, D2D1::ColorF::White);
-	UI_Objects.push_back(testObject2);
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox2(new UI_HitboxSlideButton( 100 +250, 350, 150, 150, 0,100,0,0,0.5,UI_CallbackFunctions::testCallback ));
-	UI_Hitboxes.push_back(testHitbox2);
-	UI_Hitboxes[1]->add_UI_Object(testObject2);
-	UI_Hitboxes[1]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[1]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[1]->setUI(shared_ptr_this);
-
-	
-
-	
-	//test scrollbar element 1
-	std::shared_ptr<UI_Object> testObject3 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-	
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox3(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0));
-	UI_Hitboxes.push_back(testHitbox3);
-	UI_Hitboxes[2]->add_UI_Object(testObject3);
-	UI_Hitboxes[2]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[2]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[2]->setUI(shared_ptr_this);
-
-	//test scrollbar element 2
-	std::shared_ptr<UI_Object> testObject4 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-	
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox4(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0,0.5, UI_CallbackFunctions::deleteGesture));
-	UI_Hitboxes.push_back(testHitbox4);
-	UI_Hitboxes[3]->add_UI_Object(testObject4);
-	UI_Hitboxes[3]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[3]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[3]->setUI(shared_ptr_this);
-	
-
-	//object 3
-	std::shared_ptr<UI_Object> testObject5 = std::make_shared<UI_Object>(550 + 250, 350, 150, 500, D2D1::ColorF::Red);
-	UI_Objects.push_back(testObject5);
-	std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(550 + 250, 250, 150, 100, D2D1::ColorF::Blue);
-	UI_Objects.push_back(selectedBox);
-	std::shared_ptr<UI_Object> topfiller = std::make_shared<UI_Object>(550 + 250, 50, 150, 100, D2D1::ColorF::Black);
-	std::shared_ptr<UI_Object> bottomfiller = std::make_shared<UI_Object>(550 + 250, 650, 150, 100, D2D1::ColorF::Black);
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox5(new UI_HitboxLockScrolBar(550 + 250, 350, 150, 500, 0, 0, 1000, 1000,0.5, UI_CallbackFunctions::deleteGesture));
-	UI_Hitboxes.push_back(testHitbox5);
-	UI_Hitboxes[4]->add_UI_Object(testObject5);
-	UI_Hitboxes[4]->add_UI_Object(topfiller);
-	UI_Hitboxes[4]->add_UI_Object(bottomfiller);
-	UI_Hitboxes[4]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[4]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[4]->add_UI_Element(testHitbox3);
-	UI_Hitboxes[4]->add_UI_Element(testHitbox4);
-	UI_Hitboxes[4]->setUI(shared_ptr_this);
-
-	//test scrollbar element 3
-	std::shared_ptr<UI_Object> testObject6 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox6(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0,0.5, UI_CallbackFunctions::deleteGesture));
-	UI_Hitboxes.push_back(testHitbox6);
-	UI_Hitboxes[5]->add_UI_Object(testObject6);
-	UI_Hitboxes[5]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[5]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[5]->setUI(shared_ptr_this);
-	UI_Hitboxes[4]->add_UI_Element(testHitbox6);
-
-	//test scrollbar element 4
-	std::shared_ptr<UI_Object> testObject7 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0,0.5, UI_CallbackFunctions::deleteGesture));
-	UI_Hitboxes.push_back(testHitbox7);
-	UI_Hitboxes[6]->add_UI_Object(testObject7);
-	UI_Hitboxes[6]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[6]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[6]->setUI(shared_ptr_this);
-	UI_Hitboxes[4]->add_UI_Element(testHitbox7);
-
-	//test scrollbar element 5
-	std::shared_ptr<UI_Object> testObject8 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox8(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0,0.5, UI_CallbackFunctions::deleteGesture));
-	UI_Hitboxes.push_back(testHitbox8);
-	UI_Hitboxes[7]->add_UI_Object(testObject8);
-	UI_Hitboxes[7]->addInputJoint(JointType_HandLeft);
-	UI_Hitboxes[7]->addInputJoint(JointType_HandRight);
-	UI_Hitboxes[7]->setUI(shared_ptr_this);
-	UI_Hitboxes[4]->add_UI_Element(testHitbox8);
-
-	UI_Objects.push_back(testObject3);
-	UI_Objects.push_back(testObject4);
-	UI_Objects.push_back(testObject6);
-	UI_Objects.push_back(testObject7);
-	UI_Objects.push_back(testObject8);
-	UI_Objects.push_back(bottomfiller);
-	UI_Objects.push_back(topfiller);
 }
+
 
 
 UI::~UI()
@@ -274,19 +175,18 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 	width = rct.right;
 	height = rct.bottom;
 
+	Screen->drawFrames(relframes, absframes);
+	/*
 	std::vector<Frame> * frames = &absframes;
 
-	
+	drawUI();
 
-	if(drawAbsCoord)
-	{
-		drawUI();
-	}
-	else
+	if(!drawAbsCoord)
 	{
 		frames = &relframes;
-	}
 
+	}
+	
 
 	for (int j = frames->size()-1; j > -1; --j)
 	{
@@ -297,7 +197,9 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 		{
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 			
-			if (j == 0)
+			
+
+			if (j == 0 && drawAbsCoord)
 			{
 				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
 			}
@@ -311,13 +213,19 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 			{
 				ShowJointCoordinates(joints, 1);
 			}
-			*/
+			
 		}
-		
+
+
+		if(!drawAbsCoord)
+		{
+			scaleSkeleton(jointPoints, 0.8);
+		}
+
 		graphics.DrawBody(joints, jointPoints,j);
 
 	}
-
+*/
 	
 
 	HRESULT hr = graphics.GetRenderTarget()->EndDraw();
@@ -342,11 +250,50 @@ void UI::setMain(std::shared_ptr<Main>  m)
 void UI::setModel(std::shared_ptr<Model> m)
 {
 	model = m;
+	Screen->setModel(model);
+	/*
+	
 
 	for (int i = 0; i < UI_Hitboxes.size(); i++)
 	{
 		UI_Hitboxes[i]->setModel(m);
 	}
+	updateHitboxes();
+	*/
+}
+
+void UI::createScreen()
+{
+	GetClientRect(GetDlgItem(m_hWnd, IDC_VIDEOVIEW), &rct);
+	width = rct.right;
+	height = rct.bottom;
+
+	graphics.EnsureDirect2DResources(m_hWnd);
+
+	Screen = std::make_shared<recordScreen>(1);
+	std::shared_ptr<UI> shared_ptr_this(this);
+
+	Screen->setUI(shared_ptr_this, width, height, m_pCoordinateMapper,cDepthWidth, cDepthHeight);
+	Screen->createScreen(width, height);
+}
+
+void UI::scaleSkeleton(std::vector<D2D1_POINT_2F>& jointPoints, float multiplier)
+{
+	/*
+	D2D1_POINT_2F center;
+	center.x = jointPoints[JointType_SpineMid].x;
+	center.y = jointPoints[JointType_SpineMid].y;
+
+	for (int j = 0; j < jointPoints.size(); ++j)
+	{
+		//Convert to coordinates relative to the spine
+		if(j != JointType_SpineMid)
+		{
+			jointPoints[j].x = center.x + (jointPoints[j].x - center.x)*multiplier;
+			jointPoints[j].y = center.y + (jointPoints[j].y - center.y)*multiplier;
+		}
+	}
+	*/
 }
 
 /// <summary>
@@ -372,6 +319,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		m_hWnd = hWnd;
 
 		graphics.InitD2D();
+		//Screen->initBitmaps();
 
 		// Get and initialize the default Kinect sensor
 		main->mainCanInitializeKinectSensor();
@@ -394,13 +342,13 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		if (IDC_REL_ABS == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//Start to wait for key input
 		{
 
-			if (drawAbsCoord)
+			if (Screen->getDrawAbsCoord())
 			{
-				drawAbsCoord = false;
+				Screen->setDrawAbsCoord( false);
 			}
 			else
 			{
-				drawAbsCoord = true;
+				Screen->setDrawAbsCoord(true);
 			}
 			
 
@@ -419,7 +367,10 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 			if (sc)
 			{
+				
 				model->setActiveLabel(label);
+				Screen->setGestureClassID(label);
+				model->setUpdatUI(true);
 				SetDlgItemInt(m_hWnd, IDC_ACTIVE_LABEL, label, TRUE);
 
 			}
@@ -623,17 +574,81 @@ void UI::setPredictedLabel(int label)
 	SetDlgItemInt(m_hWnd, IDC_PREDICTION, label, true);
 }
 
+
+
+/*
 void UI::fillScrolbar(int ID)
 {
+	std::shared_ptr<UI> shared_ptr_this(this);
 	std::shared_ptr<GestureClass> ActiveGestureClass = model->getGestureClassByID(ID);
-
 	std::vector<Gesture> gestures = ActiveGestureClass->getGestures();
 
-	for (int i = gestures.size(); i < 0; i--)
+		std::shared_ptr<UI_Object> background = std::make_shared<UI_Object>(550 + 250, 350, 150, 500, D2D1::ColorF::Red);
+		//UI_Objects.push_back(testObject5);
+		std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(550 + 250, 250, 150, 100, D2D1::ColorF::Blue);
+		//UI_Objects.push_back(selectedBox);
+		
+		//scrollbar->add_UI_Object(background);
+		//scrollbar->add_UI_Object(selectedBox);
+		
+
+
+		int gestureID;
+
+	//for (int i = gestures.size()-1; i >= 0; i--)
+	for (int i =0 ; i < gestures.size(); i++)
 	{
-		gestures[i].getGestureID() ;
+		gestureID = gestures[i].getGestureID();
+
+
+		std::shared_ptr<UI_Object> testObject7 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
+		std::shared_ptr<UI_Object> text1 = std::make_shared<UI_TextObject>(400 + 250 - 30, 350, 75, 150, D2D1::ColorF::Black, std::to_wstring(i+1), 20);
+		//std::shared_ptr<UI_Object> text = std::make_shared<UI_TextObject>(400 + 250+30, 350, 75, 150, D2D1::ColorF::Black,(std::to_wstring(gestureID)),20);
+		std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0, 0.5, UI_CallbackFunctions::deleteGesture, gestures[i].getGestureID()));
+
+		testHitbox7->add_UI_Object(testObject7);
+		//testHitbox7->add_UI_Object(text);
+		testHitbox7->add_UI_Object(text1);
+		testHitbox7->addInputJoint(JointType_HandLeft);
+		testHitbox7->addInputJoint(JointType_HandRight);
+		testHitbox7->setUI(shared_ptr_this);
+
+		//scrollbar->add_UI_Element(testHitbox7);
 	}
 
+	//UI_Hitboxes.push_back(scrollbar);
+
+}
+*/
+
+void UI::setRightHandBusy(const bool & busy)
+{
+	Screen->setRightHandBusy(busy);
+}
+
+const bool & UI::getRightHandBusy()
+{
+	return Screen->getRightHandBusy();
+}
+
+void UI::setLeftHandBusy(const bool & busy)
+{
+	Screen->setLeftHandBusy(busy);
+}
+
+const bool & UI::getLeftHandBusy()
+{
+	return Screen->getLeftHandBusy();
+}
+
+void UI::setScreen(const std::shared_ptr<Abstr_Screen>& scr)
+{
+	Screen = scr;
+}
+
+const std::shared_ptr<Abstr_Screen>& UI::getScreen()
+{
+	return Screen;
 }
 
 void UI::changeButtonColor(int state)
@@ -646,82 +661,16 @@ void UI::drawHandState(HandState handState, const D2D1_POINT_2F & handPosition)
 
 }
 
-void UI::drawUI()
+void UI::updateHitboxes()
 {
-	
-	for (int i = 0; i < UI_Objects.size(); ++i)
+	Screen->updateHitboxes();
+	/*
+	for (const auto & hitbox : UI_Hitboxes)
 	{
-		if (UI_Objects[i]->getVisibele())
-		{
-			graphics.drawRectangle(UI_Objects[i]->getCenter(), UI_Objects[i]->getWidth(), UI_Objects[i]->getHeight(), UI_Objects[i]->getColor());
-		}
+		hitbox->updateData();
+	}
+	*/
 		
-	}
-}
-
-void UI::activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)
-{
-	//debug code to show the coordinates of each had in screen coordinates
-	if (type == JointType_HandRight)
-	{
-		SetDlgItemInt(m_hWnd, IDC_RIGHT_X, jointPoint.x, TRUE);
-		SetDlgItemInt(m_hWnd, IDC_RIGHT_Y, jointPoint.y, TRUE);
-	}
-	if (type == JointType_HandLeft)
-	{
-		SetDlgItemInt(m_hWnd, IDC_LEFT_X, jointPoint.x, TRUE);
-		SetDlgItemInt(m_hWnd, IDC_LEFT_Y, jointPoint.y, TRUE);
-	}
-
-	for (int i = 0; i < UI_Hitboxes.size(); ++i)
-	{
-		if (UI_Hitboxes[i]->checkInputJointType(type) && !(UI_Hitboxes[i]->getTotalLock()))
-		{
-			if (UI_Hitboxes[i]->checkCoordInside(jointPoint))
-			{
-				//if (!(UI_Hitboxes[i].getHover()))
-				//{
-				//NOW only works for right and left hand !
-				if (type == JointType_HandRight && !rightHandBusy)
-				{
-					UI_Hitboxes[i]->setHover(true,type, rightHand, jointPoint);
-					rightHandBusy = UI_Hitboxes[i]->isRightHandActive();
-					
-
-				}
-				else if(type == JointType_HandLeft && !leftHandBusy)
-				{
-					UI_Hitboxes[i]->setHover(true, type, leftHand, jointPoint);
-					leftHandBusy = UI_Hitboxes[i]->isLeftHandActive();
-				}
-					
-					//UI_Hitboxes[i].setHoverJoint(type);
-					//printf("activate");
-				//}
-				
-			}
-			else// if(UI_Hitboxes[i]->getHover())
-			{
-				//if (UI_Hitboxes[i].getHover() && UI_Hitboxes[i].getHoverJoint() == type)
-				//{
-					//UI_Hitboxes[i]->setHover(false,type,leftHand, jointPoint);
-					if (type == JointType_HandRight)
-					{
-						UI_Hitboxes[i]->setHover(false, type, rightHand, jointPoint);
-						rightHandBusy = UI_Hitboxes[i]->isRightHandActive();
-					}
-					else
-					{
-						UI_Hitboxes[i]->setHover(false, type, leftHand, jointPoint);
-						leftHandBusy = UI_Hitboxes[i]->isLeftHandActive();
-					}
-					//printf("DEactivate!!!");
-				//}
-			}
-			
-		}
-		
-	}
 }
 
 

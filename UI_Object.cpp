@@ -1,19 +1,28 @@
 #include "UI_Object.h"
 
 
+extern D2D_Graphics			graphics;
+
 
 UI_Object::UI_Object():
-	color{D2D1::ColorF::White}
+	color{D2D1::ColorF::Beige}, fillColor{ D2D1::ColorF::Beige }, borderthickness{ borderthickness }
 {
 	//temporary hard coded object
 	centerCoordImage.x = 100+250;
 	centerCoordImage.y = 200;
 	widthImage = 150;
 	heightImage = 150;
+
 }
 
 UI_Object::UI_Object(float Xcenter, float Ycenter, float width, float height, D2D1::ColorF col) :
-	widthImage{ width }, heightImage{ height }, color{col}
+	UI_Object{ Xcenter,  Ycenter, width,  height, col ,col, 1}
+{
+	
+}
+
+UI_Object::UI_Object(float Xcenter, float Ycenter, float width, float height, D2D1::ColorF col, D2D1::ColorF filler, float borderthick) :
+	widthImage{ width }, heightImage{ height }, color{ col }, fillColor{ filler },  borderthickness{ borderthick }
 {
 	centerCoordImage.x = Xcenter;
 	centerCoordImage.y = Ycenter;
@@ -27,6 +36,7 @@ UI_Object::~UI_Object()
 void UI_Object::changeColor(D2D1::ColorF c)
 {
 	color = c;
+	fillColor = c;
 }
 
 void UI_Object::changeColor(float r, float g, float b)
@@ -69,6 +79,15 @@ float UI_Object::getHeight()
 	return heightImage;
 }
 
+void UI_Object::setText(const std::wstring & textToDraw)
+{
+}
+
+const std::wstring & UI_Object::getText()
+{
+	return NULL;
+}
+
 void UI_Object::moveY(float move)
 {
 	centerCoordImage.y = centerCoordImage.y + move;
@@ -87,6 +106,13 @@ void UI_Object::setVisible(const bool & visual)
 const int UI_Object::getVisibele()
 {
 	return visible;
+}
+
+void UI_Object::draw()
+{
+	graphics.drawRectangle(centerCoordImage, widthImage, heightImage, color);
+	graphics.drawRectangle(centerCoordImage, (widthImage-(2*borderthickness)), (heightImage -(2*borderthickness)), fillColor);
+
 }
 
 

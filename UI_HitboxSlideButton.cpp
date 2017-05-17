@@ -46,6 +46,8 @@ void UI_HitboxSlideButton::ActiveHandHoldAction()
 */
 void UI_HitboxSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & coord)
 {
+	D2D_POINT_2F point;
+
 	switch (act)
 	{
 	case ActionTrigger::HoverOn:
@@ -70,8 +72,11 @@ void UI_HitboxSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & coord
 		setCenterCoordActionArea(getOriginalPos());
 
 		deactivateFunction();
+
+		point = getCenterCoordActionArea();
+		point.y -= 100;
 		
-		get_UI_Objects()[0]->setCenter(getOriginalPos());
+		get_UI_Objects()[0]->setCenter(point);
 		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Gray); //TO DO make callback
 
 		break;
@@ -82,7 +87,10 @@ void UI_HitboxSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & coord
 
 		checkActivationCriteria();
 
-		get_UI_Objects()[0]->setCenter(getCenterCoordActionArea());
+		point = getCenterCoordActionArea();
+		point.y -= 100;
+
+		get_UI_Objects()[0]->setCenter(point);
 
 		break;
 	case ActionTrigger::ActiveHandOutsideOn:

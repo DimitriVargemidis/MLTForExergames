@@ -15,6 +15,9 @@ typedef std::chrono::high_resolution_clock Clock;
 
 #include "Main.h"
 
+std::shared_ptr<UI> UI_global;
+std::shared_ptr<Model> model_global;
+
 /// <summary>
 /// Entry point for the application
 /// </summary>
@@ -121,13 +124,22 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	ui = std::make_shared<UI>();
 	model = std::make_shared<Model>();
 
+	UI_global = ui;
+	model_global = model;
+
+	printf("start \n");
+
 	std::shared_ptr<Main> shared_ptr_this(this);
 
 	ui->setMain(shared_ptr_this);
-	ui->setModel(model);
 	model->setView(ui);
-
+	
 	int rc = ui->Run(hInstance, nCmdShow);
+
+	ui->createScreen();
+	ui->setModel(model);
+
+
 
 	while (ui->checkQuitMsg())
 	{

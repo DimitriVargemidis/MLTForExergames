@@ -1,8 +1,9 @@
 #include <vector>
-
+#include <dwrite.h>
 
 #include "stdafx.h"
 #include "resource.h"
+#include "ImageLoader.h"
 
 #include "D2D_Graphics.h"
 
@@ -14,6 +15,8 @@ static const float c_HandSize = 30.0f;
 
 D2D_Graphics::D2D_Graphics():
 m_pD2DFactory(NULL),
+m_pDWriteFactory(NULL),
+m_pTextFormat(NULL),
 m_pRenderTarget(NULL),
 m_pBrushJointTracked(NULL),
 m_pBrushJointInferred(NULL),
@@ -27,7 +30,6 @@ m_pBrushDownButton(NULL),
 m_pBrushRightButton(NULL),
 m_pBrushLeftButton(NULL),
 m_pBrushAButton(NULL)
-
 {
 
 }
@@ -309,14 +311,63 @@ void D2D_Graphics::DrawHand(HandState handState, const D2D1_POINT_2F& handPositi
 
 void D2D_Graphics::InitD2D()
 {
+	static const WCHAR msc_fontName[] = L"Verdana";
+	static const FLOAT msc_fontSize = 50;
+	HRESULT hr;
+
 	// Init Direct2D
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+
+	//code from https://msdn.microsoft.com/en-us/library/windows/desktop/dd756692(v=vs.85).aspx
+	if (SUCCEEDED(hr))
+	{
+
+		// Create a DirectWrite factory.
+		hr = DWriteCreateFactory(
+			DWRITE_FACTORY_TYPE_SHARED,
+			__uuidof(m_pDWriteFactory),
+			reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
+		);
+	}
+	if (SUCCEEDED(hr))
+	{
+		// Create a DirectWrite text format object.
+		hr = m_pDWriteFactory->CreateTextFormat(
+			msc_fontName,
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			msc_fontSize,
+			L"", //locale
+			&m_pTextFormat
+		);
+	}
+	if (SUCCEEDED(hr))
+	{
+		// Center the text horizontally and vertically.
+		m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+
+		m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+
+	}
+
+
+
 }
 
 void D2D_Graphics::CleanD2D()
 {
 	DiscardDirect2DResources();
 	SafeRelease(m_pD2DFactory);
+
+	//Direct2D text resources
+	SafeRelease(m_pTextFormat);
+	SafeRelease(m_pDWriteFactory);
+			
+		
+
 }
 
 //limited to 15 different color
@@ -460,29 +511,209 @@ void D2D_Graphics::drawRectangle(D2D1_POINT_2F center, float width, float height
 	SafeRelease(colorBrush);
 }
 
-void D2D_Graphics::drawText(std::string text)
+
+void D2D_Graphics::drawText(std::wstring text, D2D1_POINT_2F center, float width, float height, D2D1::ColorF color, float fontSize, DWRITE_TEXT_ALIGNMENT alignment)
 {
-/*
-	IDWriteTextFormat *pTextFormat_;
+	IDWriteTextFormat*		customTextFormat;
+
+	bool hr;
+	const WCHAR msc_fontName[] = L"Verdana";
+
+
+	// Create a DirectWrite text format object.
+	hr = m_pDWriteFactory->CreateTextFormat(
+		msc_fontName,
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		fontSize,
+		L"", //locale
+		&customTextFormat
+	);
 
 	if (SUCCEEDED(hr))
 	{
-		hr = pDWriteFactory_->CreateTextFormat(
-			L"Gabriola",
-			NULL,
-			DWRITE_FONT_WEIGHT_REGULAR,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			72.0f,
-			L"en-us",
-			&pTextFormat_
-		);
+		// Center the text horizontally and vertically.
+		customTextFormat->SetTextAlignment(alignment);
+
+		customTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+
 	}
 
-	m_pRenderTarget->DrawTextW(text, text.size(), )
 
-	SafeRelease(pTextFormat_);
+	const wchar_t* chartext = text.c_str();
+	ID2D1SolidColorBrush* m_pBlackBrush(NULL);
+
+	m_pRenderTarget->CreateSolidColorBrush(color, &m_pBlackBrush);
+
+	static bool writen = false;
+
+	if (!writen)
+	{
+		printf(" string size = %d \n", (text.size()));
+		//	printf("arreay size = %d\  ", (ARRAYSIZE(sc_helloWorld) - 1));
+		writen = true;
+	}
+
+
+
+	m_pRenderTarget->DrawText(
+		chartext,
+		text.size(),
+		customTextFormat,
+		D2D1::RectF(center.x - width / 2, center.y - height, center.x + width / 2, center.y + height),
+		m_pBlackBrush
+	);
+
+	SafeRelease(customTextFormat);
+}
+
+ID2D1Bitmap * D2D_Graphics::createBitmap(std::wstring filename, int srcWidth, int srcHeight)
+{
+	RGBQUAD*			RGBimage = new RGBQUAD[srcWidth * srcHeight];
+	ID2D1Bitmap*		bitmap;
+
+	const wchar_t* chartext = filename.c_str();
+
+	ImageLoader::LoadResourceImage(chartext, L"Image", srcWidth, srcHeight, RGBimage);
+
+	
+
+	D2D1_SIZE_U size = D2D1::SizeU(srcWidth, srcHeight);
+
+	//m_pRenderTarget->CreateBitmap(m_pRenderTarget->GetPixelSize(), NULL, (UINT32)(1920 * 1080), D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)), &bitmap);
+	m_pRenderTarget->CreateBitmap(size, NULL, (UINT32)100/*(1920 * 1080)*/, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)), &bitmap);
+
+	//convert image to bitmaps
+
+	if (RGBimage)
+	{
+		//int size = strlen((char*)image);
+		bitmap->CopyFromMemory(NULL, RGBimage, srcWidth * sizeof(RGBQUAD));
+	}
+
+	free(RGBimage);
+
+	return bitmap;
+}
+
+void D2D_Graphics::drawBitmap(RGBQUAD * image, int srcWidth, int srcHeight, D2D1_POINT_2F center, float width, float height)
+{
+	ID2D1Bitmap*				bitmap;
+
+	D2D1_SIZE_U size = D2D1::SizeU(srcWidth,srcHeight);
+	
+
+	//m_pRenderTarget->CreateBitmap(m_pRenderTarget->GetPixelSize(), NULL, (UINT32)(1920 * 1080), D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)), &bitmap);
+	m_pRenderTarget->CreateBitmap(size, NULL, (UINT32)100/*(1920 * 1080)*/, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE)), &bitmap);
+
+	//convert image to bitmaps
+
+	if (image)
+	{
+		//int size = strlen((char*)image);
+		bitmap->CopyFromMemory(NULL, image, srcWidth * sizeof(RGBQUAD));
+	}
+
+
+	D2D1_RECT_F destRect;
+	destRect.top = center.y - height/2;
+	destRect.left = center.x - width/2;
+	destRect.right= center.x + width/2;
+	destRect.bottom = center.y + height/2;
+
+	//m_pRenderTarget->CreateBitmap(m_pRenderTarget->GetPixelSize(), image,(UINT32)(1920 * 1080), &bitmap);
+	//m_pRenderTarget->DrawBitmap(bitmap,destRect,1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+	m_pRenderTarget->DrawBitmap(bitmap, destRect, 1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+
+
+	
+
+	/*
+	//D2D1_ELLIPSE ellipse = D2D1::Ellipse(handPosition, c_HandSize, c_HandSize);
+	D2D1_RECT_F destinationRect = D2D1::RectF(80,120, 160, 240);
+	//D2D1_RECT_F destinationRect = D2D1::RectF(handPosition.x - 60, handPosition.y - 40, handPosition.x + 60, handPosition.y + 40);
+	D2D1_RECT_F sourceRect = D2D1::RectF(0, 0, 80, 120);
+
+	//destinationRect.top = destinationRect.bottom + sin(rightHandRotation) * 120;
+	//destinationRect.left = destinationRect.right + cos(rightHandRotation) * 80;
+
+		//  m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandClosed);	
+		//m_pRenderTarget->DrawBitmap(bitmapClosed,destinationRect);
+		m_pRenderTarget->DrawBitmap(bitmap, destinationRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, sourceRect);
 	*/
+
+	SafeRelease(bitmap);
+}
+
+void D2D_Graphics::drawBitmap(ID2D1Bitmap * bitmap, D2D1_POINT_2F center, float width, float height)
+{
+	D2D1_RECT_F destRect;
+	destRect.top = center.y - height / 2;
+	destRect.left = center.x - width / 2;
+	destRect.right = center.x + width / 2;
+	destRect.bottom = center.y + height / 2;
+
+	m_pRenderTarget->DrawBitmap(bitmap, destRect, 1.0, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+}
+
+void D2D_Graphics::scaleSkeleton(std::vector<D2D1_POINT_2F>& jointPoints, float multiplier)
+{
+	D2D1_POINT_2F center;
+	center.x = jointPoints[JointType_SpineMid].x;
+	center.y = jointPoints[JointType_SpineMid].y;
+
+	for (int j = 0; j < jointPoints.size(); ++j)
+	{
+		//Convert to coordinates relative to the spine
+		if (j != JointType_SpineMid)
+		{
+			jointPoints[j].x = center.x + (jointPoints[j].x - center.x)*multiplier;
+			jointPoints[j].y = center.y + (jointPoints[j].y - center.y)*multiplier;
+		}
+	}
+}
+
+void D2D_Graphics::scaleSkeleton(std::vector<D2D1_POINT_2F>& jointPoints, const float startWidth, const float startHeight, const float endWidth, const float endHeight, const float absXpos, const float absYpos)
+{
+	
+	D2D1_POINT_2F center;
+	center.x = jointPoints[JointType_SpineMid].x;
+	center.y = jointPoints[JointType_SpineMid].y;
+
+	float absXposition;
+	float absYposition;
+
+	if (absXpos == -1)
+	{
+		absXposition = center.x;
+	}
+	else
+	{
+		absXposition = absXpos;
+	}
+
+	if (absYpos == -1)
+	{
+		absYposition = center.y;
+	}
+	else
+	{
+		absYposition = absYpos;
+	}
+
+	float Xmultiplier = endWidth / startWidth;
+	float Ymultiplier = endHeight / startHeight;
+
+	//printf("Xmultiplier = %f Ymultiplier = %f", Xmultiplier, Ymultiplier);
+
+	for (int j = 0; j < jointPoints.size(); ++j)
+	{
+		jointPoints[j].x = absXposition + (jointPoints[j].x - center.x)*Xmultiplier;
+		jointPoints[j].y = absYposition + (jointPoints[j].y - center.y)*Ymultiplier;
+	}
 }
 
 

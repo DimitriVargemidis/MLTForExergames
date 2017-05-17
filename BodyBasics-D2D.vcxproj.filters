@@ -26,12 +26,6 @@
     <ClCompile Include="UI.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
-    <ClCompile Include="GUI.cpp">
-      <Filter>UI_data</Filter>
-    </ClCompile>
-    <ClCompile Include="DUI.cpp">
-      <Filter>UI_data</Filter>
-    </ClCompile>
     <ClCompile Include="D2D_Graphics.cpp">
       <Filter>UI_data</Filter>
     </ClCompile>
@@ -76,10 +70,34 @@
     <ClCompile Include="UI_HitboxLockScrolBar.cpp">
       <Filter>UI_data\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="Abstr_Screen.cpp" />
-    <ClCompile Include="UI_CallbackFunctions.cpp">
-      <Filter>UI_data\Controller</Filter>
+    <ClCompile Include="UI_TextObject.cpp">
+      <Filter>UI_data\View</Filter>
     </ClCompile>
+    <ClCompile Include="Abstr_Screen.cpp">
+      <Filter>UI_data\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="DUI.cpp">
+      <Filter>UI_data\UI_Types</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>UI_data\UI_Types</Filter>
+    </ClCompile>
+    <ClCompile Include="recordScreen.cpp">
+      <Filter>UI_data\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Update_CallbackFunctions.cpp">
+      <Filter>UI_data\CallbackFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_CallbackFunctions.cpp">
+      <Filter>UI_data\CallbackFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_FramesObject.cpp">
+      <Filter>UI_data\View</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageLoader.cpp">
+      <Filter>libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_BitmapObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -111,12 +129,6 @@
       <Filter>model_subclasses</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>UI_data</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>UI_data</Filter>
-    </ClInclude>
-    <ClInclude Include="DUI.h">
       <Filter>UI_data</Filter>
     </ClInclude>
     <ClInclude Include="D2D_Graphics.h">
@@ -167,13 +179,43 @@
     <ClInclude Include="UI_HitboxLockScrolBar.h">
       <Filter>UI_data\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="Abstr_Screen.h" />
-    <ClInclude Include="UI_CallbackFunctions.h">
-      <Filter>UI_data\Controller</Filter>
+    <ClInclude Include="UI_TextObject.h">
+      <Filter>UI_data\View</Filter>
     </ClInclude>
+    <ClInclude Include="Abstr_Screen.h">
+      <Filter>UI_data\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>UI_data\UI_Types</Filter>
+    </ClInclude>
+    <ClInclude Include="DUI.h">
+      <Filter>UI_data\UI_Types</Filter>
+    </ClInclude>
+    <ClInclude Include="recordScreen.h">
+      <Filter>UI_data\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Update_CallbackFunctions.h">
+      <Filter>UI_data\CallbackFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_CallbackFunctions.h">
+      <Filter>UI_data\CallbackFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_FramesObject.h">
+      <Filter>UI_data\View</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageLoader.h">
+      <Filter>libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_BitmapObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+    <Image Include="Images\D.png">
+      <Filter>UI_data\Images</Filter>
+    </Image>
+    <Image Include="Images\open.png">
+      <Filter>UI_data\Images</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="libraries">
@@ -191,13 +233,25 @@
     <Filter Include="UI_data\View">
       <UniqueIdentifier>{7a26aeb1-77ea-4ec3-bef6-d15000bd47e7}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="BodyBasics.rc">
-      <Filter>UI_data</Filter>
-    </ResourceCompile>
+    <Filter Include="UI_data\Screens">
+      <UniqueIdentifier>{c4681489-855a-49a3-87bc-0238cdbe632c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI_data\UI_Types">
+      <UniqueIdentifier>{97009227-150e-4268-9587-f5b4ff6aa6ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI_data\CallbackFunctions">
+      <UniqueIdentifier>{05dead7a-d659-46fa-b424-fe8a17f9b42f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI_data\Images">
+      <UniqueIdentifier>{b5325c03-f8f0-4a4c-8a45-b7bbfa8497fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BodyBasics.rc">
+      <Filter>UI_data\View</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

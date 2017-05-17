@@ -24,6 +24,7 @@
 #include <Kinect.h>
 
 #pragma comment (lib, "d2d1.lib")
+#pragma comment(lib, "windowscodecs.lib")
 
 #ifdef _UNICODE
 #if defined _M_IX86

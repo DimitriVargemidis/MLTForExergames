@@ -92,6 +92,16 @@ bool Model::getTrained()
 	return trained;
 }
 
+void Model::setRecording(bool record)
+{
+	recording = record;
+}
+
+bool Model::getRecording()
+{
+	return recording;
+}
+
 void Model::addActionToActive(WORD keycode, bool hold)
 {
 	activeProject->addAction(activeGestureClassLabel, keycode, hold);
@@ -108,6 +118,7 @@ void Model::addGesture(double label, Gesture gesture)
 		gestureClasses.push_back(std::make_shared<GestureClass>(gesture));
 		activeProject->addNew(label, gestureClasses.back());
 	}
+	updateUI = true;
 }
 
 std::vector<Frame> Model::getRelevantFramesFromBuffer(int offset)
@@ -177,9 +188,17 @@ std::shared_ptr<GestureClass>	 Model::getGestureClassByID(const int & ID)
 {
 	for (int i = 0; i < gestureClasses.size(); i++)
 	{
-		if (gestureClasses[i]->getGestureClassID() == ID)
-			return gestureClasses[i];
+		if (gestureClasses[i] != nullptr)
+		{
+			if (gestureClasses[i]->getGestureClassID() == ID)
+				return gestureClasses[i];
+		}
+		
 	}
+
+	//give the last gestureClass back
+	//return gestureClasses[gestureClasses.size()-1];
+	return nullptr;
 }
 
 void Model::displayFrames()
@@ -232,9 +251,51 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 
 				if (refresh && !predict)				//The measure button was pressed last
 				{
-					framesBuffer.clear();
-					recording = true;
-					refresh = false;
+					if (!countDownInitiated)
+					{
+						countDownInitiated = true;
+						countDownRef = Clock::now();
+						printf("Get ready to record\n");
+						countDown = 4;
+						updateUI = true;
+					}
+					else
+					{
+						auto t2 = Clock::now();
+						long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - countDownRef).count();
+
+						if (time >= 1000 && countDown > 3)
+						{
+							printf("3 after %ld \n", time);
+							--countDown;
+							updateUI = true;
+						}
+						else if (time >= 2000 && countDown > 2)
+						{
+							printf("2 after %ld \n", time);
+							--countDown;
+							updateUI = true;
+						}	
+						else if (time >= 3000 && countDown > 1)
+						{
+							printf("1 after %ld \n", time);
+							--countDown;
+							updateUI = true;
+						}	
+						else if ((time >= 4000) )
+						{
+							
+							printf("GO after %ld \n", time);
+							countDown = 0;
+							
+							framesBuffer.clear();
+							recording = true;
+							refresh = false;
+							updateUI = true;
+							countDownInitiated = false;
+						}
+
+					}
 				}
 
 				if (predict)
@@ -260,6 +321,13 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 			}
 		}
 	}
+
+	if (updateUI)
+	{
+		view->updateHitboxes();
+		updateUI = false;
+	}
+	
 	displayFrames();
 }
 
@@ -298,5 +366,27 @@ void Model::recordGesture(Frame frame)
 		initialized = false;
 		startedMoving = false;
 		Console::print("Recording stopped");
+		updateUI = true;
 	}
 }
+
+bool Model::getCountDownInit()
+{
+	return countDownInitiated;
+}
+
+int Model::getCountDown()
+{
+	return countDown;
+}
+
+void Model::setUpdatUI(bool update)
+{
+	updateUI = update;
+}
+
+bool Model::getUpdateUI()
+{
+	return updateUI;
+}
+

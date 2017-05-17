@@ -66,12 +66,19 @@ void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 
 	//printf("x is %f and y is %f \n", newPos.x, newPos.y);
 
-	if (moveLeft > 0  && endLeft != 0)
+	float moveLeftFromOrigin = (getOriginalPos().x - (newPos.x - moveLeft));
+	float moveRightFromOrigin = ((newPos.x + moveRight) - (getOriginalPos()).x);
+	float moveDownFromOrigin = ((newPos.y + moveDown) - (getOriginalPos()).y);
+	float moveUpFromOrigin = ((getOriginalPos()).y - (newPos.y - moveUp));
+
+	//if (moveLeft > 0  && endLeft != 0)
+	if (moveLeft > 0)
 	{
-		if (((getOriginalPos()).x - (newPos.x - moveLeft)) < endLeft)
+		//if (((getOriginalPos()).x - (newPos.x - moveLeft)) < endLeft)
+		if ((moveLeftFromOrigin) < endLeft)
 			//newPos.x = newPos.x - moveLeft;	
 			moveLeftAction(newPos, moveLeft);
-		else
+		else if (endLeft != 0)
 		{
 			//newPos.x = originalPos.x - endLeft;
 			moveLeftAction((getOriginalPos()), endLeft);
@@ -79,36 +86,40 @@ void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 
 		//	printf("move left to x = %f  \n", newPos.x);
 	}
-	if (moveRight > 0 && endRight != 0)
+	//if (moveRight > 0 && endRight != 0)
+	if (moveRight > 0 )
 	{
-		if (((newPos.x + moveRight) - (getOriginalPos()).x) < endRight)
+		//if (((newPos.x + moveRight) - (getOriginalPos()).x) < endRight)
+		if ((moveRightFromOrigin) < endRight)
 			//newPos.x = newPos.x + moveRight;
 			moveRightAction(newPos, moveRight);
-		else
+		else if (endRight != 0)
 		{
 			//newPos.x = originalPos.x + endRight;
 			moveRightAction((getOriginalPos()), endRight);
 		}
 		//	printf("move right to x = %f  \n", newPos.x);
 	}
-	if (moveDown > 0 && endDown!= 0)
+	//if (moveDown > 0 && endDown!= 0
+	if (moveDown > 0)
 	{
-		if (((newPos.y + moveDown) - (getOriginalPos()).y) < endDown)
+		if ((moveDownFromOrigin) < endDown)
 			//newPos.y = newPos.y + moveDown;
 			moveDownAction(newPos, moveDown);
-		else
+		else if (endDown != 0)
 		{
 			//newPos.y = originalPos.y + endDown;
 			moveDownAction((getOriginalPos()), endDown);
 		}
 		//	printf("move down to y = %f  \n", newPos.y);
 	}
-	if (moveUp > 0 && endUp != 0)
+	//if (moveUp > 0 && endUp != 0)
+	if (moveUp > 0)
 	{
-		if (((getOriginalPos()).y - (newPos.y - moveUp)) < endUp)
+		if ((moveUpFromOrigin) < endUp)
 			//newPos.y = newPos.y - moveUp;
 			moveUpAction(newPos, moveUp);
-		else
+		else if (endUp != 0)
 		{
 			moveUpAction((getOriginalPos()), endUp);
 			//newPos.y = originalPos.y - endUp;
@@ -124,15 +135,27 @@ void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 	//	lastPoint = newPos;
 }
 
-void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
+float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 {
+	std::vector<std::shared_ptr<UI_Object>> & UI_Objects = get_UI_Objects();
+	float Xmoved;				//how much has been moved in the X direction relative to the original position
+	float Ymoved;				//how much has been moved in the Y direction relative to the original position
+	float NbrActivationPoint;	//how much distance to activation
+	float percentage;			//the percentage of distance to activation that has been travelled
+
 	if (!getFunctionActivation())
 	{
 		D2D1_POINT_2F center = getCenterCoordActionArea();
 
 		if (endLeft > 0)
 		{
-			if ((endLeft*ActivationPoint) < ((getOriginalPos()).x - center.x))
+			//UI_Objects[0]->changeColor(D2D1::ColorF(0.5 + , 0, 0));
+			Xmoved = (getOriginalPos()).x - center.x;
+			NbrActivationPoint = endLeft*ActivationPoint;
+
+			percentage = Xmoved / NbrActivationPoint;
+
+			if (NbrActivationPoint < Xmoved)
 			{
 				//activateFunction();
 				setFunctionActivation(true);
@@ -143,7 +166,12 @@ void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 		}
 		if (endRight > 0)
 		{
-			if ((endRight*ActivationPoint) < (center.x - (getOriginalPos()).x))
+			Xmoved = center.x - (getOriginalPos()).x;
+			NbrActivationPoint = endRight*ActivationPoint;
+			if (percentage > Xmoved / NbrActivationPoint)
+				percentage = Xmoved / NbrActivationPoint;
+
+			if (NbrActivationPoint < Xmoved)
 			{
 				//activateFunction();
 				setFunctionActivation(true);
@@ -155,7 +183,14 @@ void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 		}
 		if (endDown > 0)
 		{
-			if ((endDown*ActivationPoint) < (center.y - (getOriginalPos()).y))
+			Ymoved = center.y - (getOriginalPos()).y;
+			NbrActivationPoint = endDown*ActivationPoint;
+
+			if (percentage > Ymoved / NbrActivationPoint)
+				percentage = Ymoved / NbrActivationPoint;
+
+
+			if (NbrActivationPoint < Ymoved)
 			{
 				//activateFunction();
 				setFunctionActivation(true);
@@ -166,7 +201,13 @@ void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 		}
 		if (endUp > 0)
 		{
-			if ((endUp*ActivationPoint) < ((getOriginalPos()).y - center.y))
+			Ymoved = getOriginalPos().y - center.y;
+			NbrActivationPoint = endUp*ActivationPoint;
+
+			if (percentage > Ymoved / NbrActivationPoint)
+				percentage = Ymoved / NbrActivationPoint;
+
+			if (NbrActivationPoint < Ymoved)
 			{
 				//activateFunction();
 				setFunctionActivation(true);
@@ -175,7 +216,10 @@ void Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			}
 			//	printf("move up to y = %f  \n", newPos.y);
 		}
+
+		
 	}
+	return percentage;
 
 }
 

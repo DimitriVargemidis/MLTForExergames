@@ -7,10 +7,10 @@
 
 
 Abstr_UI_Hitbox::Abstr_UI_Hitbox():
-widthActionArea {150}, heightActionArea{ 150 }
+widthActionArea {0}, heightActionArea{ 0 }
 {
-	centerCoordActionArea.x = 100 +250;
-	centerCoordActionArea.y = 200;
+	centerCoordActionArea.x = -50;
+	centerCoordActionArea.y = -50;
 
 	activateFunctionCallback = UI_CallbackFunctions::testCallback;
 	ID_ModelObject = -1;
@@ -403,6 +403,16 @@ void Abstr_UI_Hitbox::deactivateFunction()
 	functionActive = false;
 }
 
+void Abstr_UI_Hitbox::setUpdateFunction(std::function<void(Abstr_UI_Hitbox*)> funct)
+{
+	updateFunctionCallback = funct;
+}
+
+std::function<void(Abstr_UI_Hitbox*)> Abstr_UI_Hitbox::getupdateFunction()
+{
+	return updateFunctionCallback;
+}
+
 void Abstr_UI_Hitbox::set_ID_ModelObject(int ID)
 {
 	ID_ModelObject = ID;
@@ -458,6 +468,10 @@ void Abstr_UI_Hitbox::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 {
 }
 
+void Abstr_UI_Hitbox::clear_UI_elements()
+{
+}
+
 void Abstr_UI_Hitbox::moveY(float move)
 {
 	centerCoordActionArea.y = centerCoordActionArea.y + move;
@@ -476,6 +490,86 @@ void Abstr_UI_Hitbox::moveAbsY(float pos)
 void Abstr_UI_Hitbox::moveAbsYoriginalPos(float pos)
 {
 	originalPos.y = pos;
+}
+
+
+void Abstr_UI_Hitbox::setXoffset(float offset)
+{
+}
+
+float Abstr_UI_Hitbox::getXoffset()
+{
+	return 0.0f;
+}
+
+void Abstr_UI_Hitbox::draw()
+{
+	for (int i = 0; i < UI_objects.size(); ++i)
+	{
+		if (UI_objects[i]->getVisibele())
+		{
+			//UI_ptr->drawRectangle(UI_objects[i]->getCenter(), UI_objects[i]->getWidth(), UI_objects[i]->getHeight(), UI_objects[i]->getColor());
+			UI_objects[i]->draw();
+		}
+	}
+
+}
+
+void Abstr_UI_Hitbox::attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)
+{
+	if (checkInputJointType(type) && !totalLock)
+	{
+		if (checkCoordInside(jointPoint))
+		{
+			//if (!(UI_Hitboxes[i].getHover()))
+			//{
+			//NOW only works for right and left hand !
+			if (type == JointType_HandRight && !(UI_ptr->getRightHandBusy()))
+			{
+				setHover(true, type, rightHand, jointPoint);
+				UI_ptr->setRightHandBusy(isRightHandActive());
+
+
+			}
+			else if (type == JointType_HandLeft && !(UI_ptr->getLeftHandBusy()))
+			{
+				setHover(true, type, leftHand, jointPoint);
+				UI_ptr->setLeftHandBusy(isLeftHandActive());
+			}
+
+			//UI_Hitboxes[i].setHoverJoint(type);
+			//printf("activate");
+			//}
+
+		}
+		else// if(UI_Hitboxes[i]->getHover())
+		{
+			//if (UI_Hitboxes[i].getHover() && UI_Hitboxes[i].getHoverJoint() == type)
+			//{
+			//UI_Hitboxes[i]->setHover(false,type,leftHand, jointPoint);
+			if (type == JointType_HandRight)
+			{
+				setHover(false, type, rightHand, jointPoint);
+				UI_ptr->setRightHandBusy(isRightHandActive());
+
+			}
+			else
+			{
+				setHover(false, type, leftHand, jointPoint);
+				UI_ptr->setLeftHandBusy(isLeftHandActive());
+			}
+			//printf("DEactivate!!!");
+			//}
+		}
+
+	}
+
+
+}
+
+void Abstr_UI_Hitbox::updateData()
+{
+	updateFunctionCallback(this);
 }
 
 
@@ -509,7 +603,7 @@ void Abstr_UI_Hitbox::remove_UI_Object(std::shared_ptr<UI_Object> object)
 	//TO DO define this function
 }
 
-std::vector<std::shared_ptr<UI_Object>> Abstr_UI_Hitbox::get_UI_Objects()
+std::vector<std::shared_ptr<UI_Object>> & Abstr_UI_Hitbox::get_UI_Objects()
 {
 	return UI_objects;
 }

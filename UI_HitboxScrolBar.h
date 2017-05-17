@@ -18,6 +18,8 @@ public:
 						std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model = -1);
 	~UI_HitboxScrolBar();
 
+	virtual void setModel(std::shared_ptr<Model> m) override;
+
 	virtual void moveLeftAction(D2D1_POINT_2F ref, float move) override;
 	virtual void moveRightAction(D2D1_POINT_2F ref, float move) override;
 	virtual void moveDownAction(D2D1_POINT_2F ref, float move) override;
@@ -33,7 +35,7 @@ public:
 	void	add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox);
 
 	void	setMoveUpCounter(int count);
-	int		 getMoveUpCounter();
+	int		getMoveUpCounter();
 
 	void	setMoveDownCounter(int count);
 	int		getMoveDownCounter();
@@ -43,7 +45,18 @@ public:
 	void	setHeight_UI_element(float height);
 	float	getHeight_UI_element();
 
+	void	setWidth_UI_element(float width);
+	float	getWidth_UI_element();
+
 	std::vector<std::shared_ptr<Abstr_UI_Hitbox>> get_UI_Elements();
+	void clear_UI_elements() override;
+
+	void draw() override;
+
+	virtual void attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand) override;
+
+	virtual void updateData() override;
+
 
 
 private:
@@ -66,6 +79,9 @@ private:
 	std::chrono::steady_clock::time_point TimeLastMoveDown = Clock::now();			//The time when the last move down was, to set delay between move up and down
 	std::chrono::steady_clock::time_point TimeLastMoveUp= Clock::now();		//The time when the last move up was, to set delay between move up and down
 	long long delayTimeAfterMoveLimit = 500;
+
+	UI_Object topFiller;
+	UI_Object bottomFiller;
 
 
 };

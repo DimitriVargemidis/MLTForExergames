@@ -7,6 +7,7 @@
 #include <functional>
 
 #include "UI_CallbackFunctions.h"
+#include "UI_Update_CallbackFunctions.h"
 #include "ActionTrigger.h"
 
 #include "UI_Object.h"
@@ -23,15 +24,15 @@ public:
 						std::function<void(int, int, std::shared_ptr<Model> ,std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model= -1);
 	~Abstr_UI_Hitbox();
 
-	void setModel(std::shared_ptr<Model> m);
-	std::shared_ptr<Model> getModel();
+	virtual void setModel(std::shared_ptr<Model> m);
+	virtual std::shared_ptr<Model> getModel();
 
 	void setUI(std::shared_ptr<UI> m);
 	std::shared_ptr<UI> getUI();
 
 	void add_UI_Object(std::shared_ptr<UI_Object> object);
 	void remove_UI_Object(std::shared_ptr<UI_Object> object); //TO DO define function
-	std::vector<std::shared_ptr<UI_Object>> get_UI_Objects();
+	std::vector<std::shared_ptr<UI_Object>> & get_UI_Objects();
 
 	void addInputJoint(JointType joint);
 	std::vector<JointType> getInputJoints();
@@ -80,6 +81,9 @@ public:
 	virtual void activateFunction() = 0;
 	virtual void deactivateFunction();
 
+	void setUpdateFunction(std::function<void(Abstr_UI_Hitbox*)> funct);
+	std::function<void(Abstr_UI_Hitbox*)> getupdateFunction();
+
 	void set_ID_ModelObject(int ID);
 	int	 get_ID_ModelObject();
 
@@ -99,6 +103,7 @@ public:
 	virtual D2D1_POINT_2F getLastPoint() = 0;
 
 	virtual void add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox);
+	virtual void clear_UI_elements();
 
 	void moveY(float move);
 	void moveYoriginalPos(float move);
@@ -106,7 +111,17 @@ public:
 	void moveAbsY(float pos);
 	void moveAbsYoriginalPos(float pos);
 
-	std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> activateFunctionCallback;
+	virtual void	setXoffset(float offset);
+	virtual float	getXoffset();
+
+	std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)>	activateFunctionCallback = UI_CallbackFunctions::testCallback;
+	std::function<void(Abstr_UI_Hitbox*)>										updateFunctionCallback = UI_Update_CallbackFunctions::standardUpdateFunction ;
+
+	virtual void draw();
+
+	virtual void attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
+
+	virtual void updateData();
 
 private:
 

@@ -33,24 +33,32 @@
     <ClCompile Include="Gesture.cpp" />
     <ClCompile Include="GestureClass.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Keypress.cpp" />
     <ClCompile Include="libsvm-3.21\svm.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="ProjectGesture.cpp" />
+    <ClCompile Include="recordScreen.cpp" />
     <ClCompile Include="SVMInterface.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UI_BitmapObject.cpp" />
     <ClCompile Include="UI_CallbackFunctions.cpp" />
+    <ClCompile Include="UI_FramesObject.cpp" />
     <ClCompile Include="UI_Hitbox.cpp" />
     <ClCompile Include="UI_HitboxHoverSlideButton.cpp" />
     <ClCompile Include="UI_HitboxLockScrolBar.cpp" />
     <ClCompile Include="UI_HitboxScrolBar.cpp" />
     <ClCompile Include="UI_HitboxSlideButton.cpp" />
     <ClCompile Include="UI_Object.cpp" />
+    <ClCompile Include="UI_TextObject.cpp" />
+    <ClCompile Include="UI_Update_CallbackFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+    <Image Include="Images\D.png" />
+    <Image Include="Images\open.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BodyBasics.rc" />
@@ -72,23 +80,29 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="ActionTrigger.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Keypress.h" />
     <ClInclude Include="libsvm-3.21\svm.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Project.h" />
     <ClInclude Include="ProjectGesture.h" />
+    <ClInclude Include="recordScreen.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SVMInterface.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UI_BitmapObject.h" />
     <ClInclude Include="UI_CallbackFunctions.h" />
+    <ClInclude Include="UI_FramesObject.h" />
     <ClInclude Include="UI_Hitbox.h" />
     <ClInclude Include="UI_HitboxHoverSlideButton.h" />
     <ClInclude Include="UI_HitboxLockScrolBar.h" />
     <ClInclude Include="UI_HitboxScrolBar.h" />
     <ClInclude Include="UI_HitboxSlideButton.h" />
     <ClInclude Include="UI_Object.h" />
+    <ClInclude Include="UI_TextObject.h" />
+    <ClInclude Include="UI_Update_CallbackFunctions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -34,6 +34,7 @@ private:
 	double			predictedLabel = -1;
 	double			previousPredictedLabel = -1;
 	bool			refresh = false;				//boolean if the current frame needs to be added to a gestureclass or not
+
 	bool			predict = false;				//boolean if the program is in prediction mode or not
 	bool			trained = false;
 	
@@ -50,8 +51,12 @@ private:
 	std::vector<Frame>		absFrames;			//The vector with frames that are drawn on the screen
 
 	IBody *					pBody;				//The body that is being processed
-	
 
+	std::chrono::time_point<std::chrono::steady_clock> countDownRef;
+	bool			countDownInitiated = false;		//boolean if the count down is already initiated
+	int				countDown = 3;
+
+	bool			updateUI = false;
 public:
 	Model();
 	~Model();
@@ -77,6 +82,9 @@ public:
 	void				setTrained(bool train);
 	bool				getTrained();
 
+	void				setRecording(bool record);
+	bool				getRecording();
+
 	void				addActionToActive(WORD keycode, bool hold);
 
 	void				addGesture(double label, Gesture gesture);
@@ -92,6 +100,14 @@ public:
 
 	void				processBody(INT64 nTime, int nBodyCount, IBody** ppBodies);
 	void				recordGesture(Frame frame);
+
+	bool				getCountDownInit();
+	int					getCountDown();
+
+	void				setUpdatUI(bool update);
+	bool				getUpdateUI();
+
+
 };
 
 #endif //MODEL_H
