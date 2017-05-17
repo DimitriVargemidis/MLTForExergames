@@ -67,9 +67,6 @@ public:
 	void changeColor(int colorID);
 	void changeButtonColor(int state);
 
-	void drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color);
-	void drawText(std::string text);
-
 	void					drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color);
 	void					drawText(std::wstring text, D2D1_POINT_2F center, float width = 100, float height = 50, D2D1::ColorF color = D2D1::ColorF::AliceBlue, float fontSize = 50, DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT_CENTER);
 

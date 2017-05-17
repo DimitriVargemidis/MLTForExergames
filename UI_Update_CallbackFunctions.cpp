@@ -37,7 +37,7 @@ void UI_Update_CallbackFunctions::updateScrolbarGestures(Abstr_UI_Hitbox * hitbo
 {
 	//std::shared_ptr<UI> shared_ptr_this(this);
 	std::shared_ptr<GestureClass> ActiveGestureClass = model_global->getGestureClassByID(UI_global->getScreen()->getGestureClassID());
-	std::vector<Gesture> gestures = ActiveGestureClass->getGestures();
+	std::vector<std::shared_ptr<Gesture>> gestures = ActiveGestureClass->getGestures();
 
 	hitbox->clear_UI_elements();
 
@@ -46,10 +46,10 @@ void UI_Update_CallbackFunctions::updateScrolbarGestures(Abstr_UI_Hitbox * hitbo
 	//for (int i = gestures.size()-1; i >= 0; i--)
 	for (int i = 0; i < gestures.size(); i++)
 	{
-		gestureID = gestures[i].getGestureID();
+		gestureID = gestures[i]->getGestureID();
 		std::vector<Frame> frames;
-		frames.push_back(gestures[i].getFrames()[0]);
-		frames.push_back(gestures[i].getFrames()[(gestures[i].getFrames().size()-1)]);
+		frames.push_back(gestures[i]->getFrames()[0]);
+		frames.push_back(gestures[i]->getFrames()[(gestures[i]->getFrames().size()-1)]);
 
 		//the size and position of these elements don't matter they are resized in the scrollbar hitbox
 		std::shared_ptr<UI_Object> borders = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::Black);

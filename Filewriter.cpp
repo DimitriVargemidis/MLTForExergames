@@ -71,16 +71,16 @@ void Filewriter::save(std::shared_ptr<GestureClass> & gestureClass)
 	std::string nameLine = Filewriter::NAME_STRING + " " + gestureClass->getName();
 	write(fileName, nameLine);
 
-	for (Gesture & gesture : gestureClass->getGestures())
+	for (std::shared_ptr<Gesture> gesture : gestureClass->getGestures())
 	{
-		save(gesture);
+		save(*gesture);
 
 		std::string gestureLine;
 		gestureLine.append(Filewriter::GESTURE_STRING);
 		gestureLine.append(" ");
 
 		std::ostringstream gestureSStream;
-		gestureSStream << gesture.getGestureID();
+		gestureSStream << gesture->getGestureID();
 		gestureLine.append(gestureSStream.str());
 		write(fileName, gestureLine);
 	}

@@ -31,9 +31,9 @@ svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureC
 	int problemSize{0};
 	for (const auto & keyValue : projectMap)
 	{
-		for(const Gesture & gesture : keyValue.second.first->getGestures())
+		for(const std::shared_ptr<Gesture> gesture : keyValue.second.first->getGestures())
 		{
-			problemSize = problemSize + gesture.getFrames().size();
+			problemSize = problemSize + gesture->getFrames().size();
 		}
 	}
 
@@ -45,15 +45,15 @@ svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureC
 	int rowCount{0};
 
 	for (const auto & keyValue : projectMap) {
-		for (const Gesture & g : keyValue.second.first->getGestures()) {
+		for (const std::shared_ptr<Gesture> g : keyValue.second.first->getGestures()) {
 			double fraction = 0;
 			int counter = 0;
 			int labelOffset = 0;
-			for (const Frame & f : g.getFrames())
+			for (const Frame & f : g->getFrames())
 			{
-				if (!g.isPosture())
+				if (!g->isPosture())
 				{
-					fraction = counter / ((double)g.getFrames().size());
+					fraction = counter / ((double)g->getFrames().size());
 					labelOffset = (int)(fraction / THRESHOLD_FRACTION);
 					counter++;
 				}

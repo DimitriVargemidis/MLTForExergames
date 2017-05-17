@@ -63,6 +63,11 @@ void Model::setRefresh(bool refresh)
 	this->refresh = refresh;
 }
 
+bool Model::getRefresh()
+{
+	return refresh;
+}
+
 void Model::setPredict(bool refresh)
 {
 	this->predict = refresh;
@@ -73,12 +78,22 @@ void Model::setTrained(bool train)
 	trained = train;
 }
 
+void Model::setRecording(bool record)
+{
+	recording = record;
+}
+
+bool Model::getRecording()
+{
+	return recording;
+}
+
 void Model::addActionToActive(WORD keycode, bool hold)
 {
 	activeProject->addAction(activeGestureClassLabel, keycode, hold);
 }
 
-void Model::addGesture(int label, Gesture gesture)
+void Model::addGesture(int label, std::shared_ptr<Gesture> gesture)
 {
 	if (activeProject->containsLabel(label))
 	{
@@ -110,7 +125,7 @@ void Model::addToLabelsBuffer(int label)
 bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
 {
 	//The base label exists and is linked to a posture, so the posture has been executed.
-	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().begin()->isPosture())
+	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().front()->isPosture())
 	{
 		return true;
 	}
@@ -219,7 +234,7 @@ void Model::displayFrames()
 
 	for (const auto & keyValue : activeProject->getProjectMap())
 	{
-		relFrames.push_back(keyValue.second.first->getGestures().back().getFrames().back());
+		relFrames.push_back(keyValue.second.first->getGestures().back()->getFrames().back());
 	}
 }
 
@@ -400,7 +415,7 @@ bool Model::getUpdateUI()
 
 void Model::addRecordedGesture()
 {
-	Gesture gesture{ getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-10) };
+	std::shared_ptr<Gesture> gesture = std::make_shared<Gesture>( getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-10) );
 	addGesture(activeGestureClassLabel, gesture);
 	recording = false;
 	initialized = false;

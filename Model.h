@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <iostream>
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
 
 #include "stdafx.h"
 #include "Project.h"
@@ -67,6 +69,7 @@ public:
 
 	void				setActiveLabel(int label);
 	void				setRefresh(bool refresh);
+	bool				getRefresh();
 	void				setPredict(bool refresh);
 	void				setTrained(bool train);
 
@@ -74,7 +77,7 @@ public:
 	bool				getRecording();
 
 	void				addActionToActive(WORD keycode, bool hold);
-	void				addGesture(int label, Gesture gesture);
+	void				addGesture(int label, std::shared_ptr<Gesture> gesture);
 
 	std::vector<Frame>	getRelevantFramesFromBuffer(int offset);
 

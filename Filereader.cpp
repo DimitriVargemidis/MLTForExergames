@@ -113,9 +113,8 @@ std::shared_ptr<GestureClass> Filereader::readGestureClassFromFile(std::string &
 			stream << gestureData.at(0);
 			stream << Filewriter::GESTURE_EXTENSION;
 
-			Gesture gesture;
-			readGestureFromFile(stream.str(), &gesture);
-			gesture.setGestureID(gestureData.at(0));
+			std::shared_ptr<Gesture> gesture = readGestureFromFile(stream.str());
+			gesture->setGestureID(gestureData.at(0));
 			gestureClass->addGesture(gesture);
 		}
 		else if (!fileLine.compare(0, Filewriter::NAME_STRING.size(), Filewriter::NAME_STRING))
@@ -130,8 +129,10 @@ std::shared_ptr<GestureClass> Filereader::readGestureClassFromFile(std::string &
 	return gestureClass;
 }
 
-void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
+std::shared_ptr<Gesture> Filereader::readGestureFromFile(std::string & fileName)
 {
+	std::shared_ptr<Gesture> gesture =  std::make_shared<Gesture>();
+
 	std::ostringstream fNameStream;
 	fNameStream << Filewriter::SUBDIRECTORY_STRING;
 	fNameStream << fileName;
@@ -173,6 +174,8 @@ void Filereader::readGestureFromFile(std::string & fileName, Gesture * gesture)
 	{
 		gesture->addFrame(f);
 	}
+
+	return gesture;
 }
 
 void Filereader::loadAllProjects(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)

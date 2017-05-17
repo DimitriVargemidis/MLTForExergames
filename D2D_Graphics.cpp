@@ -261,22 +261,6 @@ void D2D_Graphics::drawHand(const D2D1_POINT_2F & handPosition)
 	m_pRenderTarget->FillEllipse(ellipse, m_pBodyGradient);
 }
 
-	switch (handState)
-	{
-	case HandState_Closed:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandClosed);
-		break;
-
-	case HandState_Open:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandOpen);
-		break;
-
-	case HandState_Lasso:
-		m_pRenderTarget->FillEllipse(ellipse, m_pBrushHandLasso);
-		break;
-	}
-}
-
 
 void D2D_Graphics::InitD2D()
 {

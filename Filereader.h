@@ -13,7 +13,7 @@ namespace Filereader
 
 	std::shared_ptr<Project> readProjectFromFile(std::string & fileName, std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
 	std::shared_ptr<GestureClass> readGestureClassFromFile(std::string & fileName);
-	void readGestureFromFile(std::string & fileName, Gesture * gesture);
+	std::shared_ptr<Gesture> readGestureFromFile(std::string & fileName);
 
 	void loadAllProjects(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses);
 	void loadAllGestureClasses(std::vector<std::shared_ptr<GestureClass>> * gestureClasses);

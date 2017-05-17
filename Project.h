@@ -38,7 +38,7 @@ public:
 
 	void addNew(int label, std::shared_ptr<GestureClass> gestureClass = nullptr, std::vector<Action> & actions = std::vector<Action>());
 	void replaceGestureClass(int label, std::shared_ptr<GestureClass> gestureClass = nullptr);
-	void addGesture(int label, Gesture & gesture);
+	void addGesture(int label, std::shared_ptr<Gesture> gesture);
 	void replaceActions(int label, std::vector<Action> & actions = std::vector<Action>());
 	void addAction(int label, Action & action);
 	void addAction(int label, WORD keycode, bool hold);

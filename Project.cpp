@@ -57,7 +57,7 @@ void Project::replaceGestureClass(int label, std::shared_ptr<GestureClass> gestu
 	projectMapIt->second.first = gestureClass;
 }
 
-void Project::addGesture(int label, Gesture & gesture)
+void Project::addGesture(int label, std::shared_ptr<Gesture> gesture)
 {
 	projectMapIt = projectMap.find(label);
 	projectMapIt->second.first->addGesture(gesture);
@@ -120,7 +120,7 @@ void Project::setLongestGestureSize()
 	{
 		for (const auto & gesture : key.second.first->getGestures())
 		{
-			int gestureSize = gesture.getFrames().size();
+			int gestureSize = gesture->getFrames().size();
 			if (gestureSize > longestGestureSize)
 			{
 				longestGestureSize = gestureSize;

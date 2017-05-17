@@ -9,16 +9,16 @@ class Gesture;
 
 class GestureClass {
 private:
-	std::vector<Gesture> gestures;
+	std::vector<std::shared_ptr<Gesture>> gestures;
 	int gestureClassID = 0;
 	std::string name = "GestureClass";
 
 public:
 	GestureClass();
-	GestureClass(const Gesture & gesture);
+	GestureClass(const std::shared_ptr<Gesture> gesture);
 
-	void addGesture(const Gesture & gesture);
-	std::vector<Gesture> & getGestures();
+	void addGesture(const std::shared_ptr<Gesture> gesture);
+	std::vector<std::shared_ptr<Gesture>> & getGestures();
 
 	int getGestureClassID();
 	void setGestureClassID(int ID);
