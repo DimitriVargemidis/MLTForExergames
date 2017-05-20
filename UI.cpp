@@ -275,6 +275,7 @@ void UI::createScreen()
 
 	Screen->setUI(shared_ptr_this, width, height, m_pCoordinateMapper,cDepthWidth, cDepthHeight);
 	Screen->createScreen(width, height);
+
 }
 
 void UI::scaleSkeleton(std::vector<D2D1_POINT_2F>& jointPoints, float multiplier)
@@ -368,7 +369,7 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 			if (sc)
 			{
 				
-				model->setActiveLabel(label);
+				model->setActiveLabel(label*10);
 				Screen->setGestureClassID(label);
 				model->setUpdatUI(true);
 				SetDlgItemInt(m_hWnd, IDC_ACTIVE_LABEL, label, TRUE);

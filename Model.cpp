@@ -15,6 +15,74 @@
 #include "Model.h"
 
 
+void Model::updateCountDown()
+{
+	if (!countDownInitiated)
+	{
+		countDownInitiated = true;
+		countDownRef = Clock::now();
+		printf("Get ready to record\n");
+		countDown = 4;
+		updateUI = true;
+	}
+	else
+	{
+		auto t2 = Clock::now();
+		long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - countDownRef).count();
+
+		if (time >= 1000 && countDown > 3)
+		{
+			printf("3 after %ld \n", time);
+			--countDown;
+			updateUI = true;				//the UI will update it's state based on the countDown parameter
+		}
+		else if (time >= 2000 && countDown > 2)
+		{
+			printf("2 after %ld \n", time);
+			--countDown;
+			updateUI = true;				//the UI will update it's state based on the countDown parameter
+		}
+		else if (time >= 3000 && countDown > 1)
+		{
+			printf("1 after %ld \n", time);
+			--countDown;
+			updateUI = true;				//the UI will update it's state based on the countDown parameter
+		}
+		else if ((time >= 4000 && countDown > 0))
+		{
+
+			printf("GO after %ld \n", time);
+			--countDown;
+			framesBuffer.clear();
+			recording = true;
+			//refresh = false;
+			updateUI = true;				//the UI will update it's state based on the countDown parameter
+											//countDownInitiated = false;
+
+		}
+		else if (recording == false && countDown == 0)
+		{
+			printf(" recording is done \n");
+			--countDown;
+
+			countDownRef = Clock::now();
+
+			updateUI = true;				//the UI will update it's state based on the countDown parameter
+		}
+		else if (time >= 1000 && countDown == -1)
+		{
+			printf(" delete screen \n");
+			--countDown;
+
+			refresh = false;
+			countDownInitiated = false;
+			updateUI = true;
+		}
+
+
+	}
+}
+
 Model::Model()
 {
 	Filereader::loadAllData(&projects, &gestureClasses);
@@ -207,14 +275,15 @@ void Model::predictAndExecute(int label)
 
 std::shared_ptr<GestureClass> Model::getGestureClassByID(const int & ID)
 {
-	for (int i = 0; i < gestureClasses.size(); i++)
+	for (int i = 0; i < gestureClasses.size(); ++i)
 	{
+		//printf("Model.cpp 280: i is %d", i);
 		if (gestureClasses[i] != nullptr)
 		{
 			if (gestureClasses[i]->getGestureClassID() == ID)
 				return gestureClasses[i];
 		}
-		return nullptr;
+		
 	}
 
 	//give the last gestureClass back
@@ -231,11 +300,12 @@ void Model::displayFrames()
 
 	relFrames.clear();
 	absFrames.clear();
-
+	/*
 	for (const auto & keyValue : activeProject->getProjectMap())
 	{
 		relFrames.push_back(keyValue.second.first->getGestures().back()->getFrames().back());
 	}
+	*/
 }
 
 void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
@@ -272,51 +342,7 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 
 				if (refresh && !predict)				//The measure button was pressed last
 				{
-					if (!countDownInitiated)
-					{
-						countDownInitiated = true;
-						countDownRef = Clock::now();
-						printf("Get ready to record\n");
-						countDown = 4;
-						updateUI = true;
-					}
-					else
-					{
-						auto t2 = Clock::now();
-						long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - countDownRef).count();
-
-						if (time >= 1000 && countDown > 3)
-						{
-							printf("3 after %ld \n", time);
-							--countDown;
-							updateUI = true;
-						}
-						else if (time >= 2000 && countDown > 2)
-						{
-							printf("2 after %ld \n", time);
-							--countDown;
-							updateUI = true;
-						}	
-						else if (time >= 3000 && countDown > 1)
-						{
-							printf("1 after %ld \n", time);
-							--countDown;
-							updateUI = true;
-						}	
-						else if ((time >= 4000) )
-						{
-							
-							printf("GO after %ld \n", time);
-							countDown = 0;
-							
-							framesBuffer.clear();
-							recording = true;
-							refresh = false;
-							updateUI = true;
-							countDownInitiated = false;
-						}
-
-					}
+					updateCountDown();
 				}
 
 				if (predict)

@@ -44,6 +44,9 @@ public:
 	void setHover(const bool & a, const JointType & joint, const HandState & hand, const D2D1_POINT_2F & jointPoint);
 	bool getHover();
 
+	void setKeepHoverState(bool a);
+	bool getKeepHoverState();
+
 	void setActiveHand(const bool & hand);
 	bool getActiveHand();
 
@@ -62,7 +65,7 @@ public:
 	virtual void ActiveHandOffAction();
 	virtual void ActiveHandHoldAction();
 
-	virtual void action(ActionTrigger act, const D2D1_POINT_2F & coord) = 0;
+	virtual void action(ActionTrigger act, const D2D1_POINT_2F & coord = D2D1::Point2F(-1,-1)) = 0;
 
 	//check whether the right or left hand are controlling this object
 	virtual bool isRightHandActive();
@@ -105,6 +108,8 @@ public:
 	virtual void add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox);
 	virtual void clear_UI_elements();
 
+	virtual std::shared_ptr<UI_Object>		getActionIndicator();
+
 	void moveY(float move);
 	void moveYoriginalPos(float move);
 
@@ -125,33 +130,36 @@ public:
 
 private:
 
-	std::shared_ptr<Model> model = nullptr;
-	std::shared_ptr<UI> UI_ptr = nullptr;
+	std::shared_ptr<Model>	model = nullptr;
+	std::shared_ptr<UI>		UI_ptr = nullptr;
 
-	int ID_ModelObject;				//the id of the model object to which this hitbox is linked, not used when hitbox is not linked to a specific model object
+	int			ID_ModelObject;					//the id of the model object to which this hitbox is linked, not used when hitbox is not linked to a specific model object
 
-	std::vector<std::shared_ptr<UI_Object>> UI_objects;	//The UI_objects it will affect directly
-	std::vector<JointType> inputJoints;					//The joints that can interact with this hitbox		
+	std::vector<std::shared_ptr<UI_Object>> UI_objects;		//The UI_objects it will affect directly
+	std::vector<JointType>					inputJoints;	//The joints that can interact with this hitbox		
 
 	D2D1_POINT_2F centerCoordActionArea;
 	D2D1_POINT_2F originalPos;				//the beginposition of the hitbox
-	float	widthActionArea;
-	float heightActionArea;
 
-	HandState Activehandstate = HandState_Closed;
-	JointType HoverJoint = JointType_WristLeft; //the joint that has activated the button
+	float		widthActionArea;
+	float		heightActionArea;
 
-	bool hover = false;				//active when joint is hover over hitbox
-	bool activeHand = false;		//active when hand is in activehandstate over hitbox
-	bool activeHandOutside = false;	//active when hand was in activehandstate over hitbox and is still in this state outside the hitbox
-	bool functionActive = false;	//active when the criteria for activating its model function are met
+	HandState	Activehandstate = HandState_Closed;
+	JointType	HoverJoint = JointType_WristLeft; //the joint that has activated the button
 
-	int  InertiaCounter = 0;
-	const int InertiaLimit = 4;
+	bool		hover = false;					//active when joint is hover over hitbox
+	bool		keepHoverState = false;			//true when you want to keep the current hoverstate
+	bool		activeHand = false;				//active when hand is in activehandstate over hitbox
+	bool		activeHandBeforeHover = false;	//true when the activeHandState comes over the hitbox befor it hover non-active above the hitbox
+	bool		activeHandOutside = false;		//active when hand was in activehandstate over hitbox and is still in this state outside the hitbox
+	bool		functionActive = false;			//active when the criteria for activating its model function are met
 
-	bool handLock = false;			//whether this hitbox has locked the JointType specified in parameter HoverJoint
-	bool totalLock = false;
-	bool visible = true;
+	int			InertiaCounter = 0;
+	const int	InertiaLimit = 4;
+
+	bool		handLock = false;				//whether this hitbox has locked the JointType specified in parameter HoverJoint
+	bool		totalLock = false;
+	bool		visible = true;
 
 
 

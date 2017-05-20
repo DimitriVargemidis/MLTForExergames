@@ -5,7 +5,7 @@ extern D2D_Graphics			graphics;
 
 
 UI_Object::UI_Object():
-	color{D2D1::ColorF::Beige}, fillColor{ D2D1::ColorF::Beige }, borderthickness{ borderthickness }
+	borderColor{D2D1::ColorF::Beige}, fillColor{ D2D1::ColorF::Beige }, borderthickness{ borderthickness }
 {
 	//temporary hard coded object
 	centerCoordImage.x = 100+250;
@@ -16,13 +16,13 @@ UI_Object::UI_Object():
 }
 
 UI_Object::UI_Object(float Xcenter, float Ycenter, float width, float height, D2D1::ColorF col) :
-	UI_Object{ Xcenter,  Ycenter, width,  height, col ,col, 1}
+	UI_Object{ Xcenter,  Ycenter, width,  height, col ,col, 0}
 {
 	
 }
 
 UI_Object::UI_Object(float Xcenter, float Ycenter, float width, float height, D2D1::ColorF col, D2D1::ColorF filler, float borderthick) :
-	widthImage{ width }, heightImage{ height }, color{ col }, fillColor{ filler },  borderthickness{ borderthick }
+	widthImage{ width }, heightImage{ height }, borderColor{ col }, fillColor{ filler },  borderthickness{ borderthick }
 {
 	centerCoordImage.x = Xcenter;
 	centerCoordImage.y = Ycenter;
@@ -35,18 +35,28 @@ UI_Object::~UI_Object()
 
 void UI_Object::changeColor(D2D1::ColorF c)
 {
-	color = c;
+	borderColor = c;
 	fillColor = c;
 }
 
 void UI_Object::changeColor(float r, float g, float b)
 {
-	color = D2D1::ColorF(r, g, b, 1.0);
+	borderColor = D2D1::ColorF(r, g, b, 1.0);
 }
 
 D2D1::ColorF UI_Object::getColor()
 {
-	return color;
+	return borderColor;
+}
+
+void UI_Object::changeBorderColor(D2D1::ColorF c)
+{
+	borderColor = c;
+}
+
+void UI_Object::changeFillColor(D2D1::ColorF c)
+{
+	fillColor = c;
 }
 
 void UI_Object::setCenter(D2D1_POINT_2F c)
@@ -77,6 +87,16 @@ void UI_Object::setHeight(float h)
 float UI_Object::getHeight()
 {
 	return heightImage;
+}
+
+void UI_Object::setHorFillPercen(float percent)
+{
+	HorFillPercen = percent;
+}
+
+float UI_Object::getHorFillPercen()
+{
+	return HorFillPercen;
 }
 
 void UI_Object::setText(const std::wstring & textToDraw)
@@ -110,9 +130,22 @@ const int UI_Object::getVisibele()
 
 void UI_Object::draw()
 {
-	graphics.drawRectangle(centerCoordImage, widthImage, heightImage, color);
-	graphics.drawRectangle(centerCoordImage, (widthImage-(2*borderthickness)), (heightImage -(2*borderthickness)), fillColor);
+	//graphics.drawRectangle(centerCoordImage, widthImage, heightImage, borderColor);
 
+	graphics.drawRectangle(centerCoordImage.x-(widthImage/2), centerCoordImage.y - (heightImage / 2), centerCoordImage.x - (widthImage / 2) + widthImage*HorFillPercen, centerCoordImage.y + (heightImage / 2), borderColor);
+	if (borderthickness != 0 && HorFillPercen == 1.0F)
+	{
+		graphics.drawRectangle(centerCoordImage, (widthImage - (2 * borderthickness)), (heightImage - (2 * borderthickness)), fillColor);
+	}
+}
+
+void UI_Object::setObjectState(ObjectState status)
+{
+}
+
+const ObjectState UI_Object::getObjectState()
+{
+	return ObjectState();
 }
 
 

@@ -6,6 +6,7 @@
 
 extern HWND  m_hWnd;
 extern D2D_Graphics graphics;
+float Xoffset = 100.0;
 
 Abstr_Screen::Abstr_Screen()
 {
@@ -190,6 +191,41 @@ int Abstr_Screen::getDepthHeight()
 	return cDepthHeight;
 }
 
+void Abstr_Screen::setInitRecording(bool play)
+{
+	initRecording = play;
+}
+
+bool Abstr_Screen::getInitRecording()
+{
+	return initRecording;
+}
+
+void Abstr_Screen::setRecordingWidth(float width)
+{
+	recordWidth = width;
+}
+
+float Abstr_Screen::getRecordingWidth()
+{
+	return recordWidth;
+}
+
+void Abstr_Screen::setRecordingHeight(float height)
+{
+	recordHeight = height;
+}
+
+float Abstr_Screen::getRecordingHeight()
+{
+	return recordHeight;
+}
+
+void Abstr_Screen::setRecordVisualCenter(D2D1_POINT_2F center)
+{
+	
+}
+
 std::vector<std::shared_ptr<Abstr_UI_Hitbox>>& Abstr_Screen::get_UI_Hitboxes()
 {
 	return UI_Hitboxes;
@@ -206,6 +242,7 @@ int Abstr_Screen::getGestureClassID()
 
 void Abstr_Screen::setGestureClassID(int ID)
 {
+
 }
 
 void Abstr_Screen::autoplayGesture(int ID)
@@ -217,11 +254,46 @@ void Abstr_Screen::StopPlayGesture()
 
 }
 
+std::shared_ptr<UI_HitboxLockScrolBar> Abstr_Screen::getScrollbar()
+{
+	return std::shared_ptr<UI_HitboxLockScrolBar>();
+}
 
-void Abstr_Screen::drawFrames(	std::vector<Frame>& relframes, std::vector<Frame>& absframes)
+bool Abstr_Screen::getShowRecordVisual()
+{
+	return false;
+}
+
+void Abstr_Screen::setPlayGesture(bool play)
+{
+}
+
+bool Abstr_Screen::getPlayGesture()
+{
+	return false;
+}
+
+void Abstr_Screen::setPlayVisual(std::shared_ptr<UI_Hitbox> play)
+{
+}
+
+std::shared_ptr<UI_Hitbox> Abstr_Screen::getPlayVisual()
+{
+	return nullptr;
+}
+
+
+
+void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>& absframes)
 					
 {
 	std::vector<Frame> * frames = &absframes;
+	D2D1_POINT_2F		absCenter;
+
+	if (frames->size())
+	{
+		absCenter = graphics.BodyToScreen(frames->front().getJoints()[JointType_SpineMid].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
+	}
 
 	drawUI();
 
@@ -242,11 +314,12 @@ void Abstr_Screen::drawFrames(	std::vector<Frame>& relframes, std::vector<Frame>
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 
 
-
+			/*
 			if (j == 0 && drawAbsCoord)
 			{
 				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
 			}
+			*/
 			//code to show coordinates of 3 joints
 			/*
 			if (j == 1)
@@ -259,19 +332,45 @@ void Abstr_Screen::drawFrames(	std::vector<Frame>& relframes, std::vector<Frame>
 			}
 			*/
 		}
-
+		
+		float boneThickness;
 
 		if (!drawAbsCoord)
 		{
-			graphics.scaleSkeleton(jointPoints,height,height,500,500);
+			if (initRecording)
+			{
+				center.x = absCenter.x + Xoffset;
+				center.y = absCenter.y;
+				initRecording = false;
+				UI_ptr->getScreen()->setRecordVisualCenter(center);
+			}
+			graphics.scaleSkeleton(jointPoints,height,height,recordWidth,recordHeight, center.x, center.y);
+			boneThickness = 25.0 * (recordHeight/(height*0.8));
+
+		}
+		else
+		{
+			graphics.scaleSkeleton(jointPoints, height, height, height, height, absCenter.x + Xoffset);
+			//center.x = 350;
+			//center.y = 400;
+			boneThickness = 25.0;
 		}
 
-		graphics.DrawBody(joints, jointPoints, j);
 
+
+		
+
+		for (int i = 0; i < joints.size(); ++i)
+		{
+			if (j == 0 && drawAbsCoord)
+			{
+				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
+			}
+		}
+		graphics.DrawBody(joints, jointPoints, j, (*frames)[j].getLeftHand(), (*frames)[j].getRightHand(), boneThickness);
 	}
 
 	drawTopUI();
-
 }
 
 void Abstr_Screen::drawFrame(const Frame & relframes)
@@ -284,7 +383,7 @@ void Abstr_Screen::drawFrame(const Frame & relframes)
 			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);			
 		}
 		graphics.scaleSkeleton(jointPoints, 0.8);
-		graphics.DrawBody(joints, jointPoints, 1);
+		graphics.DrawBody(joints, jointPoints, 0);
 
 }
 
@@ -298,7 +397,9 @@ void Abstr_Screen::drawScaledFrame(const Frame & relframes, const float startWid
 		jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 	}
 	graphics.scaleSkeleton(jointPoints, startWidth, startHeight, endWidth, endHeight, absXpos, absYpos);
-	graphics.DrawBody(joints, jointPoints, 1);
+	//graphics.DrawBody(joints, jointPoints, 0);
+	graphics.DrawBody(joints, jointPoints, 0, HandState::HandState_Open, HandState::HandState_Open, 25*(endHeight/(startHeight*0.8)));
+	//graphics.DrawBody(joints, jointPoints, 0, HandState::HandState_Open, HandState::HandState_Open);
 }
 
 void Abstr_Screen::drawUI()

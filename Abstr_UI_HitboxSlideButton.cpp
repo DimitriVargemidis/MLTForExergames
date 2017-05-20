@@ -76,11 +76,15 @@ void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 	{
 		//if (((getOriginalPos()).x - (newPos.x - moveLeft)) < endLeft)
 		if ((moveLeftFromOrigin) < endLeft)
-			//newPos.x = newPos.x - moveLeft;	
+		{
+			//newPos.x = newPos.x - moveLeft;
+			//printf("abstr_UI_HitboxSlideButton 80 :MOVE LEFT from origin: %f \n", moveLeftFromOrigin);
 			moveLeftAction(newPos, moveLeft);
+		}
 		else if (endLeft != 0)
 		{
 			//newPos.x = originalPos.x - endLeft;
+			//printf("abstr_UI_HitboxSlideButton 84 \n");
 			moveLeftAction((getOriginalPos()), endLeft);
 		}
 
@@ -98,6 +102,7 @@ void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 			//newPos.x = originalPos.x + endRight;
 			moveRightAction((getOriginalPos()), endRight);
 		}
+
 		//	printf("move right to x = %f  \n", newPos.x);
 	}
 	//if (moveDown > 0 && endDown!= 0
@@ -153,7 +158,8 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			Xmoved = (getOriginalPos()).x - center.x;
 			NbrActivationPoint = endLeft*ActivationPoint;
 
-			percentage = Xmoved / NbrActivationPoint;
+			if (percentage > Xmoved / NbrActivationPoint)
+				percentage = Xmoved / NbrActivationPoint;
 
 			if (NbrActivationPoint < Xmoved)
 			{
@@ -168,6 +174,7 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 		{
 			Xmoved = center.x - (getOriginalPos()).x;
 			NbrActivationPoint = endRight*ActivationPoint;
+
 			if (percentage > Xmoved / NbrActivationPoint)
 				percentage = Xmoved / NbrActivationPoint;
 

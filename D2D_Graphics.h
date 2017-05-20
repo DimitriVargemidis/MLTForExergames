@@ -14,7 +14,7 @@ class D2D_Graphics
 {
 public:
 	const float c_JointThickness = 12.0f;
-	const float c_BoneThickness = 25.0f;
+	const float c_StdBoneThickness = 25.0f;
 	const float c_InferredBoneThickness = 8.0f;
 	const float c_HandSize = 20.0f;
 	
@@ -45,13 +45,13 @@ public:
 	//Draws a body 
 	//"pJoints": joint data
 	//"pJointPoints": joint positions converted to screen space
-	void DrawBody(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, const int colorID = 0);
+	void DrawBody(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, const int colorID = 0, const HandState leftHand = HandState::HandState_Open, const HandState rightHand = HandState::HandState_Open, const float c_BoneThickness = 25.0f);
 
 
 	//Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
 	//"handState": state of the hand
 	//"handPosition": position of the hand
-	void drawHand(const D2D1_POINT_2F& handPosition);
+	void drawHand(HandState handState, const D2D1_POINT_2F& handPosition, const float c_BoneThickness);
 
 	//Draws one bone of a body (joint to joint)
 	//"pJoints": joint data
@@ -68,7 +68,8 @@ public:
 	void changeButtonColor(int state);
 
 	void					drawRectangle(D2D1_POINT_2F center, float width, float height, D2D1::ColorF color);
-	void					drawText(std::wstring text, D2D1_POINT_2F center, float width = 100, float height = 50, D2D1::ColorF color = D2D1::ColorF::AliceBlue, float fontSize = 50, DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT_CENTER);
+	void					drawRectangle(float left,float top, float right, float bottom, D2D1::ColorF color);
+	void					drawText(std::wstring text, D2D1_POINT_2F center, float width = 100, float height = 50, D2D1::ColorF color = D2D1::ColorF::AliceBlue, float fontSize = 50, DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT paragraph = DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
 	ID2D1Bitmap	*			createBitmap(std::wstring filename, int srcWidth, int srcHeight);
 	void					drawBitmap(RGBQUAD * image, int srcWidth, int srcHeight, D2D1_POINT_2F center, float width, float height);
@@ -80,8 +81,8 @@ public:
 
 private:
 
-	void drawTorso(const std::vector<D2D1_POINT_2F> pJointPoints);
-	void drawHead(const std::vector<D2D1_POINT_2F> pJointPoints);
+	void drawTorso(const std::vector<D2D1_POINT_2F> pJointPoints, const float c_BoneThickness);
+	void drawHead(const std::vector<D2D1_POINT_2F> pJointPoints, const float c_BoneThickness);
 
 	ID2D1Factory*           m_pD2DFactory = NULL;
 
@@ -107,9 +108,10 @@ private:
 	ID2D1SolidColorBrush*   m_pBrushAButton = NULL;
 
 	ID2D1SolidColorBrush*   m_pBodyBrush = NULL;
-	
+
+	ID2D1GradientStopCollection *	pGradientStops = NULL;
 	ID2D1LinearGradientBrush*		m_pBodyGradient = NULL;
-	
+
 	ID2D1PathGeometry*		m_pTorso = NULL;
 	D2D_COLOR_F				m_pBodyColor;
 };

@@ -9,7 +9,7 @@
 extern D2D_Graphics			graphics;
 #endif
 */
-
+enum ObjectState;
 
 class UI_Object
 {
@@ -24,6 +24,9 @@ public:
 	void changeColor(float r, float g, float b);
 	D2D1::ColorF getColor();
 
+	void changeBorderColor(D2D1::ColorF c);
+	void changeFillColor(D2D1::ColorF c);
+
 	void setCenter(D2D1_POINT_2F c);
 	D2D1_POINT_2F getCenter();
 
@@ -32,6 +35,9 @@ public:
 
 	void setHeight(float h);
 	float getHeight();
+
+	void setHorFillPercen(float percent);
+	float getHorFillPercen();
 
 	virtual void setText(const std::wstring & textToDraw);
 	virtual const std::wstring & getText();
@@ -45,15 +51,17 @@ public:
 
 	virtual void draw();
 
-	
+	virtual void setObjectState(ObjectState status) ;
+	virtual const ObjectState getObjectState();
 
 private:
 	D2D1_POINT_2F centerCoordImage;
 	float	widthImage;
 	float	heightImage;
 	float	borderthickness;				//thickness of the border
+	float   HorFillPercen = 1.0F;					//the parcent of the object that is drawn from left to right (from 0 to 1), standard is full
 
-	D2D1::ColorF color;
+	D2D1::ColorF borderColor;
 	D2D1::ColorF fillColor;
 
 	bool visible = true;

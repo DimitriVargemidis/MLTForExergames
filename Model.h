@@ -55,8 +55,11 @@ private:
 	std::chrono::time_point<std::chrono::steady_clock> countDownRef;
 	bool			countDownInitiated = false;		//boolean if the count down is already initiated
 	int				countDown = 3;
+	void			updateCountDown();
 
 	bool			updateUI = false;
+
+
 public:
 	Model();
 	~Model();
@@ -98,9 +101,9 @@ public:
 	void				setUpdatUI(bool update);
 	bool				getUpdateUI();
 
-
 	void				recordGesture(Frame & frame);
 	void				addRecordedGesture();
+
 };
 
 #endif //MODEL_H

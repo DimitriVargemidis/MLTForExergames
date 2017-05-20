@@ -12,6 +12,8 @@ namespace UI_Update_CallbackFunctions
 
 	void updateScrolbarGestures(Abstr_UI_Hitbox * hitbox);
 
+	void updatePlayVisual(Abstr_UI_Hitbox * hitbox);
+
 
 };
 

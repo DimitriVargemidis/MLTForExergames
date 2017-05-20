@@ -1,7 +1,5 @@
 name Project
 svm 1
-gestclass 1 1
-gestclass 11 2
-gestclass 21 3
-gestclass 31 4
-gestclass 41 5
+gestclass 10 1
+gestclass 20 2
+action 20 65 0

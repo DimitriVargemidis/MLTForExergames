@@ -48,10 +48,22 @@ public:
 	void	setWidth_UI_element(float width);
 	float	getWidth_UI_element();
 
-	std::vector<std::shared_ptr<Abstr_UI_Hitbox>> get_UI_Elements();
+	void							setActionText(std::shared_ptr<UI_TextObject> textObject);
+	std::shared_ptr<UI_TextObject>	getActionText();
+
+	void							setActionIndicator(std::shared_ptr<UI_Object> actionIndic);
+	std::shared_ptr<UI_Object>		getActionIndicator() override;
+
+	void							setTopFiller(std::shared_ptr<UI_Object> topFill);
+	std::shared_ptr<UI_Object>		getTopFiller();
+
+	void							setBottomFiller(std::shared_ptr<UI_Object> bottomFill);
+	std::shared_ptr<UI_Object>		getBottomFiller();
+
+	std::vector<std::shared_ptr<Abstr_UI_Hitbox>> & get_UI_Elements();
 	void clear_UI_elements() override;
 
-	void draw() override;
+	virtual void draw() override;
 
 	virtual void attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand) override;
 
@@ -79,9 +91,12 @@ private:
 	std::chrono::steady_clock::time_point TimeLastMoveDown = Clock::now();			//The time when the last move down was, to set delay between move up and down
 	std::chrono::steady_clock::time_point TimeLastMoveUp= Clock::now();		//The time when the last move up was, to set delay between move up and down
 	long long delayTimeAfterMoveLimit = 500;
-
-	UI_Object topFiller;
-	UI_Object bottomFiller;
+	
+	
+	std::shared_ptr<UI_Object> topFiller = nullptr;
+	std::shared_ptr<UI_Object>  bottomFiller = nullptr;
+	std::shared_ptr<UI_Object> actionIndicator = nullptr;
+	std::shared_ptr<UI_TextObject> actionText = nullptr;
 
 
 };

@@ -73,12 +73,6 @@
     <ClCompile Include="Abstr_Screen.cpp">
       <Filter>UI_data\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="DUI.cpp">
-      <Filter>UI_data\UI_Types</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI.cpp">
-      <Filter>UI_data\UI_Types</Filter>
-    </ClCompile>
     <ClCompile Include="recordScreen.cpp">
       <Filter>UI_data\Screens</Filter>
     </ClCompile>
@@ -94,7 +88,9 @@
     <ClCompile Include="ImageLoader.cpp">
       <Filter>libraries</Filter>
     </ClCompile>
-    <ClCompile Include="UI_BitmapObject.cpp" />
+    <ClCompile Include="UI_BitmapObject.cpp">
+      <Filter>UI_data\View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BodyBasics.h" />
@@ -179,12 +175,6 @@
     <ClInclude Include="Abstr_Screen.h">
       <Filter>UI_data\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>UI_data\UI_Types</Filter>
-    </ClInclude>
-    <ClInclude Include="DUI.h">
-      <Filter>UI_data\UI_Types</Filter>
-    </ClInclude>
     <ClInclude Include="recordScreen.h">
       <Filter>UI_data\Screens</Filter>
     </ClInclude>
@@ -200,7 +190,9 @@
     <ClInclude Include="ImageLoader.h">
       <Filter>libraries</Filter>
     </ClInclude>
-    <ClInclude Include="UI_BitmapObject.h" />
+    <ClInclude Include="UI_BitmapObject.h">
+      <Filter>UI_data\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

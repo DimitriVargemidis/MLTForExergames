@@ -74,29 +74,6 @@ void Abstr_UI_Hitbox::setHover(bool a)
 {
 	hover = a;
 
-	if (hover)
-	{
-		try
-		{
-			UI_objects[0]->changeColor(D2D1::ColorF::Red);
-		}
-		catch (const std::out_of_range& oor)
-		{
-			printf("there is no UI_object linked to this UI_hitbox");
-		}
-	}
-	else
-	{
-		try
-		{
-			UI_objects[0]->changeColor(D2D1::ColorF::White);
-		}
-		catch (const std::out_of_range& oor)
-		{
-			printf("there is no UI_object linked to this UI_hitbox");
-		}
-	}
-
 }
 
 void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const HandState & hand, const D2D1_POINT_2F & jointPoint)
@@ -125,25 +102,36 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 
 		if (hand == Activehandstate) //is the hand in the state that activates the hitbox
 		{
-			if (!activeHand) //is the hitbox not already handactivated
-			{
-				InertiaCounter = 0;
-				//ActiveHandOnAction();
-				action(ActionTrigger::ActiveHandOn, jointPoint);
-
-				activeHand = true;
-				//printf("active = true /n");
+			if(!hover)
+			{ 
+				activeHandBeforeHover = true;
 			}
-			else
+			else if (!activeHand)
 			{
-				action(ActionTrigger::ActiveHandHold, jointPoint);
-				InertiaCounter = 0;
+				action(ActionTrigger::HoverOn, jointPoint);
 			}
 
+			if(!activeHandBeforeHover) //if the hand is already active before hovering over the button it is not activated
+			{ 
+				if (!activeHand) //is the hitbox not already handactivated
+				{
+					InertiaCounter = 0;
+					//ActiveHandOnAction();
+					action(ActionTrigger::ActiveHandOn, jointPoint);
 
+					activeHand = true;
+					//printf("active = true /n");
+				}
+				else
+				{
+					action(ActionTrigger::ActiveHandHold, jointPoint);
+					InertiaCounter = 0;
+				}
+			}
 		}
 		else
 		{
+			activeHandBeforeHover = false;
 
 			if (activeHand) //is the hitbox handactive already
 			{
@@ -173,6 +161,7 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 	}
 	else
 	{
+		activeHandBeforeHover = false;
 		try
 		{
 			if (activeHand == true)
@@ -221,12 +210,26 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 		}
 	}
 
-	hover = a;
+	
+	if (keepHoverState)			//if you don't want to change the hover state
+		keepHoverState = false;
+	else
+		hover = a;
 }
 
 bool Abstr_UI_Hitbox::getHover()
 {
 	return hover;
+}
+
+void Abstr_UI_Hitbox::setKeepHoverState(bool a)
+{
+	keepHoverState = a;
+}
+
+bool Abstr_UI_Hitbox::getKeepHoverState()
+{
+	return keepHoverState;
 }
 
 void Abstr_UI_Hitbox::setActiveHand(const bool & hand)
@@ -470,6 +473,11 @@ void Abstr_UI_Hitbox::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 
 void Abstr_UI_Hitbox::clear_UI_elements()
 {
+}
+
+std::shared_ptr<UI_Object> Abstr_UI_Hitbox::getActionIndicator()
+{
+	return nullptr;
 }
 
 void Abstr_UI_Hitbox::moveY(float move)
