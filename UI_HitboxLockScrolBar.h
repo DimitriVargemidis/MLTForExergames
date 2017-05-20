@@ -12,6 +12,8 @@ public:
 							std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model = -1);
 	~UI_HitboxLockScrolBar();
 
+	void draw() override;
+
 	void action(ActionTrigger act, const D2D1_POINT_2F & coord) override;
 
 	void add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox) override;
@@ -19,9 +21,17 @@ public:
 	void findSelectedHitbox();
 	void lock_UI_Elements();
 
-	
+	void setRefFrame(const D2D1_POINT_2F ref);
+	D2D1_POINT_2F getRefFrame();
+
+	void							setSelectionBox(std::shared_ptr<UI_Object> selectionVisual);
+	std::shared_ptr<UI_Object>		getSelectionBox();
 
 private:
 	int selectedHitbox;
+
+	D2D1_POINT_2F refFrame;
+
+	std::shared_ptr<UI_Object> selectionBox;
 };
 

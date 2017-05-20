@@ -5,6 +5,7 @@
 extern D2D_Graphics graphics;
 extern std::shared_ptr<UI> UI_global;
 
+
 UI_FramesObject::UI_FramesObject()
 {
 }
@@ -39,7 +40,7 @@ void UI_FramesObject::draw()
 		D2D1_POINT_2F center = getCenter();
 
 		graphics.scaleSkeleton(jointPoints, startHeight, startHeight, getWidth()-10, getHeight()-10, center.x, center.y-10);
-		graphics.DrawBody(joints, jointPoints, j);
+		graphics.DrawBody(joints, jointPoints, j,HandState::HandState_Open, HandState::HandState_Open, 25*((getHeight() - 10)/startHeight));
 		}
 	;
 }

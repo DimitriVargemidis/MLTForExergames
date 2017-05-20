@@ -23,10 +23,15 @@ public:
 
 	virtual void	setXoffset(float offset) override;
 	virtual float	getXoffset() override;
+	
+	void setMoveOn(bool move);
+	bool getMoveOn();
 private:
 
 	float orginalWidth;
 	float Xoffset;
+
+	bool moveOn = false;
 
 };
 

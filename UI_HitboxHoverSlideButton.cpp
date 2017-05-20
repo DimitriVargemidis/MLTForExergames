@@ -5,7 +5,7 @@
 
 #include "UI_HitboxHoverSlideButton.h"
 
-
+extern D2D1::ColorF selectedboxColor;
 
 UI_HitboxHoverSlideButton::UI_HitboxHoverSlideButton()
 {
@@ -35,10 +35,15 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 	{
 	case ActionTrigger::HoverOn:
 		setLastPoint(coord);
-		(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Green); //TO DO make callback
-	//	getUI()->getScreen()->autoplayGesture(get_ID_ModelObject());
+		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Green); 
+		UI_Objects[0]->changeColor(D2D1::ColorF::Black);
+		(get_UI_Objects())[0]->setObjectState(ObjectState::hover);
 
-		//printf("ON \n");
+		getUI()->getScreen()->getScrollbar()->getSelectionBox()->changeColor(D2D1::ColorF::Green);
+		getUI()->getScreen()->getPlayVisual()->get_UI_Objects()[0]->changeBorderColor(D2D1::ColorF::Black);
+
+		getUI()->getScreen()->autoplayGesture(get_ID_ModelObject());
+
 		break;
 	case ActionTrigger::HoverOff:
 		
@@ -49,6 +54,13 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 
 		UI_Objects[0]->changeColor(D2D1::ColorF::Black);
 		UI_Objects[1]->changeColor(D2D1::ColorF::White);
+		(get_UI_Objects())[0]->setObjectState(ObjectState::standard);
+
+		getUI()->getScreen()->getScrollbar()->getSelectionBox()->changeColor(D2D1::ColorF(255.0 / 255.0, 102.0 / 255.0, 0));
+		getUI()->getScreen()->getPlayVisual()->get_UI_Objects()[0]->changeBorderColor(D2D1::ColorF::LightGray);
+
+		getUI()->getScreen()->getScrollbar()->getActionIndicator()->setHorFillPercen(0.0F);
+		getUI()->getScreen()->StopPlayGesture();
 
 		imagePos = getOriginalPos();
 		imagePos.x += Xoffset;
@@ -58,6 +70,8 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 			UI_Objects[j]->setCenter(imagePos);
 		}
 
+		moveOn = false;
+
 		//getUI()->getScreen()->StopPlayGesture();
 
 		//printf("OFF\n");
@@ -65,8 +79,11 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 	case ActionTrigger::HoverHold:
 	
 		//move the hitbox and the image
-		if( coord.x > getOriginalPos().x ) //a way to only start moving when past the halve of the hitbox
+		if( coord.x > getOriginalPos().x-10 || moveOn) //a way to only start moving when past the halve of the hitbox
 		{
+			moveOn = true;
+
+
 			MoveHitbox(coord);
 
 			percentage = checkActivationCriteria();
@@ -74,11 +91,18 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 			UI_Objects[0]->changeColor(D2D1::ColorF(percentage, 0, 0));
 			UI_Objects[1]->changeColor(D2D1::ColorF(1.0, 1.0- percentage, 1.0 - percentage));
 
+			getUI()->getScreen()->getScrollbar()->getActionIndicator()->setHorFillPercen(percentage);
 		//	UI_Objects[3]->setText(std::to_wstring(percentage));
-			/*
-			if(percentage < 0.1)
+			
+			if (percentage < 0.1)
+			{
 				UI_Objects[1]->changeColor(D2D1::ColorF(1, 1, 1));
-			*/
+				UI_Objects[0]->changeColor(D2D1::ColorF::Black);
+				if (getHover())
+					action(ActionTrigger::HoverOn, coord);
+			}
+				
+			
 			imagePos = getCenterCoordActionArea();
 			imagePos.x += Xoffset;
 
@@ -88,22 +112,35 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 
 			}
 		}
+	
+	
+		
 		setLastPoint(coord);
 
 		//printf("HOLD ");
 		break;
 	case ActionTrigger::ActiveHandOn:	
-		getUI()->getScreen()->autoplayGesture(get_ID_ModelObject());
+		(get_UI_Objects())[0]->setObjectState(ObjectState::handActive);
+		if (getHover())
+			action(ActionTrigger::HoverHold, coord);
+		else
+			action(ActionTrigger::HoverOn, coord);
+			
 		break;
 	case ActionTrigger::ActiveHandOff:
-		getUI()->getScreen()->StopPlayGesture();
+		if (getHover())
+			action(ActionTrigger::HoverHold, coord);
+		else
+			action(ActionTrigger::HoverOn, coord);
+		(get_UI_Objects())[0]->setObjectState(ObjectState::hover);
 
 		break;
 
 	case ActionTrigger::ActiveHandHold:
+		action(ActionTrigger::HoverHold, coord);
 		break;
 	case ActionTrigger::ActiveHandOutsideOn:
-
+		action(ActionTrigger::HoverOff, coord);
 		break;
 	case ActionTrigger::ActiveHandOutsideOff:
 
@@ -159,4 +196,14 @@ void UI_HitboxHoverSlideButton::setXoffset(float offset)
 float UI_HitboxHoverSlideButton::getXoffset()
 {
 	return Xoffset;
+}
+
+void UI_HitboxHoverSlideButton::setMoveOn(bool move)
+{
+	moveOn = move;
+}
+
+bool UI_HitboxHoverSlideButton::getMoveOn()
+{
+	return moveOn;
 }

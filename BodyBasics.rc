@@ -37,7 +37,9 @@ IDI_APP                 ICON                    "app.ico"
 //
 
 IMAGE_D                 IMAGE                   "Images\\D.png"
-ROPE					IMAGE					"Images\\recordRope.png"
+ROPE					IMAGE					"Images\\recordRopeStd.png"
+ROPEHOVER				IMAGE					"Images\\recordRopeHover.png"
+ROPEHANDACTIVE			IMAGE					"Images\\recordRopeHandActive.png"
 
 IMAGE_OPEN              IMAGE                   "Images\\open.png"
 TEST_IMAGE				IMAGE					"Images\\MechAtlas.png"

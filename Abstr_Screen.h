@@ -31,7 +31,7 @@ public:
 	virtual void setShowRecordScreen(bool record) = 0;
 	
 
-	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
+	virtual void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes);
 	void drawFrame(const Frame & relframes);
 	void drawScaledFrame(const Frame & relframes,const float startWidth, const float startHeight, const float endWidth, const float  endHeight, const float absXpos = -1, const float absYpos = -1);
 
@@ -40,8 +40,8 @@ public:
 	//void scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, float multiplier);
 	//void scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, const float startWidth, const float startHeight, const float endWidth, const float endHeight, const float absXpos = -1, const float absYpos = -1);
 
-	void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
-	void updateHitboxes();
+	virtual void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand);
+	virtual void updateHitboxes();
 
 	void setRightHandBusy(const bool & busy);	
 	const bool & getRightHandBusy();			
@@ -67,6 +67,17 @@ public:
 	void setDepthHeight(int depthH);
 	int getDepthHeight();
 
+	void setInitRecording(bool play);
+	bool getInitRecording();
+
+	void setRecordingWidth(float width);
+	float getRecordingWidth();
+
+	void setRecordingHeight(float height);
+	float getRecordingHeight();
+
+	virtual void setRecordVisualCenter(D2D1_POINT_2F center);
+
 	std::vector<std::shared_ptr<Abstr_UI_Hitbox>> & get_UI_Hitboxes();
 
 	virtual void setRecordCountDown(int count);
@@ -77,7 +88,15 @@ public:
 	virtual void	autoplayGesture(int ID);
 	virtual void	StopPlayGesture();
 
+	virtual std::shared_ptr<UI_HitboxLockScrolBar>	getScrollbar();
 
+	virtual bool	getShowRecordVisual();
+
+	virtual void	setPlayGesture(bool play) ;
+	virtual bool	getPlayGesture();
+
+	virtual void						setPlayVisual(std::shared_ptr<UI_Hitbox> play);
+	virtual std::shared_ptr<UI_Hitbox>	getPlayVisual();
 
 
 private:
@@ -98,6 +117,12 @@ private:
 	ICoordinateMapper*  m_pCoordinateMapper;
 	int cDepthWidth; 
 	int cDepthHeight;
+
+	D2D1_POINT_2F		center;
+	bool				initRecording = false;
+
+	float recordWidth = 400;
+	float recordHeight= 400;
 	
 };
 

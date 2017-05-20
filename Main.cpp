@@ -139,7 +139,9 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	ui->createScreen();
 	ui->setModel(model);
 
-
+	model->setActiveLabel(10);
+	ui->getScreen()->setGestureClassID(1);
+	model->setUpdatUI(true);
 
 	while (ui->checkQuitMsg())
 	{

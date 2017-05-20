@@ -2,6 +2,12 @@
 
 #include "UI_Object.h"
 
+enum ObjectState {
+	standard,
+	hover,
+	handActive
+};
+
 class UI_BitmapObject: public UI_Object
 {
 public:
@@ -11,9 +17,25 @@ public:
 	void setBitmap(ID2D1Bitmap* bitmapImage);
 	const ID2D1Bitmap* getBitmap();
 
+	void setHoverBitmap(ID2D1Bitmap* bitmapImage);
+	const ID2D1Bitmap* getHoverBitmap();
+
+	void setHandActiveBitmap(ID2D1Bitmap* bitmapImage);
+	const ID2D1Bitmap* getHandActiveBitmap();
+
+	void setObjectState(ObjectState status);
+	const ObjectState getObjectState();
+
 	void draw() override;
 
 private:
-	ID2D1Bitmap* bitmap;
+	ID2D1Bitmap* stdBitmap;
+	ID2D1Bitmap* hoverBitmap;
+	ID2D1Bitmap* handActiveBitmap;
+
+	ObjectState state = standard;
+
+
+	
 };
 
