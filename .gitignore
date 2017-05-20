@@ -251,3 +251,4 @@ ModelManifest.xml
 *.bbl
 *.toc
 *.bib
+/Thesis/thesis.synctex.gz
