@@ -17,10 +17,10 @@ These are Kinect requirements:\\
 
 64-bit (x64) processor\\
 Physical dual-core 3.1 GHz (2 logical cores per physical) or faster processor\\
-USB $3.0$ controller dedicated to the Kinect for Windows v2 sensor or the Kinect Adapter for Windows for use with the Kinect for Xbox One sensor\\
+USB 3.0 controller dedicated to the Kinect for Windows v2 sensor or the Kinect Adapter for Windows for use with the Kinect for Xbox One sensor\\
 4 GB of RAM\\
 Graphics card that supports DirectX 11\\
-Windows 8 or $8.1$, Windows Embedded 8, or Windows 10\\
+Windows 8 or 8.1, Windows Embedded 8, or Windows 10\\
 
 
 Other requirements:\\
@@ -35,3 +35,30 @@ Start application, setup gestures, start browser with game or similar
 \section{Back-end software}
 
 \section{Gesture recognition}
+
+\begin{lstlisting}
+bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
+{
+	//The base label exists and is linked to a posture, so the posture has been executed.
+	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().front()->isPosture())
+		return true;
+
+	//Done enough recursive checks to confirm the gesture has been executed.
+	if (recursiveCounter >= NB_OF_LABEL_DIVISIONS)
+		return true;
+
+	int nextLabelToCheck = checkLabel - 1;
+	for (int i = posInBuffer; i >= 0; i--)
+	{
+		if (labelsBuffer.at(i) == nextLabelToCheck)
+			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter + 1, 0);
+	}
+
+	//A label that is one less than the last label found cannot be found in the buffer, but the
+	//gesture may still have been executed, so keep checking for the next one.
+	if (badCounter > 0)
+		return false;
+		
+	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter + 1, badCounter + 1);
+}
+\end{lstlisting}
