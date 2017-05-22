@@ -33,13 +33,14 @@
 \usepackage{fiiw_groepT_eng}
 
 \newcommand{\classname}[1]{\texttt{#1}}
+\renewcommand{\lstlistingname}{Code snippet}
 
 \acknowledgementspagetrue
 \acknowledgements{preface}
 \abstractpagetrue
 \abstracts{abstract}
 \listoffigurespagetrue
-\listoftablespagetrue
+%\listoftablespagetrue
 %\listofsymbolspagetrue
 %\listofsymbols{symbols}
 
@@ -59,8 +60,8 @@ part of physical therapy\phantom{tj}}
 \surnameB{Vargemidis}
 \academicyear{2016 - 2017}
 
-\promotorA[Promotor]{prof.\ dr.\ ir.\ L.\ Geurts}
-\promotorB[Co-promotor]{ir.\ K.\ Vanderloock}
+\promotorA[Supervisor]{prof.\ dr.\ ir.\ L.\ Geurts}
+\promotorB[Co-supervisor]{ir.\ K.\ Vanderloock}
 
 \begin{document}
 \selectlanguage{english}
@@ -68,8 +69,9 @@ part of physical therapy\phantom{tj}}
 	basicstyle=\footnotesize,        % the size of the fonts that are used for the code
   breakatwhitespace=true,          % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
-  captionpos=b}                    % sets the caption-position to bottom
-
+  captionpos=b,                    % sets the caption-position to bottom
+	tabsize=2}
+	
 \preface
 
 \input{chapter1}
@@ -80,8 +82,8 @@ part of physical therapy\phantom{tj}}
 \input{chapter6}
 \input{chapter7}
 
-\appendix
-\input{appendix1}
+%\appendix
+%\input{appendix1}
 
 % Bijlage met daarin het wetenschappelijk artikel
 %\chapter{Beschrijving van deze masterproef in de vorm van een wetenschappelijk artikel}
