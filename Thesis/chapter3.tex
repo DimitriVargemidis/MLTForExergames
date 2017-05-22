@@ -41,7 +41,7 @@ By mapping exercises to keyboard buttons, a vast amount of existing games can be
 
 \subsection{Setup}
 
-Before the application can be used, the user has to download and install the necessary drivers in order to use the Kinect 2.0 camera. This is only required once per device it is used on. To connect the Kinect 2.0 camera to a computer, an additional adapter is needed so it can be connected using a USB 3.0 port (see figure \ref{fig: kinect}). The Kinect cannot be powered by USB and requires a socket.\\
+Before the application can be used, the user has to download and install the necessary drivers in order to use the Kinect 2.0 camera. This is only required once per device it is used on. To connect the Kinect 2.0 camera to a computer, an additional adapter is needed so it can be connected using a USB 3.0 port (see figure \ref{fig: kinect}). The use of the Kinect camera requires a socket.\\
 
 \begin{figure}[H]
 \begin{center}
@@ -109,13 +109,18 @@ The focus of the application is reflected by the structure of the code. The clas
 \end{center}
 \end{figure}
 
+The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has an $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
 
-The \classname{Model} class forms the core of the application. It controls the flow of the program and has collections of all important objects. An instance of \classname{Frame} can be seen as a single picture taken by the Kinect camera.
+When the Kinect measures all of the \classname{Joint}s at one specific point in time, these 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is nothing more than a quick succession of pictures, an instance of \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
 
-The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has a $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
+In order to improve the application's ability to recognize an exercise, each of the exercises must be trained more than once by the physical therapist. For each exercise that is trained, an instance of \classname{Gesture} is created. The \classname{Gesture}s that contain data about different executions of the same exercise are grouped into a \classname{GestureClass}. In other words, one \classname{GestureClass} object contains all trainings of the same exercise.\\
 
-When the Kinect measures all of the \classname{Joint}s at one specific point in time, these all 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is a quick succession of a series of pictures, a \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
+After setting up a \classname{Project} object, it contains all data that is needed for playing a game using the application. It has a \classname{map} that maps a label for each exercise to a \classname{GestureClass} and the actions linked to that \classname{GestureClass}. An \classname{Action} contains information about the keyboard key that needs to be pressed and if that key should be held down or be quickly pressed and released. The \classname{Model} class forms the core of the application. It controls the flow of the program and contains all important objects, such as the \classname{Project} and the \classname{GestureClass}es.\\
 
+%SOURCE FOR LIBSVM REQUIRED
+\classname{SVMInterface} takes all gesture data and converts it to a format that is accepted by the LibSVM library. This is an existing library that provides a C$++$ support vector machine implementation used for gesture recognition.\\
+
+To prevent having to train all exercises again each time the application is started, all necessary data is saved into files in the data folder using the \classname{Filewriter} implementation. This includes the data of the \classname{Gesture}s, \classname{GestureClass}es, \classname{Project} and the computed SVM model. The \classname{Filereader} is responsible for reading data from the saved data files when the application is started.
 
 
 \section{Gesture recognition}

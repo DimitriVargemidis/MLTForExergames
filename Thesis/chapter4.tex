@@ -11,9 +11,7 @@
 
 The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. On a hardware level, the Kinect 2.0 camera requires the installation of a driver in order to function properly. This comes as part of the \emph{Kinect for Windows SDK 2.0}. Microsoft's download page states the system requirements for using the Kinect 2.0 camera. These requirements are: 64-bit processor, dual-core 3.1 GHz or faster processor, USB 3.0, 4 GB of RAM or more, graphics card that supports DirectX 11, Windows 8 or 8.1, Windows Embedded 8 or Windows 10.\\
 
-The application is tested both on Windows 8.1 and Windows 10 devices.\\
-
-%BESTANDGROOTTE VAN APPLICATIE, BESTANDGROOTTE VAN OPGESLAGEN DATA
+The application, including resources like images, takes up approximately 20 MB. Saving all exercises needed for playing a game takes up approximately 0.6 MB. This depends on the number of exercises recorded, the number of trainings for each exercise and the duration of each exercise. 
 
 
 \section{Graphical user interface}
@@ -23,15 +21,110 @@ The application is tested both on Windows 8.1 and Windows 10 devices.\\
 
 \section{Back-end software}
 
+\begin{lstlisting}[caption=the controlling method that is part of the back-end's main loop, label=code_process_body]
+void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies) {
+	//Go through all the bodies that are being seen now. If a body is tracked, its frame is made and added to the frames vector
+	for (int i = 0; i < nBodyCount; ++i) {
+		pBody = ppBodies[i];
+		if (pBody) {
+			bool bTracked = false;
+			HRESULT hr = pBody->get_IsTracked(&bTracked);
 
+			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked)	//No body is tracked at the moment {
+				currentActiveBody = i;
+			}
+
+			if (SUCCEEDED(hr) && bTracked && i == currentActiveBody) {
+				Frame relFrame(pBody);					//Create a frame of every tracked body
+				Frame absFrame(pBody, false);
+
+				relFrames.push_back(relFrame);
+				absFrames.push_back(absFrame);
+				
+				if (recording) {
+					recordGesture(relFrame);
+					break;
+				}
+
+				framesBuffer.push_back(relFrame);
+
+				if (refresh && !predict) {		//The measure button was pressed last
+					updateCountDown();
+				}
+
+				if (predict) {
+					if (!trained)	{			//If the model is not yet trained, train it
+						train();
+						trained = true;
+					}
+					int label = SVMInterface::test(activeProject->getSVMModel(), relFrame);
+					addToLabelsBuffer(label);
+					predictAndExecute(label);
+					view->setPredictedLabel(label);
+				}
+			}
+			else if (i == currentActiveBody) {				//If the current tracked body is lost for this frame
+				bodyLostCounter++;											//Increment the lostBodyCounter
+				if (bodyLostCounter > BODY_LOST_LIMIT) {//If the limit is reached, reset the currentActiveBody
+					currentActiveBody = -1;
+					bodyLostCounter = 0;
+				}
+			}
+		}
+	}
+
+	if (updateUI) {
+		view->updateHitboxes();
+		updateUI = false;
+	}
+	displayFrames();
+}
+\end{lstlisting}
 
 
 \section{Gesture recognition}
 
-\begin{lstlisting}
-bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
-{
-	//The base label exists and is linked to a posture, so the posture has been executed.
+It is possible to split up the implementation of gesture recognition in two parts: the recording of a gesture by the physical therapist and the prediction of a gesture executed by a patient.
+
+
+\subsection{Recording a gesture}
+
+\begin{lstlisting}[caption=method to record a gesture, label=code_record_gesture]
+void Model::recordGesture(Frame & frame) {
+	if (!initialized) {
+		frameNeutral.setFrame(frame);
+		initialized = true;
+	}
+	
+	framesBuffer.push_back(frame);
+
+	if (!startedMoving) {
+		if (! frame.equals(frameNeutral)) {
+			startedMoving = true;
+			framesBuffer.clear();
+		}
+		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY) {
+			addRecordedGesture();
+		}
+		else {
+			return;
+		}
+	}
+
+	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY))) {
+		addRecordedGesture();
+	}
+}
+\end{lstlisting}
+
+
+\subsection{Predicting a gesture}
+
+Code snippet \ref{code_gesture_executed} shows a piece of code.
+
+\begin{lstlisting}[caption=method to verify if a gesture with given label is executed, label=code_gesture_executed]
+bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter) {
+	//The label exists and is linked to a posture.
 	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().front()->isPosture())
 		return true;
 
@@ -40,14 +133,15 @@ bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCoun
 		return true;
 
 	int nextLabelToCheck = checkLabel - 1;
-	for (int i = posInBuffer; i >= 0; i--)
-	{
+	for (int i = posInBuffer; i >= 0; i--) {
 		if (labelsBuffer.at(i) == nextLabelToCheck)
 			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter + 1, 0);
 	}
 
-	//A label that is one less than the last label found cannot be found in the buffer, but the
-	//gesture may still have been executed, so keep checking for the next one.
+	//If this point is reached, a label that is one less than the given
+	//	label cannot be found in the buffer.
+	//The gesture may still have been executed, so keep checking for the
+	//	next one if the badCounter is not too high.
 	if (badCounter > 0)
 		return false;
 		
