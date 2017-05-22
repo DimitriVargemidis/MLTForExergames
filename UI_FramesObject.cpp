@@ -28,7 +28,7 @@ void UI_FramesObject::draw()
 	int depthWidth = screen->getDepthWidth();
 	int depthHeight = screen->getDepthHeight();
 
-	for (int j = frames.size()-1; j >= 0 ; --j)
+	for (int j = 0; j < frames.size(); ++j)
 	{
 		std::vector<Joint> joints = frames[j].getJoints();
 		std::vector<D2D1_POINT_2F> jointPoints(JointType_Count);
@@ -40,7 +40,7 @@ void UI_FramesObject::draw()
 		D2D1_POINT_2F center = getCenter();
 
 		graphics.scaleSkeleton(jointPoints, startHeight, startHeight, getWidth()-10, getHeight()-10, center.x, center.y-10);
-		graphics.DrawBody(joints, jointPoints, j+1,HandState::HandState_Open, HandState::HandState_Open, 25*((getHeight() - 10)/startHeight));
+		graphics.DrawBody(joints, jointPoints, j,HandState::HandState_Open, HandState::HandState_Open, 25*((getHeight() - 10)/startHeight));
 		}
 	;
 }

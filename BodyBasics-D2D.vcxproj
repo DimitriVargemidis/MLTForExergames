@@ -55,11 +55,7 @@
   <ItemGroup>
     <Image Include="app.ico" />
     <Image Include="Images\D.png" />
-    <Image Include="Images\MechAtlas.png" />
     <Image Include="Images\open.png" />
-    <Image Include="Images\recordRopeHandActive.png" />
-    <Image Include="Images\recordRopeHover.png" />
-    <Image Include="Images\recordRopeStd.png" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BodyBasics.rc" />

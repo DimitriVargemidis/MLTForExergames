@@ -361,29 +361,6 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 				waitForKey = true;
 
 		}
-		if (IDC_CANC_ADD_KEY2 == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//Cancel the wait for key input
-		{
-
-			waitForKey = false;
-			SetDlgItemText(m_hWnd, IDC_ADD_KEY_INFO, L"Idle");
-
-		}
-		if (IDC_SINGLE_CONT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))	//Toggle the mode key that is added
-		{
-			if (holdPress)
-			{
-				holdPress = false;
-				SetDlgItemText(m_hWnd, IDC_SINGLE_CONT_INFO, L"SINGLE PRESS");
-			}
-			else
-			{
-				holdPress = true;
-				SetDlgItemText(m_hWnd, IDC_SINGLE_CONT_INFO, L"HOLD PRESS");
-			}
-			
-
-		}
-
 		if (IDC_SELECT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
 			BOOL sc;
@@ -409,7 +386,6 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		if (IDC_START_PREDICT == LOWORD(wParam) && BN_CLICKED == HIWORD(wParam))
 		{
 			model->setPredict(TRUE);
-			Screen->setDisplay_UI(false);
 			
 		}
 
@@ -417,7 +393,6 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		{
 			model->setPredict(FALSE);
 			model->setTrained(FALSE);
-			Screen->setDisplay_UI(true);
 		}
 		break;
 	}
@@ -467,8 +442,7 @@ void UI::processKeyInput(MSG msg)
 		OutputDebugStringW(L" \n");
 
 		//model->addActionToActive(msg.wParam, true); //standard holding for now
-		
-		model->addActionToActive(msg.wParam, holdPress); 
+		model->addActionToActive(msg.wParam, false); //standard holding for now
 
 	}
 	

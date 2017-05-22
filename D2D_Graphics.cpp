@@ -354,13 +354,12 @@ void D2D_Graphics::changeColor(int colorID)
 		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Gray, 1.0f), &m_pBrushBoneInferred);
 		break;
 	case 1:
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SteelBlue), &m_pBodyBrush);
-		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBodyBrush);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBodyBrush);
 		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBrushJointTracked);
 		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 0.0f), &m_pBrushBoneTracked);
 		break;
 	case 2:
-		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::DarkBlue), &m_pBodyBrush);
+		m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBodyBrush);
 		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushJointTracked);
 		//m_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(1.0f, 0.0f, 1.0f), &m_pBrushBoneTracked);
 		break;

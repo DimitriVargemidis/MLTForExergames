@@ -64,6 +64,7 @@
 #define IDC_STOP_PREDICT                1064
 #define IDC_SELECT                      1065
 #define IDC_ACTIVE_LABEL                1066
+#define IDC_ADD_KEY                     1067
 #define IDC_ADD_KEY_INFO                1068
 #define IDC_REL_ABS                     1069
 #define IDC_LBL_MEAS_COUNT2             1070
@@ -78,11 +79,6 @@
 #define IDC_LEFT_Y                      1079
 #define IDC_MEAS_COUNT10                1080
 #define IDC_LEFT_Z                      1080
-#define IDC_ADD_KEY                     1081
-#define IDC_CANC_ADD_KEY2               1082
-#define IDC_SINGLE_CONT                 1084
-#define IDC_ADD_KEY_INFO3               1085
-#define IDC_SINGLE_CONT_INFO            1085
 
 // Next default values for new objects
 // 

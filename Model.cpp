@@ -69,7 +69,7 @@ void Model::updateCountDown()
 
 			updateUI = true;				//the UI will update it's state based on the countDown parameter
 		}
-		else if (time >= 500 && countDown == -1)
+		else if (time >= 1000 && countDown == -1)
 		{
 			printf(" delete screen \n");
 			--countDown;
@@ -388,7 +388,7 @@ void Model::recordGesture(Frame & frame)
 		Console::print("Initialized recording");
 	}
 	
-	//relFrames.push_back(frame);
+	relFrames.push_back(frame);
 	framesBuffer.push_back(frame);
 
 	if (!startedMoving)

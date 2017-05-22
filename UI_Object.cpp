@@ -35,15 +35,13 @@ UI_Object::~UI_Object()
 
 void UI_Object::changeColor(D2D1::ColorF c)
 {
-	c.a = alpha;
 	borderColor = c;
 	fillColor = c;
-
 }
 
 void UI_Object::changeColor(float r, float g, float b)
 {
-	borderColor = D2D1::ColorF(r, g, b, alpha);
+	borderColor = D2D1::ColorF(r, g, b, 1.0);
 }
 
 D2D1::ColorF UI_Object::getColor()
@@ -53,13 +51,11 @@ D2D1::ColorF UI_Object::getColor()
 
 void UI_Object::changeBorderColor(D2D1::ColorF c)
 {
-	c.a = alpha;
 	borderColor = c;
 }
 
 void UI_Object::changeFillColor(D2D1::ColorF c)
 {
-	c.a = alpha;
 	fillColor = c;
 }
 
@@ -101,18 +97,6 @@ void UI_Object::setHorFillPercen(float percent)
 float UI_Object::getHorFillPercen()
 {
 	return HorFillPercen;
-}
-
-void UI_Object::setAlpha(float a)
-{
-	alpha = a;
-	borderColor.a = alpha;
-	fillColor.a = alpha;
-}
-
-float UI_Object::getAlpha()
-{
-	return alpha;
 }
 
 void UI_Object::setText(const std::wstring & textToDraw)

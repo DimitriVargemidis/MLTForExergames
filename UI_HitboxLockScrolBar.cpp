@@ -64,11 +64,13 @@ void UI_HitboxLockScrolBar::action(ActionTrigger act, const D2D1_POINT_2F & coor
 	{
 	case ActionTrigger::HoverOn:
 		setLastPoint(coord);
-		
+		//	(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Gray); //TO DO make callback
 		break;
 	case ActionTrigger::HoverOff:
-		(get_UI_Objects())[2]->changeFillColor(D2D1::ColorF::White);
-		(get_UI_Objects())[2]->changeBorderColor(D2D1::ColorF::Black);
+		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::White);
+		//delayUpCounter = 0;
+		//delayDownCounter = 0;
+		
 		//printf("hover off triggered \n");
 		if (getMoveDownCounter() < getMoveLimit() && getMoveUpCounter() < getMoveLimit())
 		{
@@ -87,16 +89,13 @@ void UI_HitboxLockScrolBar::action(ActionTrigger act, const D2D1_POINT_2F & coor
 	case ActionTrigger::HoverHold:
 		if ((coord.y > scrolcenter.y - scrolHeight / 2 + UI_Height + selectboxScrollOffset)		&&
 			(coord.y < scrolcenter.y - scrolHeight / 2 + UI_Height * 2 - selectboxScrollOffset) &&
-			(getMoveDownCounter() < getMoveLimit())												&& 
-			(getMoveUpCounter() < getMoveLimit())												)
+			(getMoveDownCounter() < getMoveLimit())						&& 
+			(getMoveUpCounter() < getMoveLimit()))
 		{
-			(get_UI_Objects())[2]->changeFillColor(D2D1::ColorF::White);
-			(get_UI_Objects())[2]->changeBorderColor(D2D1::ColorF::Black);
 		}
 		else
 		{
-			//(get_UI_Objects())[2]->changeFillColor(D2D1::ColorF::LightGreen);
-			(get_UI_Objects())[2]->changeBorderColor(D2D1::ColorF::Green);
+		
 			//if clause to check that you do not scrol farther then the first and last element
 			//if (centerYlast > scrolcenter.y - scrolHeight / 2 + UI_Height*1.4 && centerYfirst < scrolcenter.y - scrolHeight / 2 + UI_Height*1.6)
 			//{
@@ -125,15 +124,7 @@ void UI_HitboxLockScrolBar::action(ActionTrigger act, const D2D1_POINT_2F & coor
 
 		break;
 	case ActionTrigger::ActiveHandOn:
-		if (getActiveHandBeforeHover())
-		{
-			action(ActionTrigger::HoverOn, coord);
-		}
-		else
-		{
-			action(ActionTrigger::HoverHold, coord);
-		}
-		
+		action(ActionTrigger::HoverHold, coord);
 		break;
 	case ActionTrigger::ActiveHandOff:
 		action(ActionTrigger::HoverHold, coord);
@@ -196,8 +187,7 @@ void UI_HitboxLockScrolBar::findSelectedHitbox()
 		{
 
 			selectedHitbox = i;
-			getUI()->getScreen()->set_UI_GestureID(i + 1);
-			UI_elements[i]->get_UI_Objects()[1]->changeColor(D2D1::ColorF::LightBlue);
+			UI_elements[i]->get_UI_Objects()[1]->changeColor(D2D1::ColorF::LightGreen);
 			set = true;
 			//printf("hitbox = %d \n", selectedHitbox);
 		}

@@ -50,9 +50,6 @@ public:
 	void setActiveHand(const bool & hand);
 	bool getActiveHand();
 
-	void setActiveHandBeforeHover(bool a);
-	bool getActiveHandBeforeHover();
-
 	void setActiveHandOutside(const bool & hand);
 	bool getActiveHandOutside();
 
@@ -104,11 +101,6 @@ public:
 
 	void setVisible(bool visual);
 	bool getVisible();
-
-	void setFading(bool fade);
-	bool getFading();
-
-	float getFadeProgress();
 
 	virtual void setLastPoint(D2D1_POINT_2F pos) = 0;
 	virtual D2D1_POINT_2F getLastPoint() = 0;
@@ -168,10 +160,6 @@ private:
 	bool		handLock = false;				//whether this hitbox has locked the JointType specified in parameter HoverJoint
 	bool		totalLock = false;
 	bool		visible = true;
-	bool		fading = false;
-
-	int			fadeCounter = 0;
-	const int	fadeLimit = 30;
 
 
 

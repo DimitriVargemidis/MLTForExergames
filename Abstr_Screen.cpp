@@ -10,6 +10,7 @@ float Xoffset = 100.0;
 
 Abstr_Screen::Abstr_Screen()
 {
+	
 }
 
 
@@ -130,16 +131,6 @@ const bool & Abstr_Screen::getLeftHandBusy()
 	return leftHandBusy;
 }
 
-void Abstr_Screen::setDisplay_UI(const bool abs)
-{
-	display_UI = abs;
-}
-
-const bool Abstr_Screen::getDisplay_UI()
-{
-	return display_UI;
-}
-
 void Abstr_Screen::setDrawAbsCoord(const bool abs)
 {
 	drawAbsCoord = abs;
@@ -254,15 +245,6 @@ void Abstr_Screen::setGestureClassID(int ID)
 
 }
 
-void Abstr_Screen::set_UI_GestureID(int ID)
-{
-}
-
-int Abstr_Screen::get_UI_GestureID()
-{
-	return 0;
-}
-
 void Abstr_Screen::autoplayGesture(int ID)
 {
 }
@@ -312,8 +294,8 @@ void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 	{
 		absCenter = graphics.BodyToScreen(frames->front().getJoints()[JointType_SpineMid].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
 	}
-	if(display_UI)
-		drawUI();
+
+	drawUI();
 
 	if (!drawAbsCoord)
 	{
@@ -353,9 +335,9 @@ void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 		
 		float boneThickness;
 
-		if (!drawAbsCoord)		//when the relative coordinates are drawn and not the absolute
+		if (!drawAbsCoord)
 		{
-			if (initRecording)	//when a recording is initiated
+			if (initRecording)
 			{
 				center.x = absCenter.x + Xoffset;
 				center.y = absCenter.y;
@@ -363,12 +345,8 @@ void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 				UI_ptr->getScreen()->setRecordVisualCenter(center);
 			}
 			graphics.scaleSkeleton(jointPoints,height,height,recordWidth,recordHeight, center.x, center.y);
-
 			boneThickness = 25.0 * (recordHeight/(height*0.8));
-			if (j != 0)
-				boneThickness = boneThickness*0.8;
-			
-			
+
 		}
 		else
 		{
@@ -389,11 +367,10 @@ void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
 			}
 		}
-		
 		graphics.DrawBody(joints, jointPoints, j, (*frames)[j].getLeftHand(), (*frames)[j].getRightHand(), boneThickness);
 	}
-	if (display_UI)
-		drawTopUI();
+
+	drawTopUI();
 }
 
 void Abstr_Screen::drawFrame(const Frame & relframes)
