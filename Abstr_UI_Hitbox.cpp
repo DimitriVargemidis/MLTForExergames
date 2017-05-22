@@ -242,6 +242,16 @@ bool Abstr_UI_Hitbox::getActiveHand()
 	return activeHand;
 }
 
+void Abstr_UI_Hitbox::setActiveHandBeforeHover(bool a)
+{
+	activeHandBeforeHover = a;
+}
+
+bool Abstr_UI_Hitbox::getActiveHandBeforeHover()
+{
+	return activeHandBeforeHover;
+}
+
 void Abstr_UI_Hitbox::setActiveHandOutside(const bool & hand)
 {
 	activeHandOutside = hand;
@@ -394,11 +404,7 @@ D2D1_POINT_2F Abstr_UI_Hitbox::getOriginalPos()
 
 void Abstr_UI_Hitbox::activateFunction()
 {
-	if (!functionActive)
-	{
-		model->setRefresh(true);
-		functionActive = true;
-	}
+
 }
 
 void Abstr_UI_Hitbox::deactivateFunction()
@@ -466,6 +472,21 @@ bool Abstr_UI_Hitbox::getVisible()
 	return visible;
 }
 
+void Abstr_UI_Hitbox::setFading(bool fade)
+{
+	fading = fade;
+}
+
+bool Abstr_UI_Hitbox::getFading()
+{
+	return fading;
+}
+
+float Abstr_UI_Hitbox::getFadeProgress()
+{
+	return static_cast<float>(fadeCounter) / static_cast<float>(fadeLimit);
+}
+
 
 void Abstr_UI_Hitbox::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 {
@@ -512,11 +533,31 @@ float Abstr_UI_Hitbox::getXoffset()
 
 void Abstr_UI_Hitbox::draw()
 {
+	float fade;
+	if (fading)
+	{
+		if(fadeCounter != fadeLimit)
+			fadeCounter++;
+		
+		fade = 1- (static_cast<float>(fadeCounter) / static_cast<float>(fadeLimit))*0.7;
+		if (fadeCounter >= fadeLimit)
+		{
+			activateFunction();
+		}
+	}
+	else
+	{
+		fade = 1.0f;
+		fadeCounter = 0;
+	}
+	
+
 	for (int i = 0; i < UI_objects.size(); ++i)
 	{
 		if (UI_objects[i]->getVisibele())
 		{
 			//UI_ptr->drawRectangle(UI_objects[i]->getCenter(), UI_objects[i]->getWidth(), UI_objects[i]->getHeight(), UI_objects[i]->getColor());
+			UI_objects[i]->setAlpha(fade);
 			UI_objects[i]->draw();
 		}
 	}

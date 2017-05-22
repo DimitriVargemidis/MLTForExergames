@@ -70,19 +70,19 @@ void UI_Update_CallbackFunctions::updateScrolbarGestures(Abstr_UI_Hitbox * hitbo
 			std::shared_ptr<UI_Object> filling = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
 			std::shared_ptr<UI_Object> framesObject = std::make_shared<UI_FramesObject>(400 + 250, 350, 150, 150, D2D1::ColorF::White, frames);
 			std::shared_ptr<UI_Object> text = std::make_shared<UI_TextObject>(400 + 250 - 30, 350, 75, 150, D2D1::ColorF::Black, std::to_wstring(i + 1), 40, DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
-			std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400 + 250 + 50, 350, 100, 150, 0, 100, 0, 0, 0.6, UI_CallbackFunctions::deleteGesture, gestureID, 0));
+			std::shared_ptr<Abstr_UI_Hitbox> HitboxElement(new UI_HitboxHoverSlideButton(400 + 250 + 50, 350, 100, 150, 0, 100, 0, 0, 0.6, UI_CallbackFunctions::deleteGesture, gestureID, 0));
 
-			testHitbox7->add_UI_Object(borders);
-			testHitbox7->add_UI_Object(filling);
-			testHitbox7->add_UI_Object(framesObject);
-			testHitbox7->add_UI_Object(text);
-			//testHitbox7->add_UI_Object(text1);
-			testHitbox7->addInputJoint(JointType_HandLeft);
-			testHitbox7->addInputJoint(JointType_HandRight);
-			testHitbox7->setUI(UI_global);
-			testHitbox7->setModel(model_global);
+			HitboxElement->add_UI_Object(borders);
+			HitboxElement->add_UI_Object(filling);
+			HitboxElement->add_UI_Object(framesObject);
+			HitboxElement->add_UI_Object(text);
+			//HitboxElement->add_UI_Object(text1);
+			HitboxElement->addInputJoint(JointType_HandLeft);
+			HitboxElement->addInputJoint(JointType_HandRight);
+			HitboxElement->setUI(UI_global);
+			HitboxElement->setModel(model_global);
 
-			hitbox->add_UI_Element(testHitbox7);
+			hitbox->add_UI_Element(HitboxElement);
 		}
 	}
 	else
@@ -95,7 +95,7 @@ void UI_Update_CallbackFunctions::updatePlayVisual(Abstr_UI_Hitbox * hitbox)
 {
 	if (UI_global->getScreen()->getPlayGesture())
 	{
-		(hitbox->get_UI_Objects()[0])->changeBorderColor(D2D1::ColorF::Black);
+		(hitbox->get_UI_Objects()[0])->changeBorderColor(D2D1::ColorF::Green);
 	}
 	else
 	{

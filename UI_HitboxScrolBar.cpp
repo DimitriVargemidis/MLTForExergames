@@ -109,12 +109,10 @@ void UI_HitboxScrolBar::action(ActionTrigger act, const D2D1_POINT_2F & coord)
 	{
 	case ActionTrigger::HoverOn:
 		setLastPoint(coord);
-	//	(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Gray); //TO DO make callback
+		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Green);
 		break;
 	case ActionTrigger::HoverOff:
-		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::White);
-		//delayUpCounter = 0;
-		//delayDownCounter = 0;
+		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Black);
 		delayMoveUpCounter = 0;
 		delayMoveDownCounter = 0;
 		break;
@@ -160,10 +158,15 @@ bool UI_HitboxScrolBar::isLeftHandActive()
 void UI_HitboxScrolBar::add_UI_Element(std::shared_ptr<Abstr_UI_Hitbox> hitbox)
 {
 
-	hitbox->setWidth(width_UI_Element);
+	//hitbox->setWidth(width_UI_Element);
+
+	printf("width UI %f and width %f", width_UI_Element, getWidth());
+	hitbox->setWidth(getWidth());
 	hitbox->setHeigth(height_UI_Element);
 	//UI_elements.push_back(hitbox);
 	UI_elements.push_back(hitbox);
+
+	getUI()->getScreen()->set_UI_GestureID(UI_elements.size());
 
 	for (int j = 0; j < UI_elements.size(); j++)
 	{

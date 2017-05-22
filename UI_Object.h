@@ -39,6 +39,9 @@ public:
 	void setHorFillPercen(float percent);
 	float getHorFillPercen();
 
+	void setAlpha(float a);
+	float getAlpha();
+
 	virtual void setText(const std::wstring & textToDraw);
 	virtual const std::wstring & getText();
 
@@ -63,6 +66,7 @@ private:
 
 	D2D1::ColorF borderColor;
 	D2D1::ColorF fillColor;
+	float	alpha = 1.0F; //not used yet
 
 	bool visible = true;
 

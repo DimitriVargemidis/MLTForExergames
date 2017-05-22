@@ -29,6 +29,9 @@ public:
 
 	virtual void	autoplayGesture(int ID) override;
 	virtual void	StopPlayGesture() override;
+
+	virtual	void	set_UI_GestureID(int ID)override;
+	virtual int		get_UI_GestureID() override;
 	
 	virtual void	setRecordVisualCenter(D2D1_POINT_2F center) override;
 
@@ -59,6 +62,7 @@ private:
 	//objects belonging to the play action: replaying selected recordings
 	std::shared_ptr<Gesture>		AutoPlayGesture;		//the Gesture that is being replayed in the playVisual
 	int								playGestureIndex;		//the index of the frame in AutoPlayGesture that is displayed at this point
+	int								UI_GestureID;			//the number of the gesture in the list.
 	
 	bool							playGesture = false;	//boolean whether or not the recording should be displayed
 	std::shared_ptr<UI_Hitbox>		playVisual;				//the image of the box in which the recording is played
