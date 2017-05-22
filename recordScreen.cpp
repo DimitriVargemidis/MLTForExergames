@@ -28,7 +28,8 @@ void recordScreen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 {
 	if (model_global->getGestureClassByID(gestureClassID) != nullptr)
 	{
-		if (model_global->getGestureClassByID(gestureClassID)->getGestures().front()->getFrames().size() != 0)
+		//here the 2 guys that are placed behind the active person during recording are added
+		if (model_global->getGestureClassByID(gestureClassID)->getGestures().front()->getFrames().size() != 0) 
 		{
 			relframes.push_back(model_global->getGestureClassByID(gestureClassID)->getGestures().front()->getFrames().front());
 			relframes.push_back(model_global->getGestureClassByID(gestureClassID)->getGestures().front()->getFrames().back());
@@ -65,18 +66,6 @@ void recordScreen::createScreen(int width, int height)
 	stationairyObjects->add_UI_Object(largeBanner);
 	stationairyObjects->add_UI_Object(title);
 
-	//example of regular button
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox(new UI_Hitbox(100 + 450, 200, 150, 150,UI_CallbackFunctions::updateHitboxes));
-	std::shared_ptr<UI_Object> testObject = std::make_shared<UI_Object>(100.0 + 450, 200.0, 150.0, 150.0, D2D1::ColorF::Crimson);
-	testHitbox->add_UI_Object(testObject);
-	
-
-	//example of slidebutton 
-	std::shared_ptr<Abstr_UI_Hitbox> testHitbox2(new UI_HitboxSlideButton(100 + 450, 350, 150, 150, 0, 100, 0, 0, 0.5, UI_CallbackFunctions::recordGesture));
-	std::shared_ptr<UI_Object> testObject2 = std::make_shared<UI_Object>(100.0 + 450, 350.0, 150.0, 150.0, D2D1::ColorF::Crimson);
-	testHitbox2->add_UI_Object(testObject2);
-	testHitbox2->setUpdateFunction(UI_Update_CallbackFunctions::stopRecord);
-
 	//record rope in slidebutton with bitmap
 	std::shared_ptr<Abstr_UI_Hitbox> testHitbox3(new UI_HitboxSlideButton(100 + 450 + Xoffset, 300, 75, 150, 0, 0, 0, 200, 0.5, UI_CallbackFunctions::recordGesture));
 	std::shared_ptr<UI_BitmapObject> ropeImage = std::make_shared<UI_BitmapObject>(100.0 + 450 + Xoffset, 300.0 - 100.0, 360.0*0.6, 780.0*0.6, D2D1::ColorF::Crimson, graphics.createBitmap(L"Rope",360,780));
@@ -88,8 +77,6 @@ void recordScreen::createScreen(int width, int height)
 
 	//putting the hitboxes in the vector: this is also the order of drawing the UI_objects!!
 	get_UI_Hitboxes().push_back(backgroundHitbox);
-	//get_UI_Hitboxes().push_back(testHitbox);
-	//get_UI_Hitboxes().push_back(testHitbox2);
 	get_UI_Hitboxes().push_back(testHitbox3);
 	createScrolbar();
 	get_UI_Hitboxes().push_back(stationairyObjects);
@@ -108,7 +95,7 @@ void recordScreen::createScreen(int width, int height)
 	//recordVisual.setUpdateFunction(UI_Update_CallbackFunctions::updateScrolbarGestures);
 
 	//make the counter for the record visual 
-	std::shared_ptr<UI_TextObject> counter = std::make_shared<UI_TextObject>(width / 2 + Xoffset+100, height / 2 - recordHeight/2 + 50, recordWidth, recordHeight, D2D1::ColorF::Red, L"Get Ready", 70, DWRITE_TEXT_ALIGNMENT_CENTER);
+	std::shared_ptr<UI_TextObject> counter = std::make_shared<UI_TextObject>(width / 2 + Xoffset+100, height / 2 - recordHeight/2 + 50, recordWidth, recordHeight, D2D1::ColorF::Black, L"Get Ready", 70, DWRITE_TEXT_ALIGNMENT_CENTER);
 
 	//add UI_Object to UI_Hitbox recordCountDown
 	recordCountDown.add_UI_Object(counter);
@@ -116,10 +103,17 @@ void recordScreen::createScreen(int width, int height)
 
 	//make the visual for the play box
 	std::shared_ptr<UI_Object> playbox = std::make_shared<UI_Object>(playCenterpoint.x, playCenterpoint.y,playWidth, playHeight, D2D1::ColorF::LightGray, D2D1::ColorF::White, 15);
+	std::shared_ptr<UI_Object> progressBar = std::make_shared<UI_Object>(playCenterpoint.x, playCenterpoint.y + playWidth/2 - 100/2, playWidth-30, 100-30, D2D1::ColorF::LightBlue);
+	std::shared_ptr<UI_Object> UI_GestureID_Text = std::make_shared<UI_TextObject>(playCenterpoint.x, playCenterpoint.y, playWidth-30, playHeight-30, D2D1::ColorF::Black,L"0",100, DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
+	
+	progressBar->setHorFillPercen(0.0F);
+	UI_GestureID_Text->setVisible(false);
 
 	//add UI_Object to UI_Hitbox recordCountDown
 	playVisual = std::make_shared<UI_Hitbox>();
-	playVisual->add_UI_Object(playbox);
+	playVisual->add_UI_Object(playbox);				//0
+	playVisual->add_UI_Object(progressBar);			//1
+	playVisual->add_UI_Object(UI_GestureID_Text);	//2
 	playVisual->setUI(getUI());
 	playVisual->setUpdateFunction(UI_Update_CallbackFunctions::updatePlayVisual);
 
@@ -145,12 +139,14 @@ void recordScreen::createScrolbar()
 	std::shared_ptr<UI_Object> background = std::make_shared<UI_Object>(Xpos + Xoffset, Ypos, width, height, D2D1::ColorF::Black, D2D1::ColorF::White,10);
 	std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(Xpos + Xoffset, Ypos- scrollbar->getHeight_UI_element(), width, scrollbar->getHeight_UI_element(), D2D1::ColorF(255.0/255.0, 102.0/255.0, 0));
 	
+	float extraWidth = 75;
+
 	//deletebox elements
-	std::shared_ptr<UI_Object> borders = std::make_shared<UI_Object>(Xpos+ deleteBoxXoffset + Xoffset, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element(), scrollbar->getHeight_UI_element(), D2D1::ColorF::Black);
-	std::shared_ptr<UI_Object> filling = std::make_shared<UI_Object>(Xpos+ deleteBoxXoffset + Xoffset, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element()- deleteBoxBorders, scrollbar->getHeight_UI_element()- deleteBoxBorders, D2D1::ColorF::White);
-	std::shared_ptr<UI_Object> indicator = std::make_shared<UI_Object>(Xpos + deleteBoxXoffset + Xoffset, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element() - deleteBoxBorders, scrollbar->getHeight_UI_element() - deleteBoxBorders, D2D1::ColorF::Red);
+	std::shared_ptr<UI_Object> borders = std::make_shared<UI_Object>(Xpos+ deleteBoxXoffset + Xoffset + extraWidth/2, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element() + extraWidth, scrollbar->getHeight_UI_element(), D2D1::ColorF::Black);
+	std::shared_ptr<UI_Object> filling = std::make_shared<UI_Object>(Xpos+ deleteBoxXoffset + Xoffset + extraWidth/2, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element()- deleteBoxBorders + extraWidth, scrollbar->getHeight_UI_element()- deleteBoxBorders, D2D1::ColorF::White);
+	std::shared_ptr<UI_Object> indicator = std::make_shared<UI_Object>(Xpos + deleteBoxXoffset + Xoffset + extraWidth/2, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element() - deleteBoxBorders + extraWidth, scrollbar->getHeight_UI_element() - deleteBoxBorders, D2D1::ColorF::Red);
 	indicator->setHorFillPercen(0.0F);
-	std::shared_ptr<UI_TextObject> text = std::make_shared<UI_TextObject>(Xpos+ deleteBoxXoffset + Xoffset, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element()- deleteBoxBorders, scrollbar->getHeight_UI_element()- deleteBoxBorders, D2D1::ColorF::Black,L"DEL", 40);
+	std::shared_ptr<UI_TextObject> text = std::make_shared<UI_TextObject>(Xpos+ deleteBoxXoffset + Xoffset + extraWidth/2, Ypos - scrollbar->getHeight_UI_element(), scrollbar->getWidth_UI_element()- deleteBoxBorders + extraWidth, scrollbar->getHeight_UI_element()- deleteBoxBorders, D2D1::ColorF::Black,L"DEL", 40);
 	
 	//add deleeteBox layout
 	scrollbar->add_UI_Object(borders);
@@ -188,29 +184,42 @@ void recordScreen::drawUI()
 void recordScreen::drawTopUI()
 {
 	playVisual->draw();
+
 	if (playGesture)
 	{
-		if (playGestureIndex < AutoPlayGesture->getFrames().size())
+		playVisual->get_UI_Objects()[2]->setVisible(true);
+		if (AutoPlayGesture != nullptr)
 		{
-			//inefficient?
-			drawScaledFrame((AutoPlayGesture->getFrames())[playGestureIndex], getHeight(), getHeight(),playWidth*0.8,playHeight*0.8, playCenterpoint.x, playCenterpoint.y);
-			playGestureIndex++;
-			
-			playGestureTimer = Clock::now();
-		}
-		else
-		{
-			drawScaledFrame((AutoPlayGesture->getFrames()).back(), getHeight(), getHeight(), playWidth*0.8, playHeight*0.8, playCenterpoint.x, playCenterpoint.y);
-
-			auto t2 = Clock::now();
-			long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - playGestureTimer).count();
-			if (time >= 1000)
+			if (playGestureIndex < AutoPlayGesture->getFrames().size()) //read violation op deze plaats!
 			{
-				//StopPlayGesture();
-				playGestureIndex = 0;
-			}	
-		}
+				//draws the scaled version of the frame
+				drawScaledFrame((AutoPlayGesture->getFrames())[playGestureIndex], getHeight(), getHeight(), playWidth*0.8, playHeight*0.8, playCenterpoint.x, playCenterpoint.y - 25);
 
+				//calculate how far in percentage (float 0 -> 1) the playGestureIndex is to reaching the end to draw the progessbar
+				float playPercentage = (static_cast<float>(playGestureIndex)) / (static_cast<float>(AutoPlayGesture->getFrames().size() - 1));
+				playVisual->get_UI_Objects()[1]->setHorFillPercen(playPercentage);
+
+				playGestureIndex++;
+				playGestureTimer = Clock::now();
+			}
+			else
+			{
+				drawScaledFrame((AutoPlayGesture->getFrames()).back(), getHeight(), getHeight(), playWidth*0.8, playHeight*0.8, playCenterpoint.x, playCenterpoint.y - 25);
+
+				auto t2 = Clock::now();
+				long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - playGestureTimer).count();
+				if (time >= 1000)
+				{
+					//StopPlayGesture();
+					playGestureIndex = 0;
+				}
+			}
+		}
+	}
+	else
+	{
+		playVisual->get_UI_Objects()[1]->setHorFillPercen(0.0F);
+		playVisual->get_UI_Objects()[2]->setVisible(false);
 	}
 	if (showRecordVisual)
 	{
@@ -231,10 +240,12 @@ void recordScreen::setRecordCountDown(int count)
 	if (count == 0)
 	{
 		recordCountDown.get_UI_Objects()[0]->setText(L"Go!");
+		recordVisual.get_UI_Objects()[0]->changeBorderColor(D2D1::ColorF::Red);
 	}
 	if (count == -1)
 	{
 		recordCountDown.get_UI_Objects()[0]->setText(L"Done!");
+		recordVisual.get_UI_Objects()[0]->changeBorderColor(D2D1::ColorF::Black);
 	}
 
 }
@@ -255,9 +266,24 @@ void recordScreen::autoplayGesture(int ID)
 	std::shared_ptr<GestureClass> gestureClass = getModel()->getGestureClassByID(gestureClassID);
 	if (gestureClass != nullptr)
 	{
-		AutoPlayGesture = gestureClass->getGestureWithID(ID);
-		playGesture = true;
-		playGestureIndex = 0;
+		if (AutoPlayGesture == nullptr)
+		{
+			//if (!playGesture)
+			//{
+			AutoPlayGesture = gestureClass->getGestureWithID(ID);
+			playGesture = true;
+			playGestureIndex = 0;
+			//}
+		}
+		else
+		{
+			if (!playGesture || AutoPlayGesture->getGestureID() != ID)
+			{
+				AutoPlayGesture = gestureClass->getGestureWithID(ID);
+				playGesture = true;
+				playGestureIndex = 0;
+			}
+		}
 	}
 	else
 	{
@@ -269,6 +295,17 @@ void recordScreen::StopPlayGesture()
 {
 	playGesture = false;
 	playGestureIndex = 0;
+}
+
+void recordScreen::set_UI_GestureID(int ID)
+{
+	UI_GestureID = ID;
+	playVisual->get_UI_Objects()[2]->setText(std::to_wstring(ID));
+}
+
+int recordScreen::get_UI_GestureID()
+{
+	return UI_GestureID;
 }
 
 void recordScreen::setRecordVisualCenter(D2D1_POINT_2F center)

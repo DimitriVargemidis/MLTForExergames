@@ -138,7 +138,8 @@ private:
 
 	std::shared_ptr<Abstr_Screen>	Screen;		//UI elements to be drawn
 
-	bool					waitForKey;		//parameter is set when the interface is waiting for a key
+	bool					waitForKey;		//parameter is true when the interface is waiting for a key
+	bool					holdPress = false;		//parameter is true when the next added key will (during prediction) be held aslong as no other gesture is recognized
 	bool					drawAbsCoord = true;
 
 	long					time; //test parameter to see how long a button is pressed by a human

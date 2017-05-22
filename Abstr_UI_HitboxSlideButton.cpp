@@ -146,7 +146,8 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 	float Xmoved;				//how much has been moved in the X direction relative to the original position
 	float Ymoved;				//how much has been moved in the Y direction relative to the original position
 	float NbrActivationPoint;	//how much distance to activation
-	float percentage;			//the percentage of distance to activation that has been travelled
+	volatile float percentage = 0.0f;			//the percentage of distance to activation that has been travelled (volatile becuase the compiler kept optimizing it out while it is needed)
+	float percent = 0.0f;
 
 	if (!getFunctionActivation())
 	{
@@ -158,14 +159,13 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			Xmoved = (getOriginalPos()).x - center.x;
 			NbrActivationPoint = endLeft*ActivationPoint;
 
-			if (percentage > Xmoved / NbrActivationPoint)
-				percentage = Xmoved / NbrActivationPoint;
+			percentage = Xmoved / NbrActivationPoint;
 
 			if (NbrActivationPoint < Xmoved)
 			{
-				//activateFunction();
-				setFunctionActivation(true);
-				activateFunctionCallback(get_ID_ModelObject(),0, getModel(), getUI());
+				activateFunction();
+				//setFunctionActivation(true);
+				//activateFunctionCallback(get_ID_ModelObject(),0, getModel(), getUI());
 				
 			}
 			//	printf("move left to x = %f  \n", newPos.x);
@@ -175,14 +175,16 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			Xmoved = center.x - (getOriginalPos()).x;
 			NbrActivationPoint = endRight*ActivationPoint;
 
-			if (percentage > Xmoved / NbrActivationPoint)
-				percentage = Xmoved / NbrActivationPoint;
+			percent = Xmoved / NbrActivationPoint;
+			//printf("percent %f", percent);
+			if (percentage < percent)
+				percentage = percent;
 
 			if (NbrActivationPoint < Xmoved)
 			{
-				//activateFunction();
-				setFunctionActivation(true);
-				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+				activateFunction();
+				//setFunctionActivation(true);
+				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
 				
 			}
 
@@ -193,15 +195,17 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			Ymoved = center.y - (getOriginalPos()).y;
 			NbrActivationPoint = endDown*ActivationPoint;
 
-			if (percentage > Ymoved / NbrActivationPoint)
-				percentage = Ymoved / NbrActivationPoint;
+			percent = Ymoved / NbrActivationPoint;
+			//printf("percent %f", percent);
+			if (percentage < percent)
+				percentage = percent;
 
 
 			if (NbrActivationPoint < Ymoved)
 			{
-				//activateFunction();
-				setFunctionActivation(true);
-				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+				activateFunction();
+				//setFunctionActivation(true);
+				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
 			
 			}
 			//	printf("move down to y = %f  \n", newPos.y);
@@ -211,14 +215,16 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			Ymoved = getOriginalPos().y - center.y;
 			NbrActivationPoint = endUp*ActivationPoint;
 
-			if (percentage > Ymoved / NbrActivationPoint)
-				percentage = Ymoved / NbrActivationPoint;
+			percent = Ymoved / NbrActivationPoint;
+			//printf("percent %f", percent);
+			if (percentage < percent)
+				percentage = percent;
 
 			if (NbrActivationPoint < Ymoved)
 			{
-				//activateFunction();
-				setFunctionActivation(true);
-				activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
+				activateFunction();
+				//setFunctionActivation(true);
+				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
 
 			}
 			//	printf("move up to y = %f  \n", newPos.y);
@@ -226,6 +232,13 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 
 		
 	}
+	/*
+	if (percentage > 0.2)
+	{
+		printf("Abstr_UI_HitboxSlideButton 231: percentage is %f\n" , percentage);
+	}
+	*/
+	
 	return percentage;
 
 }
