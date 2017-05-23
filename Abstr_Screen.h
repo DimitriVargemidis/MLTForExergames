@@ -49,6 +49,9 @@ public:
 	void setLeftHandBusy(const bool & busy);	
 	const bool & getLeftHandBusy();
 
+	void setDisplay_UI(const bool abs);
+	const bool getDisplay_UI();
+
 	void setDrawAbsCoord(const bool abs);
 	const bool getDrawAbsCoord();
 
@@ -85,6 +88,9 @@ public:
 	virtual int		getGestureClassID();
 	virtual	void	setGestureClassID(int ID);
 
+	virtual	void	set_UI_GestureID(int ID);
+	virtual int		get_UI_GestureID();
+
 	virtual void	autoplayGesture(int ID);
 	virtual void	StopPlayGesture();
 
@@ -110,6 +116,7 @@ private:
 	bool rightHandBusy = false;		//boolean to indicate that the righthand is already controlling a button
 	bool leftHandBusy = false;		//boolean to indicate that the lefthand is already controlling a button
 
+	bool display_UI = true;			//boolean whether the UI is displayed or not
 	bool drawAbsCoord = true;
 
 	int width;

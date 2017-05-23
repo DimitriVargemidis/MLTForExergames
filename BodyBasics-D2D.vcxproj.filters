@@ -202,6 +202,10 @@
     <Image Include="Images\open.png">
       <Filter>UI_data\Images</Filter>
     </Image>
+    <Image Include="Images\recordRopeStd.png" />
+    <Image Include="Images\recordRopeHover.png" />
+    <Image Include="Images\recordRopeHandActive.png" />
+    <Image Include="Images\MechAtlas.png" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="libraries">
