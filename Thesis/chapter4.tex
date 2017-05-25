@@ -1,15 +1,6 @@
 \chapter{Implementation}
 
-\begin{itemize}
-\item Bespreking van werking van belangrijkste softwareonderdelen
-\item Belangrijkste deel/delen uit code
-\item \ldots
-\end{itemize}
-
-
-\section{Requirements of the application}
-
-The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. On a hardware level, the Kinect 2.0 camera requires the installation of a driver in order to function properly. This comes as part of the \emph{Kinect for Windows SDK 2.0}. Microsoft's download page states the system requirements for using the Kinect 2.0 camera. These requirements are: 64-bit processor, dual-core 3.1 GHz or faster processor, USB 3.0, 4 GB of RAM or more, graphics card that supports DirectX 11, Windows 8 or 8.1, Windows Embedded 8 or Windows 10.\\
+The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. On a hardware level, the Kinect 2.0 camera requires the installation of a driver in order to function properly. This comes as part of the \emph{Kinect for Windows SDK 2.0}. Microsoft's download page states the system requirements for using the Kinect 2.0 camera. These requirements include: a 64-bit processor, dual-core 3.1 GHz or faster processor, USB 3.0, 4 GB of RAM or more, graphics card that supports DirectX 11, Windows 8 or 8.1, Windows Embedded 8 or Windows 10.\\
 
 
 \section{Graphical user interface}
@@ -19,65 +10,13 @@ The application is developed in C$++$ using Microsoft's Visual Studio IDE and ca
 
 \section{Back-end software}
 
-\begin{lstlisting}[caption=the controlling method that is part of the back-end's main loop, label=code_process_body]
-void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies) {
-	//Go through all the bodies that are being seen now. If a body is tracked, its frame is made and added to the frames vector
-	for (int i = 0; i < nBodyCount; ++i) {
-		pBody = ppBodies[i];
-		if (pBody) {
-			bool bTracked = false;
-			HRESULT hr = pBody->get_IsTracked(&bTracked);
+After initialization of variables like the instances responsible for the user interface, the model and the communication with the Kinect camera, the program locks into an infinite loop while the application is running. This main loop consists of three processes: fetching new data from the Kinect camera, analyzing this data in order to use it for recording or predicting gestures and updating the GUI with relevant changes.\\
 
-			if (currentActiveBody == -1 && SUCCEEDED(hr) && bTracked)	//No body is tracked at the moment {
-				currentActiveBody = i;
-			}
+It is important that none of these three processes block the continuous flow of the main loop. The update rate of the interface is only as fast as the rate with which the main loop is executed. If it is slowed down with a blocking or long-running loop, the GUI appears to stutter of freeze and no new data is collected from the Kinect camera.\\
 
-			if (SUCCEEDED(hr) && bTracked && i == currentActiveBody) {
-				Frame relFrame(pBody);					//Create a frame of every tracked body
-				Frame absFrame(pBody, false);
+The Kinect camera can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
 
-				relFrames.push_back(relFrame);
-				absFrames.push_back(absFrame);
-				
-				if (recording) {
-					recordGesture(relFrame);
-					break;
-				}
-
-				framesBuffer.push_back(relFrame);
-
-				if (refresh && !predict) {		//The measure button was pressed last
-					updateCountDown();
-				}
-
-				if (predict) {
-					if (!trained)	{			//If the model is not yet trained, train it
-						train();
-						trained = true;
-					}
-					int label = SVMInterface::test(activeProject->getSVMModel(), relFrame);
-					addToLabelsBuffer(label);
-					predictAndExecute(label);
-					view->setPredictedLabel(label);
-				}
-			}
-			else if (i == currentActiveBody) {				//If the current tracked body is lost for this frame
-				bodyLostCounter++;											//Increment the lostBodyCounter
-				if (bodyLostCounter > BODY_LOST_LIMIT) {//If the limit is reached, reset the currentActiveBody
-					currentActiveBody = -1;
-					bodyLostCounter = 0;
-				}
-			}
-		}
-	}
-
-	if (updateUI) {
-		view->updateHitboxes();
-		updateUI = false;
-	}
-	displayFrames();
-}
-\end{lstlisting}
+To control the flow of the program without reverting to blocking loops, software flags are used. These flags keep track of the current state of the program. By evaluating the state of the flags, it is possible to indicate if the program is predicting a gesture, recording a gesture or animating specific graphical elements of the GUI.
 
 
 \section{Gesture recognition}
@@ -90,14 +29,17 @@ It is possible to split up the implementation of gesture recognition in two part
 \begin{lstlisting}[caption=method to record a gesture, label=code_record_gesture]
 void Model::recordGesture(Frame & frame) {
 	if (!initialized) {
+		//Set the neutral frame on the first call
 		frameNeutral.setFrame(frame);
 		initialized = true;
 	}
 	
+	//Add the frame to the buffer
 	framesBuffer.push_back(frame);
 
 	if (!startedMoving) {
 		if (! frame.equals(frameNeutral)) {
+		
 			startedMoving = true;
 			framesBuffer.clear();
 		}

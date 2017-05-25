@@ -9,7 +9,8 @@
 \usepackage{graphicx}
 \usepackage[latin1]{inputenc}		% om niet ascii karakters rechtstreeks te kunnen ingeven
 %\usepackage[utf8]{inputenc}		% commentarieer deze regel uit als je utf8 encoded files gebruikt in plaats van latin1
-\usepackage{natbib}
+%\usepackage{natbib}
+\usepackage[round, sort, numbers, authoryear]{natbib}
 \usepackage{listings}         	% voor het weergeven van broncode
 \usepackage{verbatim}						% weergeven van code, commando's, ...
 \usepackage{hyperref}						% maak PDF van de thesis navigeerbaar
@@ -47,10 +48,9 @@
 \opleiding{Electronics-ICT,}
 \afdeling{Internet computing}
 
-\title{Design and implementation\phantom{tj}\\
-of an application for\phantom{tj}\\
-controlling computer games\phantom{tj}\\
-using a Kinect camera as\phantom{tj}\\
+\title{Design and implementation of an\phantom{tj}\\
+application using motion input for\phantom{tj}\\
+controlling computer games as\phantom{tj}\\
 part of physical therapy\phantom{tj}}
 \subtitle{ }
 
@@ -62,6 +62,7 @@ part of physical therapy\phantom{tj}}
 
 \promotorA[Supervisor]{prof.\ dr.\ ir.\ L.\ Geurts}
 \promotorB[Co-supervisor]{ir.\ K.\ Vanderloock}
+
 
 \begin{document}
 \selectlanguage{english}
@@ -85,13 +86,8 @@ part of physical therapy\phantom{tj}}
 %\appendix
 %\input{appendix1}
 
-% Bijlage met daarin het wetenschappelijk artikel
-%\chapter{Beschrijving van deze masterproef in de vorm van een wetenschappelijk artikel}
-%\includepdf{artikel.pdf}
-
-% Bijlage met daarin de poster
-%\chapter{Poster}
-%\includepdf{poster.pdf}
+\bibliographystyle{abbrvnat}
+\bibliography{litlist}
 
 \includepdf{back_fiiw_groepT_eng.pdf}
 
