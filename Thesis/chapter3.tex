@@ -94,20 +94,262 @@ The sessions were very taxing for the test subjects, the concept we tried to int
 
 Instead we decided to brainstorm with each other and our supervisor Prof. Geurts to develop a few paper prototypes that we can eventually show to the physical therapist to see which one seems the most user-friendly. The two mayor interaction patterns that came out of this brainstorm session we call hints and mime. In the rest of this chapter the abbreviation UI is used to say user interface and a UI element is a button, scrollbar or any other element that the user can interact with. When discussing the different concepts we often refer to a movement by the user or position that is taken that activates a function in the program as a sign.
 
-The hints pattern implies that the screen is largely devoid of UI elements and actions are performed when the user does a certain movement or takes a certain position, for example, the user forms an cross with his arms to delete a recording.  The lack of feed forward that this implies means the user should learn all of the signs at the start of application, putting a large strain on the user's cognitive ability which is not ideal. Alternatively, all possible action could be displayed on the screen around the user with a depiction of the sign. Though this would put less strain on the user's cognitive abilities, he would still have to focus on these pictures and try to figure out what sign they depict. But what if the sign is a movement? It is impossible to depict is statically so how can you make this clear without distracting the user with constant moving pictures. A more significant problem might be the fact that position and movements might be recognized by accident, an undo movement could partly solve this but you also need a redo button to compensate for any accidental undo-activations.{\large COMMENT: iets over het perongeluk activeren bij on aandachtig zijn.}  The only real benefits to using the hints pattern is that activating an action can be done from anywhere and it could be faster once the user has mastered the signs, though this depends on the ease of performing the signs and the delay between a sign and the corresponding action in the program.{\large COMMENT: make the signs so that the link between the sign and the action is similar to the meaning it has in everyday life, culture dependency .}
+The hints pattern implies that the screen is largely devoid of UI elements and actions are performed when the user does a certain movement or takes a certain position, for example, the user forms an cross with his arms to delete a recording.  The lack of feed forward that this implies means the user should learn all of the signs at the start of application, putting a large strain on the user's cognitive ability which is not ideal. Alternatively, all possible action could be displayed on the screen around the user with a depiction of the sign. Though this would put less strain on the user's cognitive abilities, he would still have to focus on these pictures and try to figure out what sign they depict. But what if the sign is a movement? It is impossible to depict is statically so how can you make this clear without distracting the user with constant moving pictures. A more significant problem might be the fact that position and movements might be recognized by accident, an undo movement could partly solve this but you also need a redo button to compensate for any accidental undo-activations.{\large COMMENT: iets over het perongeluk activeren bij on aandachtig zijn.}  The only real benefits to using the hints pattern is that activating an action can be done from anywhere and it could be faster once the user has mastered the signs, though this depends on the ease of performing the signs and the delay between a sign and the corresponding action in the program.\\
+{\large COMMENT: make the signs so that the link between the sign and the action is similar to the meaning it has in everyday life, culture dependency .}\\
 
-The mime pattern, as the name suggests, is the act of mimicking an action that is needed to act on everyday objects such as opening a door. But where an mime artist does this without any indication of that object being there, here an image of ,for example, the door would be displayed on the screen. The power of this pattern is that the user should immediately recognize the UI element, know how to interact with it. To achieve the best effect, the UI elements that are chosen should need signs that the user has done frequently already, so that doing them feel natural and familiar. An extra user friendly characteristic would be if the sign performs a function that is similar the real life such as going to a different screen when opening the door. \textbf{Wensveen} already said that for this to work correctly feedback is crucial, the reaction of the UI element must match the expectations of the user otherwise he will be confused and the flow of the program is interrupted. Disadvantages is that you cannot activate every action from anywhere and it might be slower because of that.  
-{\large COMMENT: Allows the use of affordances }  
-{\large COMMENT: look in notes HCI for extra idea's from the litarute study }
+The mime pattern, as the name suggests, is the act of mimicking an action that is needed to act on everyday objects such as opening a door. But where an mime artist does this without any indication of that object being there, here an image of ,for example, the door would be displayed on the screen. The technical term for such a UI element is a metaphor because the function is similar to what a user would do with the object in real life. The power of this pattern is that the user should immediately recognize the UI element, know how to interact with it. To achieve the best effect, the UI elements that are chosen should need signs that the user has done frequently already, so that doing them feel natural and familiar. An extra user friendly characteristic would be if the sign performs a function that is similar the real life such as going to a different screen when opening the door. \textbf{Wensveen} already said that for this to work correctly feedback is crucial, the reaction of the UI element must match the expectations of the user otherwise he will be confused and the flow of the program is interrupted. Disadvantages is that you cannot activate every action from anywhere and it might be slower because of that.  \\
+{\large COMMENT: Allows the use of affordances }  \\
+{\large COMMENT: look in notes HCI for extra idea's from the literate study }\\
 
 
-Our opinion is \textbf{(and that of other?)} is that one should not mix the 2 patterns because the user will expect to interact with everything on the screen when using the mime pattern if one action is activated using the hints pattern the user will forget and be confused if there is no indication of this and if there is indication the user will likely try to interact with the indicator of the sign as a button which will not have the desired effect. Combination with regular WIMP UI elements, such as pushbutton or scrollbars, is possible\textbf{(is it possible?)} for both patterns but it combines better with the mime pattern because it requires the user to point at a specific area in the UI which would detract from the idea of being able to do every action everywhere in the hints pattern. To sum up in the mime pattern the behavior of the UI elements are simple and obvious but possibly more inefficient, like pulling a handle on a slot machine to spin the slots. While the hints pattern 
+Our opinion is \textbf{(and that of other?)} is that one should not mix the 2 patterns because the user will expect to interact with everything on the screen when using the mime pattern if one action is activated using the hints pattern the user will forget and be confused if there is no indication of this and if there is indication the user will likely try to interact with the indicator of the sign as a button which will not have the desired effect. Combination with regular WIMP UI elements, such as pushbutton or scrollbars, is possible\textbf{(is it possible?)} for both patterns but it combines better with the mime pattern because it requires the user to point at a specific area in the UI which would detract from the idea of being able to do every action everywhere in the hints pattern. To sum up in the mime pattern the behavior of the UI elements are simple and obvious but possibly more inefficient, like pulling a handle on a slot machine to spin the slots. While the hints pattern is more abstract and complex, but should allow a more efficient interaction once mastered.
 
+With these patterns in mind the design of the paper prototypes focuses more on designing UI elements and methods with which the user can interact that is simple, fast, ergonomically, feels natural and is not taxing to the user physically and cognitively while being practical and not easy to activate accidentally. The regular way of testing paper prototypes is by presenting the user with a paper version of the UI (hence the name) and whenever the user touches a UI element the designer manually changes the paper prototype to reflect the activated action. This kind of testing absolutely not suited for this kind of designing, it is more to assess the placement and shape of UI elements and the general flow of a program. What was needed here is a way to interact with the paper prototypes in a way similar to how the real program would work but without having to code the whole program. For that reason we took 2 example programs from Microsoft's kinect SDK and made some adjustment to show the user in front of the paper prototype, these applications will be discussed further down this chapter. \\
+{\large COMMENT: out of idea's to be continued }\\
  
+ Regarding how the user is shown on the screen there are four viable options : \\
+ 1. A real image of the person as the camera films it is shown.  \textbf{reference to fig 1? A} \\
+ 2. A semi-transparent schadow of the user is shown. \textbf{reference to fig 1? B} \\
+ 3. A puppet that copies the user's movement is shown.  \textbf{reference to fig 1? C} \\
+ 4. No body is shown, only images that portray the position and state of the hands are shown\textbf{reference to fig 1? D}\\ \\
+ 
+ \begin{figure}[H]
+ 	\begin{center}
+ 		\includegraphics[width=7cm, height=7cm]{KUL.png}
+ 		\includegraphics[width=7cm, height=7cm]{KUL.png}
+ 		\includegraphics[width=7cm, height=7cm]{KUL.png}
+ 		\includegraphics[width=7cm, height=7cm]{KUL.png}
+ 		\caption{\emph{types of visualizations of the user}}
+ 		\label{fig: a: the UI with real image of user, b: the UI with semi-transparent shadow, c: the UI with puppet, d: the UI with only hands }
+ 	\end{center}
+ \end{figure}
+ 
+ 
+ A real image of the person is the most identifiable for the user because it is literally an image of himself but this doesn't mean that it would be the best option to use in interacting with the UI. Though it has the advantage that it is crystal clear with movement the user caried out which is good for recording and replaying exercice. The most important issue is that the image is taken from the front so the image of the screen is facing away, so unless the UI elements are drawn on top of the user's image it is hard to imagine you are grabbing a handle or pushing a button on the UI. Placing the kinect camera behind the user to solve this problem, is technically not possible because an important part of the kinects person recognition is based on recognition of the the facial features. This would also require a very large amount of room to operate because you need to have a distance of atleast a one meter from the screen in front of the user and at least 1.5 m from the kinect at the back. When the UI elements are drawn behind the user, he will also obscure any elements directly behind him. Another issue is that most people are not comfortable with an image of themselves being displayed on the screen which could detract from the user experience. The physical therapist we interviewed, who works in a school for disabled children, also noted that this might cause legal problems with parent who do not want unauthorized footage of their child being stored. A final technical issue is that displaying the real image of the user is very resource intensive and in our case it would sometimes cause the program to lag. \\
+ {\large COMMENT: Why can't the real image also be transparent?}
+ 
+ A semi-transparent shadow would solve the legal issue, the discomfort experienced by users and it also solves the problem of the image facing away from the UI because there are almost no features that indicate which way the image is facing, making it look like the shadow is facing towards the UI. By making the image semi-transparent any UI element behind the user can still be seen. A disadvantage is that it is harder to identify subtle differences between similar recordings. It is also still very resource intensive, trying to optimize this was beyond the scope of this thesis.
+ 
+ 
+ A puppet that copies the movements of the user has similar benefits to the shadow and can be transparent or non-transparent. It is far less resource intensive but makes it even harder to distinguish similar recordings from each other.
+ 
+ Showing no body and only hands can obviously only be used to interact with the UI and not for the recording of an exercise. It removes all distractions from the screen and shows only the states that are essential to the user to interact with the UI. But because of this the interaction might feel less natural to the user.
+ 
+In total 6 paper prototypes are created ranging from obvious prototypes using mostly mime pattern elements and metaphors to more abstract prototypes where more elements of the hints pattern and standard WIMP concepts are used with less mime pattern elements. 
+The first four paper prototypes are only the screen in which the user can record one exercise multiple times to provide the data for the SVM as discussed in \textbf{REFERENCE TO CHAPTER?}. They use a schadow image of the user to control the UI. The other two prototypes are menu's to browser to a recording and replay it while the user only sees his images of his hands. This list sums up all the prototypes: \\
+
+1. A UI with mostly mime pattern elements and metaphors. \\
+2. A UI that combines mime patterns with standard WIMP elements. \\
+3. A UI that also combines mime patterns but with more WIMP elements. \\
+4. An alternative mime pattern element for the scrollbar only. \\
+5. A UI that combines the hints pattern with WIMP elements. \\
+6. A UI that combines the hints pattern with more WIMP elements.\\ \\
+
+In this thesis only three of these prototypes are discussed to show the kind of elements that were experimented with, these are: the first prototype, the third and the last, a more detailed description of the rest of the prototypes can be found in \textbf{appendix A}.\\
+
+{\large COMMENT: should I talk about some general rules we kept to? like don't place buttons too low}
+
+The first paper prototype, that can be seen in \textbf{ fig:2}, mostly uses the mime pattern and metaphors, the orange color is used to indicate a possibility for an action. On the right the door on the side says exit and would swing open when the user grabs the orange handle an pulls to the left. On the top of the screen a collection of recordings can be seen pinned to a scrollbar with orange thumbnails, the arrows on the sides imply that the recordings can be moved. The user would grab the orange indicator bar to browse the recordings. To delete a recording the user grab the thumbnail of that specific recording and drag it to the recycle bin to release it there. The user can display the recording by dragging it to the projector on the left side of the screen with would display the recording on the screen where the big 1 is displayed. In the middle a camera with his lens pointed towards the user is displayed, by moving his hand forward on the "opnemen" button the user could start a recording.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The first paper prototype}}
+		\label{The first paper prototype}
+	\end{center}
+\end{figure}
+
+{\large COMMENT: START MOVE TO APPENDIX}
+
+The second paper prototype combines mime pattern elements with more standard WIMP elements to streamline the process. In \textbf{ fig 3} the first screen can be seen. On the left of the screen the screen can be exited by grabbing the orange part of the lever and pulling it downwards. A new recording can be started by grabbing the orange part of the cord and pulling downwards. The record screen as seen in \textbf{ fig 4} is now shown. The window shown is what is going to be recorded, the red one shows where the program will count down from 3 until the recording starts allowing the user for some time to get to his start position. All other UI elements are grayed out to indicate that they are not available to interact with. Once the recording is finished the program returns to the screen in \textbf{ fig 3}. When the user moves into the orange circle on the ground the program switches to a different mode as seen in \textbf{ fig 4} which is called the manage screen. The window on the right of the screen will replay the recording that is highlighted in orange in the scrollbar automatically. The user can pause this function by pushing the orange slide button above the scrollbar to the left, grabbing it is not necessary. Each block in the scrollbar is linked to a recording and contains a static previews of their recording. The recording that is highlighted orange can be pushed into the trash, grabbing it is also not necessary here. On the right side of the user is an orange scroll wheel that is connected to the scrollbar to indicate it's association with the scrollbar, the orange tint difference can be used to indicate the speed and the direction in which the wheel is turning. The idea is that the user can move an right hand over the scroll wheel to scroll through the items in the scrollbar, simultaneously the user can use his left hand to delete an item in the scrollbar. The gray block next to the scrollbar is an indication of position within the scrollbar.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The standard screen of the second paper prototype}}
+		\label{The standard screen of the second paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The record screen of the second paper prototype}}
+		\label{The first paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The manage screen of the second paper prototype}}
+		\label{The first paper prototype}
+	\end{center}
+\end{figure}
+
+{\large COMMENT: END MOVE TO APPENDIX}
+
+The third paper prototype in the list combines mime pattern elements with more standard WIMP elements to streamline the process, it can be seen in \textbf{ fig 3}. On the right of the screen is a lever that is activated by grabbing the orange part of the lever and pulling it downwards causing the user the leave this screen. The record button is a pushbutton that the user activates by moving his hand forward over it. This action activates the record screen as seen in \textbf{ fig 4}. The window shown is what is going to be recorded, the red one shows where the program will count down from 3 until the recording starts allowing the user for some time to get to his start position. All other UI elements are grayed out to indicate that they are not available to interact with. Once the recording is finished the program returns to the screen in \textbf{ fig 3}. When this is activated the screen changes to  On the left is a scrollbar that contains elements that represent previous recordings. These show a static representation of their recording. On the right of it there is a scroll wheel in orange with which the user can scroll through the scrollbar by simply hover his hand above it. When the user stops scrolling the elements are locked into a position as is it is shown in \textbf{ fig 3}. By hovering over it the user can slide the top element into the "THRASH" or "PLAY" area to play or delete the element. 
+
+{\large COMMENT: Is this really necessary in such detail?}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The standard screen of the third paper prototype}}
+		\label{The standard screen of the third paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The record screen of the third paper prototype}}
+		\label{The record screen of the third paper prototype}
+	\end{center}
+\end{figure}
+
+The last paper prototype is a combination of the hints pattern where the user has to close his hand over the element with which he wants to interact to open een typical WIMP element called a context menu with which the user can interact. The user can only see images of his hands as discussed earlier in this chapter. It start af with a small tutorial screen as seen in \textbf{ fig 4}, when the user closes his hand the context menu as seen in \textbf{ fig 5} when the user slides his closed fist towards any of the elements it reacts as seen in \textbf{ fig 6} to indicate the the option is chosen. Throughout the prototype the user can interact with the chosen recording as seen in \textbf{ fig 7}, in this instance he can choose between playing the recording, deleting it or canceling the current menu.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The first tutorial screen of the last paper prototype}}
+		\label{The first tutorial screen of the last paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The second tutorial screen of the last paper prototype}}
+		\label{The second tutorial screen of the last paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{The third tutorial screen of the last paper prototype}}
+		\label{The third tutorial screen of the last paper prototype}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\caption{\emph{An example of how the user would interact with and element of the last paper prototype}}
+		\label{An example of how the user would interact with and element of the last paper prototype}
+	\end{center}
+\end{figure}
+
+{\large COMMENT:THE PAPERPROTOTYPE USERTEST}
+
+The mayor goal of this user test is to see how the user interacts with the different paper prototypes, how fast can he do the required actions, what he thinks of the signs whether they feel natural or not and which one of the paper prototypes speak to him the most. 
+
+The kinect is placed on a table of regular height and the user is asked to stay within 2 to 4 meters distance from the camera. The screen with the UI is placed directly behind the kinect camera.
+
+The user is first introduced to the concept and flow of our program through the use of a simple schematic with the required steps of the program as seen in \textbf{ fig 5}, to bring the user up to speed with what is necessary to operate the eventual progam. {\large COMMENT: WHERE TO INTRODUCE THIS?} Then a small demo program, to show the capabilities of the concept and the kinect is shown, to give him an idea of the possibilities and the end goal of the program. After some more introductory questions the user is assured that he is never at fault and that we are responsible for any misunderstandings he might have. Before the actual tests permission is asked to film the proceedings of the tests. During the test we also remind him that we like the hear his thoughts on what he sees and thinks.\\
+
+Then the user is asked to interact with the prototypes using the kinect. To mimic the functionalities of the screen a Wizard of Oz method is used to change the screens whenever the user performs the required action. Some prototypes still require some explanation but generally the user is only assisted when he is completely stuck and at the end of every prototype an explanation of the intend is given. At the end we go through every prototype again without the kinect to reflect about the performance of every prototype. The user is asked to select a personal favorite.
+
+In total four candidates were subjected to this user test of which were one physical therapist and three relatives or friends but this paragraph will focus on the results with the physical therapist supplemented with the results of the others, thereby the physical therapist is refered to as "the user" and the others as "the other users". It is important to mention that the user has previous experience with kinect games which sometimes influenced his reaction, such as he did not know that he could move his hand forward to mimic pushing a button. For the first prototype  \textbf{ fig 2} The user was trying to interact with UI elements that were not intended to be interacted with, he later indicated that he did not see the metaphors as they were intended and that the screen was to hectic. After the explanation of the first prototype the user commented that he now understood it the goal of the screen much better. Most of the other users also made the same remarks about the first prototype. The rope UI element such as seen in the second prototype in the \textbf{ appendix} was clear to him how to interact with it but he had no idea how to interact with the scroll wheel to scroll through the scrollbar. The lever to leave the screen was clear but he did not like the Others users indicated that they expected the UI to react as if it were a touchscreen. 
+{\large COMMENT:TO BE CONTINUED}
+
+
+
+
+
+
+
 
 %TODO alles over de prototypes (ook experimentele strategie uitleggen)
 
 \subsection{Description of the interface}
+
+The end design looks as seen in \textbf{ fig simple picture} From left to right the user can see a gray box in which a recording can be replayed, this is a typical WIMP element becuase it does not have any elements to it that can be seen as a metaphor to anything the user is familiar.Right of this there is the rope as seen in prototype 2 which is a very distinct mime pattern element and a simplified version of the scollbar containing the recordings with the currently selected recording highlighted in orange. The user can slide this element to the "DEL" bar to delete the element. The black bordered box at the feet of the puppet represent the ground on which the puppet walks on so it does not appear to float in mid air.
+
+Though we had previously established that the schadow was the most naturel way of representing a user in the interface. Performance issues forced us to resort to using the puppet image. The reason why the puppet is not semi-transparent is because the joints are more visible because two semi-transparent images are drawn on top of each other which combine into a less transparent color. This breaks the unison of the puppet's coloring making it seem less human which would be a distraction that detracts from the experience of the user. Another detail of the puppet is that the centerpoint of the spine is fixed in the vertical direction but not in the horizontal direction. This eliminates any dependency on the position of the camera so that, as long as the body is in the field of vision of the kinect, the user can always reach every UI element on the screen. This measure introduces two different problems: the biggest problem is that when the user tries to squat the puppet will lift its feet instead of lowering his torso, this might cause confusion and does not feel natural. The other problem is that the user cannot reach any UI element that is placed where the it could only be reach by bending downwards. This is not seen as a big problem because such a movement is very taxing for an adult to perform. The puppet is free to move in the horizontal direction but there is an offset on where the puppet is drawn so that the puppet appears to stand between rope and the scrollbar drawn more toward the right of the screen when the user is standing right in front of the kinect, normally the screen will also stand behind the kinect so that the user can look straight forward when interacting with the UI. The depth coordinate in 3D space is also set to a fixed distance before conversion to a 2D screen to ensure that the puppet is always drawn to the same size no matter how far the user is standing within the vision field ofcourse.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{figures/1_screen_with_user.png}
+		\caption{\emph{The regular view of the end design of the UI}}
+		\label{The regular view of the end desing of the UI}
+	\end{center}
+\end{figure}
+
+
+An important aspect of the UI is the color coding that is consistent throughout the UI except on the puppet itself though it should be apparent that the puppet is not much more than a representation of the user. {\large COMMENT: the puppet doesn't activate anything without interaction with any of the UI element to keep in line with the general pattern of the UI} This should give the user extra feedforward about what the consequence of their action will be. Orange is indication of interaction possibilities, green means a hand is hovering over the element, blue gives information about what happened or will happen after an action and red indicates a more serious action is about to be activated. The exact meaning of all these color codes will become clear during the description of the UI.
+
+Since it is important for the user to know when the system sees that it is grabbing the rope, the UI provides feedback to the user by coloring the hands green when they are open and red when the user makes a fist.
+
+When the user hovers his hand over the orange handle of the rope the handle turns green indicating that it can now be grabbed. When the user closes his hand then the handle turns red to show the user that he is pulling it. The dynamics for pulling the rope are simple, between the starting position and the end position, which is below the starting point, the rope will make the same relative movement in the vertical direction as the user does with the center of his hand. In this way the interaction is linked in time, speed, direction, dynamics and location user's hand {\large COMMENT: FRAMEWORK REF?}. When the rope is near to his end position the record screen is activated. There is no progression bar to indicate how far the user is from activating the function because generally the action of pulling a rope is very sudden and fast, as long as the function is activated before the user runs out of momentum this kind of feedback is not needed here. In the normal state the handle guards are not colored because the indication of the action area is clear enough and a person would not normally grab a handle by the handle guards, they are however colored green and red to make it more apparent to the user that they are acting on it. 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=6cm, height=8cm]{figures/2_hover_over_rope.png}
+		\includegraphics[width=6cm, height=8cm]{figures/3_grab_rope.png}
+		\caption{\emph{Reaction of the rope handle: a) when hovered over, b) when grabbed}}
+		\label{The regular view of the end desing of the UI}
+	\end{center}
+\end{figure}
+
+The rope activates the screen seen in \textbf{ fig 8}. In this screen a seperate window is openend with a a scaled version of the puppet, another typical WIMP element. The large change in the UI clearly indicates that the user is in a different mode. Here the puppet is also fixed in the X direction to indicate correctly how the program will see the exercice. To avoid confusion the window is opened on top of the last position in which the user was before pulling the rope. Since the goal of this screen is to record one exercice multiple times two static puppets are drawn behind the user, the light blue puppet shows the starting position and the dark blue puppet shows the end position of the movement. Care has been taken to choose a color that does not conflict with the green of the user's puppet and doesn't overpower it by being to bright while still being clearly visible and distinguishable. The color also follows the color code defined earlier in this chapter since it gives information about the first recording. The message "Get Ready" is shown for 1 second before changing to a count down of 3,2,1,Go!. At "Go!" the window's edges turn red to clearly indicate that the program has started recording the user's movements. An example of how this would look can be seen in \textbf{ fig 9}. The program stops recording when the user remains still for certain amount of time. After that the text changes to "Done!" and after 0.5 seconds the screen return to \textbf{ fig 8}. The result is that a new element in the scrollbar is added to the top. It is given the next number and set into the orange selection area.\\
+
+
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{figures/4_record_getready.png}
+		\caption{\emph{First view of the recording screen}}
+		\label{The regular view of the end desing of the UI}
+	\end{center}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{figures/6_record_start.png}
+		\caption{\emph{View when the program starts recording, between this and the first view there is a countdown from 3, after the user stands still for a certain amount of time to text in the window will read "Done!"}}
+		\label{The regular view of the end design of the UI}
+	\end{center}
+\end{figure}
+
+As said before the scrollbar contains elements that are each linked to a recording of the current exercice. In these boxes a small preview can be seen of the start and end position of the linked recording in the same color scheme as during recording. The numbering of the boxes goes from the first recording as one counting up to the last recording, though these numbers are not the same as the ID's of the gesture class as seen further on during the discussion of the backend but the order of the numbers is still the same. When the user hovers one of his hands over the recorded element within the orange area the effects as seen in \textbf{ fig 8} are triggered. The the specific recorded element is replayed within the previously grayed out window on the left. The blue bar on the bottom of the window indicates the progression of the recording. As long as the user hovers over the element in the scrollbar the recording is repeated with half seconds delays between repeats. This was a deliberate choice to make sure the user is fully aware of which recording is playing in the window, he should notice that the recording is only playing when he touches it. For the same reasons the number of the recording is also displayed on the left of the screen where it does not obstruct the user in reviewing his recording but is there when the user is uncertain of which recording is playing. Additionally both the orange selectionbox in the scrollbar and the edges of the display screen are colored green, the color previously linked with hover over information. The emphasizes on clearly linking the replay with the recording comes from the fact that the screen is so far from the actual element it is connected too. The scrollbar is on the right because it is easier to operate for right handed users which is more likely to be the case and the delete action is already on the right of it and can hardly be moved for reason given later on. Following both the proximity and similarity law of the Pragnanz law's would make the most sense but placing the screen on the right of the delete button would still have the delete button between it and the recorded element and would place the user's puppet to far from the center of the screen, out of the focus of the user.\\
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=16cm, height=9cm]{figures/11_replay_recording.png}
+		\caption{\emph{The recorded element six is replayed to the user by hovering over it with any hand.}}
+		\label{replay of element six}
+	\end{center}
+\end{figure}
+
+To activate the scroll function on the scrollbar, the user has to hover his hand within the boundaries of the black bordered box but not within the orange selectionbox, the black borders of the scrollbar turn green to indicate that the user is hovering over the scrollbar, this is shown in \textbf{ fig 9}. Scrolling is only starts when the user has moved a small distance up or down to avoid to scrollbar being immediately stuck to the user which would be annoying. Onces scrolling is started it continues as long as the user keeps moving in the same direction, this also counts when going through the selectionbox area and even when going outside of the scrollbar's borders. This makes sure that the user is not surprised by as sudden stop of the scrolling action when accidentally going inside of the selectionbox or outside of the scrollbar. The whole reason why the user cannot initiate a scroll within the selectionbox is because the element that is placed there has to be able to be hovered over to display it, as explained earlier and it has to be able to be moved to the side for deletion. Accidental activation of the scroll function is minimized by this measure. Though there is more to this, informal tests with user that are not familiar with the UI often tried to scroll down or upward starting from the selectionbox, the activation of the scroll function only after the user left the selectionbox area proved to confuse the user. To counter this the activation area of the scroll function is expanded into the orange area for about 15 percent of the selection box height on both the top and the bottom. Once activated the element stay on a fixed distance from each other but all elements are moved with the same dynamics as used in the record rope, they perform the same relative movement as the hand that is hovering over it. During scrolling all recorded elements are locked to any interactions and the element that will land in the selection box is indicated by a light blue coloring of the white background. The example of scrolling can be seen in \textbf{ fig 10}. When the user stops scrolling the recorded elements are locked into positions as seen in \textbf{ fig 9}. Only the element in the selection box can be interacted with.\\
+
+{\large COMMENT: talking about how why using the slide with a closed hand is a bad idea} \\
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=6cm, height=8cm]{figures/9_hover_scrollbar.png}
+		\includegraphics[width=6cm, height=8cm]{figures/10_scroll_scrollbar.png}
+		\caption{\emph{Reaction of the scrollbar: a) when hovered over, b) when scrolling is activated}}
+		\label{The regular view of the end desing of the UI}
+	\end{center}
+\end{figure}
+
+The delete sequence of the recorded element in the selection box can be started by hovering over the middle of it. After this the element will follow the relative horizontal movement of the interacting hand between start point and end point with the same dynamics as the scrollbar and the rope. As seen in \textbf{ fig 10}, The "DEL" box is filled up with a red bar to indicate how far the user still has to move until the item is deleted. When the end point is reached the recorded element turns red and fades away within a halve second to clearly indicate that this recording is deleted. Once the endpoint is reached the action is irreversible and for the duration of the fading the scrollbar and all the elements are locked for any further interaction. An example of this is shown in \textbf{ fig 11}. The reason why this action is only started from the middle is to increase the difference between initiating the delete sequence and replaying the recording and also heighten the threshold to start such a serious action as deleting an item. After deleting an element the other recorded elements are renumbered.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=6cm, height=8cm]{figures/12_delete_progress.png}
+		\includegraphics[width=6cm, height=8cm]{figures/13_delete_complete.png}
+		\caption{\emph{The delete sequence: a) the user in the process of deleting, the red progress bar indicates how far until deletion the user has to go , b) The endpoint of the action is reached, the item turns red and fades after which it is deleted}}
+		\label{The regular view of the end desing of the UI}
+	\end{center}
+\end{figure}
+
+
 
 %TODO beschrijving + afbeeldingen van de uiteindelijke interface
 

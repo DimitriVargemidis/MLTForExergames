@@ -46,8 +46,6 @@ ROPEHANDACTIVE          IMAGE                   "Images\\recordRopeHandActive.pn
 
 IMAGE_OPEN              IMAGE                   "Images\\open.png"
 
-TEST_IMAGE              IMAGE                   "Images\\MechAtlas.png"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
