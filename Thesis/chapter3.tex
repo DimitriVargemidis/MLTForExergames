@@ -75,11 +75,11 @@ Before starting the application, it is recommended to put the executable file in
 \item \ldots
 \end{itemize}
 
-A large part of this thesis was focused on the design and implementation of a user-friendly interface that can be controlled via input from the kinect 3D camera. The reasoning behind this is that the user does not want to run back and forth from the standing position in front of the kinect and the keyboard. Many interfaces have been design for use with the kinect but they are generally only used to get the game and are therefore made up of simple button and scrollbars to select your option. In this section the process of developing the user-interface and the eventual implementation is discussed.
+A large part of this thesis was focused on the design and implementation of a user-friendly interface that can be controlled via input from the kinect 3D camera. The reasoning behind this is that the user does not want to run back and forth from the standing position in front of the kinect and the keyboard. Many interfaces have been design for use with the kinect but they are generally only used to get to the game and are therefore made up of standard WIMP elements (Window, icon, menu, pointer) such as button and scrollbars to select your option. In this section the process of developing the user-interface and the properties of the coded prototype are discussed.
 
 \subsection{Prototypes}
 
-The goal with this part of the thesis was to find a new way of interacting with a user-interface using the kinect 3D-camera that feels natural to the average user, this despite  \textbf{NORMAN's} claims that the  term natural user-interfaces, that is often used to describe interfaces controlled with 3D-cameras, are not natural because  of \textbf{REASONS}. This means that we will try to avoid using standard WIMP (Window, icon, menu, pointer) elements such as pushbuttons and scrollbars. A brainstorm session with the eventual user, the physical therapist, would give us fresh idea's on how the user will expect to interact with a user interface using his body or sound. The expectation was that 2 distinct observation would be made: how the user would wish to interact with the user-interface and how they would expect the flow of the program. 
+The goal in this part of the thesis was to find a new way of interacting with a user-interface using the kinect 3D-camera that feels natural to the average user, this despite  \textbf{NORMAN's} claims that the  term natural user-interfaces (NUI), that is often used to describe interfaces controlled with 3D-cameras, are not natural because  of \textbf{REASONS}. Standard WIMP elements do not feel natural in a NUI, pointing and clicking on buttons with a pointer may have already become second nature to modern humans, but it is a whole other thing when they are large and floating in the sky or fixed to a wall and the user has to slap them or close their fist over them without getting any inherent feedback as \textbf{WENSVEEN} called it. For this reason element such as pushbuttons, scrollbuttons and floating windows were avoided. If possible we wanted to find new idea's on how to control a NUI, if that proves impossible we atleast wanted to improve upon existing concepts. A brainstorm session with the eventual user, the physical therapist, would give us fresh idea's on how the user will expect to interact with a user interface using his body or sound. The expectation was that 2 distinct observation would be made: how the user would wish to interact with the user-interface and how they would expect the flow of the program. 
 
  {\large COMMENT: is WIMP de juiste term in het vorige stuk? }
  {\large COMMENT: hadden wij toen al dat visuele stappen plan? ik denk het niet he }
@@ -153,7 +153,7 @@ The first paper prototype, that can be seen in figure \ref{first prototype}, mos
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_1_1_standard.png}
 		\caption{\emph{The first prototype screen}}
 		\label{first prototype}
 	\end{center}
@@ -165,7 +165,7 @@ The second paper prototype combines mime pattern elements with more standard WIM
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{KUL.png}
 		\caption{\emph{The standard screen of the second paper prototype}}
 		\label{The standard screen of the second paper prototype}
 	\end{center}
@@ -173,7 +173,7 @@ The second paper prototype combines mime pattern elements with more standard WIM
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{KUL.png}
 		\caption{\emph{The record screen of the second paper prototype}}
 		\label{The first paper prototype}
 	\end{center}
@@ -181,7 +181,7 @@ The second paper prototype combines mime pattern elements with more standard WIM
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{KUL.png}
 		\caption{\emph{The manage screen of the second paper prototype}}
 		\label{The first paper prototype}
 	\end{center}
@@ -189,31 +189,31 @@ The second paper prototype combines mime pattern elements with more standard WIM
 
 {\large COMMENT: END MOVE TO APPENDIX}
 
-The third paper prototype in the list combines mime pattern elements with more standard WIMP elements to streamline the process, it can be seen in \textbf{ fig 3}. On the right of the screen is a lever that is activated by grabbing the orange part of the lever and pulling it downwards causing the user the leave this screen. The record button is a pushbutton that the user activates by moving his hand forward over it. This action activates the record screen as seen in \textbf{ fig 4}. The window shown is what is going to be recorded, the red one shows where the program will count down from 3 until the recording starts allowing the user for some time to get to his start position. All other UI elements are grayed out to indicate that they are not available to interact with. Once the recording is finished the program returns to the screen in \textbf{ fig 3}. When this is activated the screen changes to  On the left is a scrollbar that contains elements that represent previous recordings. These show a static representation of their recording. On the right of it there is a scroll wheel in orange with which the user can scroll through the scrollbar by simply hover his hand above it. When the user stops scrolling the elements are locked into a position as is it is shown in \textbf{ fig 3}. By hovering over it the user can slide the top element into the "THRASH" or "PLAY" area to play or delete the element. 
+The third paper prototype in the list combines mime pattern elements with more standard WIMP elements to streamline the process, it can be seen in figure \ref{standard third prototype}. On the right of the screen is a lever that is activated by grabbing the orange part of the lever and pulling it downwards causing the user the leave this screen. The record button is a pushbutton that the user activates by moving his hand forward over it. This action activates the record screen as seen in figure \ref{record third prototype}. The window shown is what is going to be recorded, the red one shows where the program will count down from 3 until the recording starts allowing the user for some time to get to his start position. All other UI elements are grayed out to indicate that they are not available to interact with. Once the recording is finished the program returns to the screen in figure \ref{standard third prototype}. When this is activated the screen changes to  On the left is a scrollbar that contains elements that represent previous recordings. These show a static representation of their recording. On the right of it there is a scroll wheel in orange with which the user can scroll through the scrollbar by simply hover his hand above it. When the user stops scrolling the elements are locked into a position as is it is shown in \ref{standard third prototype}. By hovering over it the user can slide the top element into the "THRASH" or "PLAY" area to play or delete the element. 
 
 {\large COMMENT: Is this really necessary in such detail?}
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_5_3_standard.png}
 		\caption{\emph{The standard screen of the third paper prototype}}
-		\label{The standard screen of the third paper prototype}
+		\label{standard third prototype}
 	\end{center}
 \end{figure}
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_6_3_record.png}
 		\caption{\emph{The record screen of the third paper prototype}}
-		\label{The record screen of the third paper prototype}
+		\label{record third prototype}
 	\end{center}
 \end{figure}
 
-The last paper prototype is a combination of the hints pattern where the user has to close his hand over the element with which he wants to interact to open een typical WIMP element called a context menu with which the user can interact. The user can only see images of his hands as discussed earlier in this chapter. It start af with a small tutorial screen as seen in \textbf{ fig 4}, when the user closes his hand the context menu as seen in \textbf{ fig 5} when the user slides his closed fist towards any of the elements it reacts as seen in \textbf{ fig 6} to indicate the the option is chosen. Throughout the prototype the user can interact with the chosen recording as seen in \textbf{ fig 7}, in this instance he can choose between playing the recording, deleting it or canceling the current menu.
+The last paper prototype is a combination of the hints pattern where the user has to close his hand over the element with which he wants to interact to open een typical WIMP element called a context menu with which the user can interact. The user can only see images of his hands as discussed earlier in this chapter. It start af with a small tutorial screen as seen in \textbf{ fig 4}, when the user closes his hand the context menu as seen in \textbf{ fig 5} when the user slides his closed fist towards any of the elements it reacts as seen in \textbf{ fig 6} to indicate the the option is chosen. Throughout the prototype the user can interact with the chosen recording as seen in \textbf{ fig 7}, in this instance he can choose between playing the recording, deleting it or canceling the current menu.\\
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_7_6_tutorial_1.png}
 		\caption{\emph{The first tutorial screen of the last paper prototype}}
 		\label{The first tutorial screen of the last paper prototype}
 	\end{center}
@@ -221,7 +221,7 @@ The last paper prototype is a combination of the hints pattern where the user ha
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_8_6_tutorial_2.png}
 		\caption{\emph{The second tutorial screen of the last paper prototype}}
 		\label{The second tutorial screen of the last paper prototype}
 	\end{center}
@@ -229,7 +229,7 @@ The last paper prototype is a combination of the hints pattern where the user ha
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_9_6_tutorial_3.png}
 		\caption{\emph{The third tutorial screen of the last paper prototype}}
 		\label{The third tutorial screen of the last paper prototype}
 	\end{center}
@@ -237,7 +237,7 @@ The last paper prototype is a combination of the hints pattern where the user ha
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{KUL.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_10_6_example.png}
 		\caption{\emph{An example of how the user would interact with and element of the last paper prototype}}
 		\label{An example of how the user would interact with and element of the last paper prototype}
 	\end{center}
@@ -273,7 +273,7 @@ Though we had previously established that the schadow was the most naturel way o
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{figures/1_screen_with_user.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/1_screen_with_user.png}
 		\caption{\emph{The regular view of the end design of the UI}}
 		\label{The regular view of the end desing of the UI}
 	\end{center}
@@ -301,7 +301,7 @@ The rope activates the screen seen in \textbf{ fig 8}. In this screen a separate
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{figures/4_record_getready.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/4_record_getready.png}
 		\caption{\emph{First view of the recording screen}}
 		\label{The regular view of the end desing of the UI}
 	\end{center}
@@ -309,7 +309,7 @@ The rope activates the screen seen in \textbf{ fig 8}. In this screen a separate
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{figures/6_record_start.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/6_record_start.png}
 		\caption{\emph{View when the program starts recording, between this and the first view there is a countdown from 3, after the user stands still for a certain amount of time to text in the window will read "Done!"}}
 		\label{The regular view of the end design of the UI}
 	\end{center}
@@ -319,7 +319,7 @@ As said before the scrollbar contains elements that are each linked to a recordi
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=16cm, height=9cm]{figures/11_replay_recording.png}
+		\includegraphics[width=12.5cm, height=7cm]{figures/11_replay_recording.png}
 		\caption{\emph{The recorded element six is replayed to the user by hovering over it with any hand.}}
 		\label{replay of element six}
 	\end{center}
