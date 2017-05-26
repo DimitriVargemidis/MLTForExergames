@@ -176,58 +176,7 @@ void UI::drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absfram
 	height = rct.bottom;
 
 	Screen->drawFrames(relframes, absframes);
-	/*
-	std::vector<Frame> * frames = &absframes;
-
-	drawUI();
-
-	if(!drawAbsCoord)
-	{
-		frames = &relframes;
-
-	}
 	
-
-	for (int j = frames->size()-1; j > -1; --j)
-	{
-		std::vector<Joint> joints = (*frames)[j].getJoints(); 
-		std::vector<D2D1_POINT_2F> jointPoints(JointType_Count);
-		
-		for (int i = 0; i < joints.size(); ++i)
-		{
-			jointPoints[i] = graphics.BodyToScreen(joints[i].Position, width, height, m_pCoordinateMapper, cDepthWidth, cDepthHeight);
-			
-			
-
-			if (j == 0 && drawAbsCoord)
-			{
-				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
-			}
-			//code to show coordinates of 3 joints
-			/*
-			if (j == 1)
-			{
-				ShowJointCoordinates(joints, 0);
-			}
-			else
-			{
-				ShowJointCoordinates(joints, 1);
-			}
-			
-		}
-
-
-		if(!drawAbsCoord)
-		{
-			scaleSkeleton(jointPoints, 0.8);
-		}
-
-		graphics.DrawBody(joints, jointPoints,j);
-
-	}
-*/
-	
-
 	HRESULT hr = graphics.GetRenderTarget()->EndDraw();
 
 	// Device lost, need to recreate the render target
@@ -276,25 +225,6 @@ void UI::createScreen()
 	Screen->setUI(shared_ptr_this, width, height, m_pCoordinateMapper,cDepthWidth, cDepthHeight);
 	Screen->createScreen(width, height);
 
-}
-
-void UI::scaleSkeleton(std::vector<D2D1_POINT_2F>& jointPoints, float multiplier)
-{
-	/*
-	D2D1_POINT_2F center;
-	center.x = jointPoints[JointType_SpineMid].x;
-	center.y = jointPoints[JointType_SpineMid].y;
-
-	for (int j = 0; j < jointPoints.size(); ++j)
-	{
-		//Convert to coordinates relative to the spine
-		if(j != JointType_SpineMid)
-		{
-			jointPoints[j].x = center.x + (jointPoints[j].x - center.x)*multiplier;
-			jointPoints[j].y = center.y + (jointPoints[j].y - center.y)*multiplier;
-		}
-	}
-	*/
 }
 
 /// <summary>

@@ -79,17 +79,14 @@ public:
 	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes); //duplicate
 	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
 
-	void updateHitboxes();  //duplicate
+	void updateHitboxes(); 
 
 	void changeButtonColor(int state);
 
 	void setMain(std::shared_ptr<Main> m);
 	void setModel(std::shared_ptr<Model> m); 
 
-	void createScreen(); //duplicate
-
-	void scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, float multiplier);//move
-
+	void createScreen(); 
 
 	/// <summary>
 	/// Draws one bone of a body (joint to joint)
