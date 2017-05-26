@@ -9,8 +9,8 @@
 \usepackage{graphicx}
 \usepackage[latin1]{inputenc}		% om niet ascii karakters rechtstreeks te kunnen ingeven
 %\usepackage[utf8]{inputenc}		% commentarieer deze regel uit als je utf8 encoded files gebruikt in plaats van latin1
-%\usepackage{natbib}
-\usepackage[round, sort, numbers, authoryear]{natbib}
+\usepackage[round, sort, numbers]{natbib}
+\setcitestyle{square}
 \usepackage{listings}         	% voor het weergeven van broncode
 \usepackage{verbatim}						% weergeven van code, commando's, ...
 \usepackage{hyperref}						% maak PDF van de thesis navigeerbaar
@@ -86,7 +86,8 @@ part of physical therapy\phantom{tj}}
 %\appendix
 %\input{appendix1}
 
-\bibliographystyle{abbrvnat}
+\bibliographystyle{vancouver}
+%\bibliographystyle{abbrvnat}
 \bibliography{litlist}
 
 \includepdf{back_fiiw_groepT_eng.pdf}
