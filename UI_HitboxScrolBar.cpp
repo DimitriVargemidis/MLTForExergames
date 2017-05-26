@@ -18,7 +18,7 @@ UI_HitboxScrolBar::UI_HitboxScrolBar(float Xcenter, float Ycenter, float width, 
 	topFiller = std::make_shared<UI_Object>(Xcenter, Ycenter - height, width_UI_Element, height, D2D1::ColorF::White);
 	bottomFiller = std::make_shared<UI_Object>(Xcenter, Ycenter + height, width_UI_Element, height, D2D1::ColorF::White);
 
-	delayMoveLimit = height_UI_Element*0.1; //the delay before the scroll starts is 75% of the height of 1 UI_element
+	delayMoveLimit = height_UI_Element*0.1; //the delay before the scroll starts is 10% of the height of 1 UI_element
 }
 
 UI_HitboxScrolBar::~UI_HitboxScrolBar()

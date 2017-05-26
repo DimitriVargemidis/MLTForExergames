@@ -80,14 +80,19 @@ private:
 	float height_UI_Element = 100;	//height of the UI objects within the scrollbar
 	float XoffsetDisplay = 0;		//offset van de 
 
+	//NOT IMPLEMENTED
+	//Idea for scroll delay based on the frames in which the hand moves continuesly in the same direction 
 	float delayDownCounter = 0;		//The counter to decide when the movement downwards is initiated
 	float delayUpCounter = 0;		//The counter to decide when the movement upwards is initiated
 	float delayLimit = 5;
 
+	// The counters for the delay based on the distance the user moves within the scrollbar
 	float delayMoveDownCounter = 0;		//The counter to decide when the movement downwards is initiated
 	float delayMoveUpCounter = 0;		//The counter to decide when the movement upwards is initiated
 	float delayMoveLimit;
 
+	//NOT IMPLEMENTED!!
+	//idea of building in a delay time before a opposite scroll is performe 
 	std::chrono::steady_clock::time_point TimeLastMoveDown = Clock::now();			//The time when the last move down was, to set delay between move up and down
 	std::chrono::steady_clock::time_point TimeLastMoveUp= Clock::now();		//The time when the last move up was, to set delay between move up and down
 	long long delayTimeAfterMoveLimit = 500;

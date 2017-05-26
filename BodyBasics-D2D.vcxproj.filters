@@ -153,7 +153,6 @@
     <ClInclude Include="UI_Hitbox.h">
       <Filter>UI_data\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="ActionTrigger.h" />
     <ClInclude Include="Abstr_UI_HitboxSlideButton.h">
       <Filter>UI_data\Controller</Filter>
     </ClInclude>
@@ -193,19 +192,21 @@
     <ClInclude Include="UI_BitmapObject.h">
       <Filter>UI_data\View</Filter>
     </ClInclude>
+    <ClInclude Include="ActionTrigger.h">
+      <Filter>UI_data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
-    <Image Include="Images\D.png">
+    <Image Include="Images\recordRopeStd.png">
       <Filter>UI_data\Images</Filter>
     </Image>
-    <Image Include="Images\open.png">
+    <Image Include="Images\recordRopeHandActive.png">
       <Filter>UI_data\Images</Filter>
     </Image>
-    <Image Include="Images\recordRopeStd.png" />
-    <Image Include="Images\recordRopeHover.png" />
-    <Image Include="Images\recordRopeHandActive.png" />
-    <Image Include="Images\MechAtlas.png" />
+    <Image Include="Images\recordRopeHover.png">
+      <Filter>UI_data\Images</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="libraries">
