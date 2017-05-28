@@ -1,13 +1,13 @@
 \chapter{Implementation}
 
-The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. On a hardware level, the Kinect 2.0 camera requires the installation of a driver in order to function properly. This comes as part of the \emph{Kinect for Windows SDK 2.0}. Microsoft's download page states the system requirements for using the Kinect 2.0 camera. These requirements include: a 64-bit processor, dual-core 3.1 GHz or faster processor, USB 3.0, 4 GB of RAM or more, graphics card that supports DirectX 11, Windows 8 or 8.1, Windows Embedded 8 or Windows 10.\\
+The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. The implementation consist of three big parts: graphical user interface, back-end software and gesture recognition.\\
 
 
 \section{Graphical user interface}
 
 
 
-In this chapter the implementation of the UI is discussed. First the used technologies are given, then the class diagram is discussed per class and last the general flow of the program is described.
+In this chapter the implementation of the UI is discussed. First the used technologies are given, then the class diagram is discussed per class and last the general flow of the program is described.\\
 
 {\large COMMENT: zou ik deze dislaimer houden? , de UML moet echt veel groter} \\
 
@@ -23,7 +23,7 @@ WPF is used to easily create buttons and input fields to use as a developer's UI
 
 \subsection{Class diagram}
 
- The program is build out of an uncopyrighted example by Microsoft called "BodyBasics-D2D" that contained all code to draw 2D skeletons of people seen by the kinect 3D camera on an empty background. The original program had all of its code centered into one class but has been refactored into a more defined structure as is seen in Figure \ref{fig: gui_classdiagram}. The original code has been spread over the Main, UI, Model and D2D\textunderscore Graphics into a kind of Model-View structure with the Main class initiating the resources for the kinect, creating the UI and Model class and starting the program loop. The UI received all the elements retaining to the view and controller, while the model received all code retaining to the processing of the kinect imput. The D2D\textunderscore Graphics serves as an interface between the UI classes and the D2Direct canvas.
+The program is build out of an uncopyrighted example by Microsoft called \emph{BodyBasics-D2D} that contained all code to draw 2D skeletons of people seen by the Kinect camera on an empty background. The original program had all of its code centered into one class but has been refactored into a more defined structure as is seen in Figure \ref{fig: gui_classdiagram}. The original code has been spread over the Main, UI, Model and D2D\textunderscore Graphics into a Model-View structure with the Main class initiating the resources for the Kinect, creating the UI and Model class and starting the program loop. The UI received all the elements retaining to the view and controller, while the model received all code retaining to the processing of the Kinect input. The D2D\textunderscore Graphics serves as an interface between the UI classes and the D2Direct canvas.
 
 \begin{figure}[H]
 	\begin{center}
@@ -78,35 +78,63 @@ Whenever something changes in the Model structure that affects the representatio
 
 \section{Back-end software}
 
-After initialization of variables like the instances responsible for the user interface, the model and the communication with the Kinect camera, the program locks into an infinite loop while the application is running. This main loop consists of three processes: fetching new data from the Kinect camera, analyzing this data in order to use it for recording or predicting gestures and updating the GUI with relevant changes.\\
+\subsection{Class diagram}
 
-It is important that none of these three processes block the continuous flow of the main loop. The update rate of the interface is only as fast as the rate with which the main loop is executed. If it is slowed down with a blocking or long-running loop, the GUI appears to stutter of freeze and no new data is collected from the Kinect camera.\\
+The focus of the application is reflected by the structure of the code. The class diagram shows a model-view pattern to make a distinction between the graphical interface of the application and the back-end (see figure \ref{fig: backend_classdiagram}).\\
 
-The Kinect camera can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=14cm]{ClassDiagramBackEnd.png}
+\caption{\emph{The class diagram of the application, focusing on the back-end}}
+\label{fig: backend_classdiagram}
+\end{center}
+\end{figure}
+
+The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has an $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
+
+When the Kinect measures all of the \classname{Joint}s at one specific point in time, these 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is nothing more than a quick succession of pictures, an instance of \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
+
+In order to improve the application's ability to recognize an exercise, each of the exercises must be trained more than once by the physical therapist. For each exercise that is trained, an instance of \classname{Gesture} is created. The \classname{Gesture}s that contain data about different executions of the same exercise are grouped into a \classname{GestureClass}. In other words, one \classname{GestureClass} object contains all trainings of the same exercise.\\
+
+After setting up a \classname{Project} object, it contains all data that is needed for playing a game using the application. It has a \classname{map} that maps a label for each exercise to a \classname{GestureClass} and the actions linked to that \classname{GestureClass}. An \classname{Action} contains information about the keyboard key that needs to be pressed and if that key should be held down or be quickly pressed and released. The \classname{Model} class forms the core of the application. It controls the flow of the program and contains all important objects, such as the \classname{Project} and the \classname{GestureClass}es. By storing the \classname{GestureClass} objects in \classname{Model} rather than \classname{Project}, it is possible to reuse the same \classname{GestureClass}es in multiple \classname{Project}s.\\
+
+\classname{SVMInterface} takes all gesture data and converts it to a format that is accepted by the LibSVM library \cite{LibSVM}. This is an existing library that provides a C$++$ support vector machine implementation and is used in this application for gesture recognition.\\
+
+To prevent having to train all exercises again each time the application is started, all necessary data is saved into files in the data folder using the \classname{Filewriter} implementation. This includes the data of the \classname{Gesture}s, \classname{GestureClass}es, \classname{Project} and the computed SVM model. The \classname{Filereader} is responsible for reading data from the saved data files when the application is started.\\
+
+
+\subsection{Flow of the program}
+
+After initialization of variables like the instances responsible for the user interface and the communication with the Kinect camera, the program locks into an infinite loop while the application is running. This main loop consists of three processes: fetching new data from the Kinect camera, analyzing this data in order to use it for recording or predicting gestures and updating the GUI with relevant changes.\\
+
+It is important that none of these three processes block the continuous flow of the main loop. The update rate of the interface is only as fast as the rate with which the main loop is executed. If it is slowed down with a blocking or long-running loop, the GUI appears to stutter or freeze and no new data is collected from the Kinect camera.\\
+
+The Kinect can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
 
 To control the flow of the program without reverting to blocking loops, software flags are used. These flags keep track of the current state of the program. By evaluating the state of the flags, it is possible to indicate if the program is predicting a gesture, recording a gesture or animating specific graphical elements of the GUI.
 
 
 \section{Gesture recognition}
 
-It is possible to split up the implementation of gesture recognition in two parts: the recording of a gesture by the physical therapist and the prediction of a gesture executed by a patient.
+It is possible to split up the implementation of gesture recognition into two parts: the recording of a gesture by the physical therapist and the prediction of a gesture executed by a patient.
 
 
 \subsection{Recording a gesture}
 
+Code snippet \ref{code_record_gesture} shows the code for recording a gesture. When the recording of a gesture is initialized, the first frame is stored for reference. Actual recording starts when the users starts moving. This means that the first frame is different from the current frame. Two frames are considered equal when all of the joints of both frames in all three dimensions have a difference of less than 12 centimeters. In other words, if the person moved more than that, the frames are not equal. The threshold of 12 centimeters is chosen due limitations of the Kinect camera, where small variations in measurements are possible. Additionally, it is hard for a person to stay perfectly still, so the choice of the threshold can eliminate recognizing small tremblings as the user having moved.\\
+
+When actual recording is initialized, the frames are stored in a buffer. Together, the frames of this buffer form an entire gesture. If the buffer is filled up without the user moving, this means that the user is recording a posture rather than a gesture. However, when the user moves, recording can be ended by standing still in an ending position of choice for approximately 1 second.\\
+
 \begin{lstlisting}[caption=method to record a gesture, label=code_record_gesture]
 void Model::recordGesture(Frame & frame) {
 	if (!initialized) {
-		//Set the neutral frame on the first call
-		frameNeutral.setFrame(frame);
+		//Set the first frame on the first call
+		firstFrame.setFrame(frame);
 		initialized = true;
 	}
-	
-	//Add the frame to the buffer
-	framesBuffer.push_back(frame);
 
 	if (!startedMoving) {
-		if (! frame.equals(frameNeutral)) {
+		if (! frame.equals(firstFrame)) {
 		
 			startedMoving = true;
 			framesBuffer.clear();
@@ -118,6 +146,9 @@ void Model::recordGesture(Frame & frame) {
 			return;
 		}
 	}
+	
+	//Add the frame to the buffer
+	framesBuffer.push_back(frame);
 
 	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY))) {
 		addRecordedGesture();
@@ -128,7 +159,11 @@ void Model::recordGesture(Frame & frame) {
 
 \subsection{Predicting a gesture}
 
-Code snippet \ref{code_gesture_executed} shows a piece of code.
+Code snippet \ref{code_gesture_executed} shows a method for predicting a gesture. This method is called recursively. Gestures are split up into a number of smaller parts, referred to in the code as \classname{NB\textunderscore OF\textunderscore LABEL\textunderscore DIVISIONS}. If this constant equals four, it means that a gesture is split up into four parts. For instance, if the base label of a gesture equals one, predictions for labels one, two, three and four all relate to one of the parts of the gesture.\\
+
+Continuing with this example, if during prediction a part of a gesture with label four is found, the recursive method \classname{isGestureExecuted} is called. It checks if shortly before label four is found, label three is predicted as well. If label three is predicted, the method is called recursively to check for label two. This goes on until the base label is reached. At this point, the recursion is ended and the gesture is recognized as being successfully executed. All parts of the gesture must be executed in the right order and fast enough. If the gesture is executed too slow, the buffer with predicted labels is cleared.\\
+
+The method allows that one label is not predicted correctly. There are many reasons this can happen, such as noisy measurements, the user moving differently or not having trained the gesture sufficiently. In the case of the considered example, if labels one, three and four are predicted, and label two is missing, the gesture is still considered to be executed successfully. This can improve user experience while playing a game, as a gesture has less of a chance of being not recognized wrongfully.\\
 
 \begin{lstlisting}[caption=method to verify if a gesture with given label is executed, label=code_gesture_executed]
 bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter) {
@@ -143,7 +178,7 @@ bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCoun
 	int nextLabelToCheck = checkLabel - 1;
 	for (int i = posInBuffer; i >= 0; i--) {
 		if (labelsBuffer.at(i) == nextLabelToCheck)
-			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter + 1, 0);
+			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter++, badCounter);
 	}
 
 	//If this point is reached, a label that is one less than the given
@@ -153,6 +188,6 @@ bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCoun
 	if (badCounter > 0)
 		return false;
 		
-	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter + 1, badCounter + 1);
+	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter++, badCounter++);
 }
 \end{lstlisting}
