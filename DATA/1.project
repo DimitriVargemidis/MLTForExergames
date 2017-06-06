@@ -2,9 +2,6 @@ name Project
 svm 1
 gestclass 10 1
 gestclass 20 2
-action 20 39 1
+action 20 39 0
 gestclass 30 3
-action 30 37 1
-gestclass 40 4
-action 40 32 0
-action 40 32 1
+action 30 37 0

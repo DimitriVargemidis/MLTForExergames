@@ -167,3 +167,13 @@ svm_node * Frame::toArray() const
 	rawArray[indexCount].value = 0;
 	return rawArray;
 }
+
+void Frame::setLabel(int labelToSet)
+{
+	label = labelToSet;
+}
+
+const int Frame::getLabel() const
+{
+	return label;
+}

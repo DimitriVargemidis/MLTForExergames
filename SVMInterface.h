@@ -16,6 +16,8 @@ namespace SVMInterface {
 
 	svm_model * train(std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap);
 	int test(svm_model & model, Frame & frame);
+	
+	void prepareLabels(std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap);
 };
 
 #endif //SVMINTERFACE_H

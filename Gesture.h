@@ -10,6 +10,7 @@ class Gesture {
 private:
 	
 	std::vector<Frame> frames;
+	std::vector<int> labelOrder;
 	int gestureID = 0;
 	std::string name = "Gesture";
 
@@ -20,7 +21,7 @@ public:
 	Gesture(Frame & frameToAdd);
 	Gesture(std::vector<Frame> & framesToAdd = std::vector<Frame>());
 
-	const std::vector<Frame> & getFrames() const;
+	std::vector<Frame> & getFrames();
 	void addFrame(Frame & frameToAdd);
 	void clearFrames();
 	const int getNumberOfFrames() const;
@@ -31,6 +32,11 @@ public:
 
 	std::string getName();
 	void setName(std::string & nameToSet);
+
+	void setLabelOrder(std::vector<int> labelOrderToSet);
+	void addLabel(int labelToAdd);
+	std::vector<int> & getLabelOrder();
+
 	
 };
 
