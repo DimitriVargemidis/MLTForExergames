@@ -85,8 +85,9 @@ public:
 	std::vector<Frame>	getRelevantFramesFromBuffer(int offset);
 
 	void				addToLabelsBuffer(int label);
-	bool				isGestureExecuted(int offsetLabel, int posInBuffer, int recursiveCounter, int badCounter);
 	void				resizeLabelsBuffer();
+	bool				isGestureExecuted(int offsetLabel, int posInBuffer, int recursiveCounter, int badCounter);
+	bool				getExecutedGesture(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter);
 	void				predictAndExecute(int label);
 
 	std::shared_ptr<GestureClass>		getGestureClassByID(const int & ID);

@@ -21,7 +21,7 @@ void Model::updateCountDown()
 	{
 		countDownInitiated = true;
 		countDownRef = Clock::now();
-		printf("Get ready to record\n");
+		//printf("Get ready to record\n");
 		countDown = 4;
 		updateUI = true;
 	}
@@ -32,26 +32,26 @@ void Model::updateCountDown()
 
 		if (time >= 1000 && countDown > 3)
 		{
-			printf("3 after %ld \n", time);
+			//printf("3 after %ld \n", time);
 			--countDown;
 			updateUI = true;				//the UI will update it's state based on the countDown parameter
 		}
 		else if (time >= 2000 && countDown > 2)
 		{
-			printf("2 after %ld \n", time);
+			//printf("2 after %ld \n", time);
 			--countDown;
 			updateUI = true;				//the UI will update it's state based on the countDown parameter
 		}
 		else if (time >= 3000 && countDown > 1)
 		{
-			printf("1 after %ld \n", time);
+			//printf("1 after %ld \n", time);
 			--countDown;
 			updateUI = true;				//the UI will update it's state based on the countDown parameter
 		}
 		else if ((time >= 4000 && countDown > 0))
 		{
 
-			printf("GO after %ld \n", time);
+			//printf("GO after %ld \n", time);
 			--countDown;
 			framesBuffer.clear();
 			recording = true;
@@ -62,7 +62,7 @@ void Model::updateCountDown()
 		}
 		else if (recording == false && countDown == 0)
 		{
-			printf(" recording is done \n");
+			//printf(" recording is done \n");
 			--countDown;
 
 			countDownRef = Clock::now();
@@ -71,7 +71,7 @@ void Model::updateCountDown()
 		}
 		else if (time >= 500 && countDown == -1)
 		{
-			printf(" delete screen \n");
+			//printf(" delete screen \n");
 			--countDown;
 
 			refresh = false;
@@ -190,6 +190,11 @@ void Model::addToLabelsBuffer(int label)
 	}
 }
 
+void Model::resizeLabelsBuffer()
+{
+	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
+}
+
 bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
 {
 	//The base label exists and is linked to a posture, so the posture has been executed.
@@ -223,13 +228,28 @@ bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCoun
 	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter + 1, badCounter + 1);
 }
 
-void Model::resizeLabelsBuffer()
+bool Model::getExecutedGesture(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter)
 {
-	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
+	int labelOrderPosition = SVMInterface::NB_OF_LABEL_DIVISIONS - recursiveCounter;
+	int labelToCheck = gesture->getLabelOrder().at(labelOrderPosition);
+
+	for (int i = posInBuffer; i >= 0; i--)
+	{
+		if (labelsBuffer.at(i) == labelToCheck)
+		{
+			if (labelOrderPosition <= 0)
+			{
+				return true;
+			}
+			return getExecutedGesture(gesture, i - 1, recursiveCounter + 1);
+		}
+	}
+	return false;
 }
 
 void Model::predictAndExecute(int label)
 {
+	/*
 	//Find out what base label the given label belongs to.
 	int baseLabel = -1;
 	if (activeProject->containsLabel(label))
@@ -271,19 +291,54 @@ void Model::predictAndExecute(int label)
 			activeProject->activate(predictedLabel);
 		}
 	}
+	*/
+
+	int executedLabel = -1;
+	for (const auto & keyValue : activeProject->getProjectMap())
+	{
+		for (std::shared_ptr<Gesture> gesture : keyValue.second.first->getGestures())
+		{
+			if (getExecutedGesture(gesture, labelsBuffer.size() - 1, 1))
+			{
+				executedLabel = keyValue.first;
+			}
+		}
+	}
+
+	if (executedLabel != -1)
+	{
+		previousPredictedLabel = predictedLabel;
+		predictedLabel = executedLabel;
+
+		Console::print("Predicted label: ");
+		Console::printsl(predictedLabel);
+		labelsBuffer.clear();
+
+		if (previousPredictedLabel < 0)
+		{
+			activeProject->activate(predictedLabel);
+		}
+		else if (previousPredictedLabel != predictedLabel)
+		{
+			activeProject->deactivate(previousPredictedLabel);
+			activeProject->activate(predictedLabel);
+		}
+		else if (previousPredictedLabel == predictedLabel)
+		{
+			activeProject->activate(predictedLabel);
+		}
+	}
 }
 
 std::shared_ptr<GestureClass> Model::getGestureClassByID(const int & ID)
 {
 	for (int i = 0; i < gestureClasses.size(); ++i)
 	{
-		//printf("Model.cpp 280: i is %d", i);
 		if (gestureClasses[i] != nullptr)
 		{
 			if (gestureClasses[i]->getGestureClassID() == ID)
 				return gestureClasses[i];
 		}
-		
 	}
 
 	//give the last gestureClass back
@@ -300,12 +355,6 @@ void Model::displayFrames()
 
 	relFrames.clear();
 	absFrames.clear();
-	/*
-	for (const auto & keyValue : activeProject->getProjectMap())
-	{
-		relFrames.push_back(keyValue.second.first->getGestures().back()->getFrames().back());
-	}
-	*/
 }
 
 void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
@@ -397,7 +446,15 @@ void Model::recordGesture(Frame & frame)
 		{
 			Console::print("Motion detected -- start recording frames");
 			startedMoving = true;
-			framesBuffer.clear();
+			if (framesBuffer.size() > 20)
+			{
+				std::vector<Frame> latestFrames = getRelevantFramesFromBuffer(10);
+				framesBuffer.clear();
+				for (Frame frame : latestFrames)
+				{
+					framesBuffer.push_back(frame);
+				}
+			}
 		}
 		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY)
 		{
@@ -411,7 +468,8 @@ void Model::recordGesture(Frame & frame)
 	}
 
 	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&
-		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY)))
+		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY)) &&
+		framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY/2)))
 	{
 		addRecordedGesture();
 	}
@@ -441,7 +499,7 @@ bool Model::getUpdateUI()
 
 void Model::addRecordedGesture()
 {
-	std::shared_ptr<Gesture> gesture = std::make_shared<Gesture>( getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-10) );
+	std::shared_ptr<Gesture> gesture = std::make_shared<Gesture>( getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-20) );
 	addGesture(activeGestureClassLabel, gesture);
 	recording = false;
 	initialized = false;

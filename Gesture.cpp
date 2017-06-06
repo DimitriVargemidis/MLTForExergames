@@ -13,7 +13,7 @@ Gesture::Gesture(std::vector<Frame> & framesToAdd) : gestureID{ getAppGestureID(
 {
 }
 
-const std::vector<Frame> & Gesture::getFrames() const
+std::vector<Frame> & Gesture::getFrames()
 {
 	return frames;
 }
@@ -67,6 +67,21 @@ std::string Gesture::getName()
 void Gesture::setName(std::string & nameToSet)
 {
 	name = nameToSet;
+}
+
+void Gesture::setLabelOrder(std::vector<int> labelOrderToSet)
+{
+	labelOrder = labelOrderToSet;
+}
+
+void Gesture::addLabel(int labelToAdd)
+{
+	labelOrder.push_back(labelToAdd);
+}
+
+std::vector<int> & Gesture::getLabelOrder()
+{
+	return labelOrder;
 }
 
 

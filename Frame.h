@@ -9,12 +9,13 @@
 
 class Frame {
 private:
+	int label = -1;
 	HandState rightHand;
 	HandState leftHand;
 	std::vector<Joint> joints;
 
 public:
-	const float THRESHOLD_EQUALS = 0.12;
+	const float THRESHOLD_EQUALS = 0.10;
 	const static int DIMENSIONS_PER_JOINT = 3;
 	const static int NB_OF_JOINTS = 25;
 	const static int FRAME_DIMENSIONS = DIMENSIONS_PER_JOINT * NB_OF_JOINTS;
@@ -38,6 +39,9 @@ public:
 	void setLeftHand(HandState left);
 
 	svm_node * toArray() const;
+
+	void setLabel(int labelToSet);
+	const int getLabel() const;
 
 };
 

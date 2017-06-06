@@ -289,8 +289,8 @@ void D2D_Graphics::InitD2D()
 	D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 
 	//code from https://msdn.microsoft.com/en-us/library/windows/desktop/dd756692(v=vs.85).aspx
-	if (SUCCEEDED(hr))
-	{
+	//if (SUCCEEDED(hr))
+	//{
 
 		// Create a DirectWrite factory.
 		hr = DWriteCreateFactory(
@@ -298,7 +298,7 @@ void D2D_Graphics::InitD2D()
 			__uuidof(m_pDWriteFactory),
 			reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
 		);
-	}
+	//}
 	if (SUCCEEDED(hr))
 	{
 		// Create a DirectWrite text format object.
