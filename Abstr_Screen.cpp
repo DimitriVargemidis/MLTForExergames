@@ -230,6 +230,7 @@ float Abstr_Screen::getRecordingHeight()
 	return recordHeight;
 }
 
+
 void Abstr_Screen::setRecordVisualCenter(D2D1_POINT_2F center)
 {
 	
@@ -384,7 +385,7 @@ void Abstr_Screen::drawFrames(std::vector<Frame>& relframes, std::vector<Frame>&
 
 		for (int i = 0; i < joints.size(); ++i)
 		{
-			if (j == 0 && drawAbsCoord)
+			if (j == 0 && drawAbsCoord && display_UI)
 			{
 				activateHitboxes(jointPoints[i], static_cast<JointType>(i), (*frames)[j].getLeftHand(), (*frames)[j].getRightHand());
 			}
