@@ -195,40 +195,7 @@ void Model::resizeLabelsBuffer()
 	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
 }
 
-bool Model::isGestureExecuted(int checkLabel, int posInBuffer, int recursiveCounter, int badCounter)
-{
-	//The base label exists and is linked to a posture, so the posture has been executed.
-	if (activeProject->containsLabel(checkLabel) && activeProject->getGestureClass(checkLabel)->getGestures().front()->isPosture())
-	{
-		return true;
-	}
-
-	//Done enough recursive checks to confirm the gesture has been executed.
-	if (recursiveCounter >= SVMInterface::NB_OF_LABEL_DIVISIONS)
-	{
-		return true;
-	}
-
-	int nextLabelToCheck = checkLabel - 1;
-	for (int i = posInBuffer; i >= 0; i--)
-	{
-		if (labelsBuffer.at(i) == nextLabelToCheck)
-		{
-			return isGestureExecuted(nextLabelToCheck, i, recursiveCounter + 1, 0);
-		}
-	}
-
-	//A label that is one less than the last label found cannot be found in the buffer, but the
-	//gesture may still have been executed, so keep checking for the next one.
-	if (badCounter > 0)
-	{
-		return false;
-	}
-
-	return isGestureExecuted(nextLabelToCheck, posInBuffer, recursiveCounter + 1, badCounter + 1);
-}
-
-bool Model::getExecutedGesture(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter)
+bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter)
 {
 	int labelOrderPosition = SVMInterface::NB_OF_LABEL_DIVISIONS - recursiveCounter;
 	int labelToCheck = gesture->getLabelOrder().at(labelOrderPosition);
@@ -241,7 +208,7 @@ bool Model::getExecutedGesture(std::shared_ptr<Gesture> & gesture, int posInBuff
 			{
 				return true;
 			}
-			return getExecutedGesture(gesture, i - 1, recursiveCounter + 1);
+			return isGestureExecuted(gesture, i - 1, recursiveCounter + 1);
 		}
 	}
 	return false;
@@ -298,7 +265,7 @@ void Model::predictAndExecute(int label)
 	{
 		for (std::shared_ptr<Gesture> gesture : keyValue.second.first->getGestures())
 		{
-			if (getExecutedGesture(gesture, labelsBuffer.size() - 1, 1))
+			if (isGestureExecuted(gesture, labelsBuffer.size() - 1, 1))
 			{
 				executedLabel = keyValue.first;
 			}
