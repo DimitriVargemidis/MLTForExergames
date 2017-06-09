@@ -1,6 +1,44 @@
 \chapter{Implementation}
 
-The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. The implementation consists of three big parts: graphical user interface, back-end software and gesture recognition.\\
+The application is developed in C$++$ using Microsoft's Visual Studio IDE and can run on computers with a Windows operating system. On an implementation level, platform-specific features are used for saving and loading data files and running the GUI. The implementation consists of three big parts: back-end software, graphical user interface and gesture recognition.\\
+
+
+\section{Back-end software}
+
+\subsection{Class diagram}
+
+The focus of the application is reflected by the structure of the code. The class diagram shows a model-view pattern to make a distinction between the graphical interface of the application and the back-end (see figure \ref{fig: backend_classdiagram}).\\
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=14cm]{ClassDiagramBackEnd.png}
+\caption{\emph{The class diagram of the application, focusing on the back-end}}
+\label{fig: backend_classdiagram}
+\end{center}
+\end{figure}
+
+The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has an $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
+
+When the Kinect measures all of the \classname{Joint}s at one specific point in time, these 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is nothing more than a quick succession of pictures, an instance of \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
+
+In order to improve the application's ability to recognize a gesture, each of the gestures must be trained more than once by the physical therapist. For each gesture that is trained, an instance of \classname{Gesture} is created. The \classname{Gesture}s that contain data about different executions of the same gesture are grouped into a \classname{GestureClass}. In other words, one \classname{GestureClass} object contains all trainings of the same gesture.\\
+
+After setting up a \classname{Project} object, it contains all data that is needed for playing a game using the application. It has a \classname{map} that maps a label for each gesture to a \classname{GestureClass} and the actions linked to that \classname{GestureClass}. An \classname{Action} contains information about the virtual keyboard button that needs to be pressed and if that button should be held down or be quickly pressed and released. The \classname{Model} class forms the core of the application. It controls the flow of the program and contains all important objects, such as the \classname{Project} and the \classname{GestureClass}es. By storing the \classname{GestureClass} objects in \classname{Model} rather than \classname{Project}, it is possible to reuse the same \classname{GestureClass}es in multiple \classname{Project}s.\\
+
+\classname{SVMInterface} takes all gesture data and converts it to a format that is accepted by the LibSVM library \cite{LibSVM}. This is an existing library that provides a C$++$ support vector machine implementation and is used in this application for gesture recognition.\\
+
+To prevent having to train all gestures again each time the application is started, all necessary data is saved into files in the data folder using the \classname{Filewriter} implementation. This includes the data of the \classname{Gesture}s, \classname{GestureClass}es, \classname{Project} and the computed SVM model. The \classname{Filereader} is responsible for reading data from the saved data files when the application is started.\\
+
+
+\subsection{Flow of the program}
+
+After initialization of variables like the instances responsible for the user interface and the communication with the Kinect camera, the program locks into an infinite loop while the application is running. This main loop consists of three processes: fetching new data from the Kinect camera, analyzing this data in order to use it for recording or predicting gestures and updating the GUI with relevant changes.\\
+
+It is important that none of these three processes block the continuous flow of the main loop. The update rate of the interface is only as fast as the rate with which the main loop is executed. If it is slowed down with a blocking or long-running loop, the GUI appears to stutter or freeze and no new data is collected from the Kinect camera.\\
+
+The Kinect can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
+
+To control the flow of the program without reverting to blocking loops, software flags are used. These flags keep track of the current state of the program. By evaluating the state of the flags, it is possible to indicate if the program is predicting a gesture, recording a gesture or animating specific graphical elements of the GUI.
 
 
 \section{Graphical user interface}
@@ -43,20 +81,20 @@ The \classname{UI\textunderscore BitmapObject} is the last child of the \classna
 
 The \classname{Abstr\textunderscore UI\textunderscore Hitbox} class represents a rectangle that takes on different states depending on the position and state of the hands of the user. The different states that the class can attain are: \emph{hover} when a hand is hovering over the borders of the defined rectangle, \emph{handActive} when the hovering hand is in the \emph{activeHand} state, such as a closed hand and \emph{activeHandOutside} state when the user's hand moves outside of the rectangle while the hand is in the \emph{activeHand} state. The states are indicated by flags in the class.\\
 
-The \classname{action} method defines behavior for the entering, holding and leaving of a each state using enumerations. Additional flags allow the usage of special circumstances such as when the hand enters the rectangle while in the \emph{activeHand} state. This \classname{action} method is the main method that is redefined by every child to obtain more complex behavior using these states. This means that every hitbox that has a different effect on the UI must have his own class that is a child of this class. This is the reason why the strategy pattern is used. The class contains a vector of shared pointers to \classname{UI\textunderscore Object}s. The class can access and change these objects, like moving them and change their color. It is also used to have the \classname{UI\textunderscore Object}s draw themselves when the method \classname{draw} is called. Multiple hitboxes can have a pointer to the same \classname{UI\textunderscore Object}, so they can all change it. It also contains two callback functions. One is called \classname{activateFunctionCallback}, which defines the action performed on the \classname{Model} and \classname{UI} when the criteria for activation of the hitbox have been reached. The other is called \classname{updateFunctionCallback}, which defines the behavior when the data in the \classname{Model} is changed and the UI is updated accordingly.\\
+The \classname{action} method of the \classname{Abstr\textunderscore UI\textunderscore Hitbox} class defines behavior for the entering, holding and leaving of a each state using enumerations. Additional flags allow the usage of special circumstances such as when the hand enters the rectangle while in the \emph{activeHand} state. This \classname{action} method is the main method that is redefined by every child to obtain more complex behavior using these states. This means that every hitbox that has a different effect on the UI must have his own class that is a child of this class. This is the reason why the strategy pattern is used. The class contains a vector of shared pointers to \classname{UI\textunderscore Object}s. The class can access and change these objects, like moving them and change their color. It is also used to have the \classname{UI\textunderscore Object}s draw themselves when the method \classname{draw} is called. Multiple hitboxes can have a pointer to the same \classname{UI\textunderscore Object}, so they can all change it. It also contains two callback functions. One is called \classname{activateFunctionCallback}, which defines the action performed on the \classname{Model} and \classname{UI} when the criteria for activation of the hitbox have been reached. The other is called \classname{updateFunctionCallback}, which defines the behavior when the data in the \classname{Model} is changed and the UI is updated accordingly.\\
 
 %The \classname{UI\textunderscore Hitbox} class is a child of \classname{Abstr\textunderscore UI\textunderscore Hitbox} and redefines the action method to define a specific behavior when entering, holding and leaving each state. This type of hitbox changes the color of all his \classname{UI\textunderscore Objects} when the user hovers over it and again when the user enters the \emph{activeHand} state while hovering, such as closing his hand. In the former situation the activation callback function is also called. No instance of this object is currently used in the interface.\\
 %Since this class is not used, delete this paragraph?
 
 The \classname{Abstr\textunderscore HitboxSlideButton} class is a different abstract class that adds behavior to the parent class. Specifically it adds functions to calculate how far the hand that is interacting with the hitbox has moved since the last frame. This information can be used by its children to move hitboxes and \classname{UI\textunderscore Objects} relative to the hand's movement. Parameters within this class define how far the hand can move from the hitbox's original position and when the activation callback function is called.\\
 
-The \classname{UI\textunderscore HitboxScrollbar} class adds a vector of \classname{Abstr\textunderscore UI\textunderscore Hitboxes} and uses the behavior defined in \classname{UI\textunderscore HitboxSlideButton} to move them up or down according the movement of interacting hand.\\
+The \classname{UI\textunderscore HitboxScrollbar} class adds a vector of \classname{Abstr\textunderscore UI\textunderscore Hitboxes} and uses the behavior defined in \classname{Abstr\textunderscore HitboxSlideButton} to move them up or down according the movement of interacting hand.\\
 
 The \classname{UI\textunderscore HitboxLockScrollbar} class adds the act of locking each \classname{Abstr\textunderscore UI\textunderscore Hitbox} derived object in its vector into predefined positions when the user stops scrolling. It also manages the behavior of the orange selection box, as discussed in chapter \ref{chapter: design}, where this class of hitbox is used as the scrollbar in the end design.\\
 
 The \classname{UI\textunderscore HitboxSlideButton} defines the behavior to slide a button until an activation point is reached. In this specific case, the user has to put his hand into the \emph{handActive} state, before he is able to slide the button. The rope described in chapter \ref{chapter: design} is an instance of this class.\\
 
-The \classname{UI\textunderscore HitboxHoverSlideButton} does the same as the \classname{UI\textunderscore HitboxSlideButton}, but doesn't require the user to put his hand into the \emph{handActive} state. A hand hovering in any state on the right side of the hitbox rectangle has it sliding towards the activation point. This class is used for the delete slide button for the recorded elements in the scrollbar.\\
+The \classname{UI\textunderscore HitboxHoverSlideButton} does the same as the \classname{UI\textunderscore HitboxSlideButton}, but doesn't require the user to put his hand into the \emph{handActive} state. A hand hovering in any state on the right side of the hitbox rectangle activates the sliding towards the activation point. This class is used for the delete slide button for the recorded elements in the scrollbar.\\
 
 The \classname{Abstr\textunderscore Screen} class is an abstract class for the creation of different screens. It holds a vector of shared pointers to all hitboxes on the screen, defines how the puppet of the user is drawn and provides functions to draw background and top UI elements to be defined by his children. For every different screen, a new child of this abstract class needs to be added.\\
 
@@ -70,54 +108,20 @@ At the start of the program, after the creation of the \classname{UI} and \class
 Whenever something changes in the \classname{Model} structure that affects the representation in the UI, a flag is set and during execution of the  \classname{processBody} method, the \classname{updateHitboxes} function is called on the \classname{UI} object before the UI is drawn. The \classname{UI} passes this on to the \classname{Abstr\textunderscore Screen} child, which calls an \classname{update} function on all of the hitboxes it contains. Each hitbox calls their own \classname{updateFunctionCallback} to retrieve all information related to them from the \classname{Model} and process it. Hitboxes that contain other hitboxes call the \classname{update} function recursively.
 
 
-\section{Back-end software}
-
-\subsection{Class diagram}
-
-The focus of the application is reflected by the structure of the code. The class diagram shows a model-view pattern to make a distinction between the graphical interface of the application and the back-end (see figure \ref{fig: backend_classdiagram}).\\
-
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=14cm]{ClassDiagramBackEnd.png}
-\caption{\emph{The class diagram of the application, focusing on the back-end}}
-\label{fig: backend_classdiagram}
-\end{center}
-\end{figure}
-
-The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has an $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
-
-When the Kinect measures all of the \classname{Joint}s at one specific point in time, these 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is nothing more than a quick succession of pictures, an instance of \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
-
-In order to improve the application's ability to recognize a gesture, each of the gestures must be trained more than once by the physical therapist. For each gesture that is trained, an instance of \classname{Gesture} is created. The \classname{Gesture}s that contain data about different executions of the same gesture are grouped into a \classname{GestureClass}. In other words, one \classname{GestureClass} object contains all trainings of the same gesture.\\
-
-After setting up a \classname{Project} object, it contains all data that is needed for playing a game using the application. It has a \classname{map} that maps a label for each gesture to a \classname{GestureClass} and the actions linked to that \classname{GestureClass}. An \classname{Action} contains information about the virtual keyboard button that needs to be pressed and if that button should be held down or be quickly pressed and released. The \classname{Model} class forms the core of the application. It controls the flow of the program and contains all important objects, such as the \classname{Project} and the \classname{GestureClass}es. By storing the \classname{GestureClass} objects in \classname{Model} rather than \classname{Project}, it is possible to reuse the same \classname{GestureClass}es in multiple \classname{Project}s.\\
-
-\classname{SVMInterface} takes all gesture data and converts it to a format that is accepted by the LibSVM library \cite{LibSVM}. This is an existing library that provides a C$++$ support vector machine implementation and is used in this application for gesture recognition.\\
-
-To prevent having to train all gestures again each time the application is started, all necessary data is saved into files in the data folder using the \classname{Filewriter} implementation. This includes the data of the \classname{Gesture}s, \classname{GestureClass}es, \classname{Project} and the computed SVM model. The \classname{Filereader} is responsible for reading data from the saved data files when the application is started.\\
-
-
-\subsection{Flow of the program}
-
-After initialization of variables like the instances responsible for the user interface and the communication with the Kinect camera, the program locks into an infinite loop while the application is running. This main loop consists of three processes: fetching new data from the Kinect camera, analyzing this data in order to use it for recording or predicting gestures and updating the GUI with relevant changes.\\
-
-It is important that none of these three processes block the continuous flow of the main loop. The update rate of the interface is only as fast as the rate with which the main loop is executed. If it is slowed down with a blocking or long-running loop, the GUI appears to stutter or freeze and no new data is collected from the Kinect camera.\\
-
-The Kinect can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
-
-To control the flow of the program without reverting to blocking loops, software flags are used. These flags keep track of the current state of the program. By evaluating the state of the flags, it is possible to indicate if the program is predicting a gesture, recording a gesture or animating specific graphical elements of the GUI.
-
-
 \section{Gesture recognition}
 
 It is possible to split up the implementation of gesture recognition into two parts: the recording of a gesture by the physical therapist and the prediction of a gesture executed by a patient.
 
 
-\subsection{Recording a gesture}
+\subsection{Recording gestures}
 
 Code snippet \ref{code_record_gesture} shows the code for recording a gesture. Recording starts when the user starts moving. In order to know when the user moves, the first frame is stored in the variable \classname{firstFrame}. The variable can then be used to compare the first frame to the current frame. If the two frames are not equal, the user has moved. Two frames are considered equal when all of the joints of both frames in all three dimensions have a difference of less than 10 centimeters. In other words, if the person moved more than that, the frames are not equal. The threshold of 10 centimeters is chosen due to limitations of the Kinect camera, where small variations in measurements are possible due to noise. Additionally, it is hard for a person to stay perfectly still, so the choice of the threshold can eliminate recognizing small tremblings as the user having moved.\\
 
-When actual recording is initialized, the frames measured by the Kinect camera are stored in a buffer at a rate of 30 frames per second. The user now has two options. The first option is to stand still in a certain posture.        Together, the frames of this buffer form an entire gesture. If the buffer is filled up without the user moving, this means that the user is recording a posture rather than a gesture. However, when the user moves, recording can be ended by standing still in an ending position of choice for approximately 1 second.\\
+When actual recording is initialized, the frames measured by the Kinect camera are stored in a buffer at a rate of 30 frames per second. The user now has two options.\\
+
+The first option is to stand still in a certain posture. If the user does not move for approximately 1.3 seconds, the recording stops and the frames stored in the buffer represent the recorded posture. The constant \classname{NOT\textunderscore MOVING\textunderscore FRAME\textunderscore DELAY} contains the duration of the delay and is expressed in number of frames. The chosen number of frames translates to a delay of 1.3 seconds, as mentioned before. Several variations for this delay are tested, but 1.3 seconds has been empirically proved to be a good balance between giving the user enough time to react to on-screen feedback, while it does not make the user stand still too long to end the recording.\\
+
+The second option is to start moving after recording has started. The user can perform a gesture and then stop the recording by standing still for 1.3 seconds. After that, the frames stored in the buffer represent the recorded gesture.\\
 
 \begin{lstlisting}[caption=method to record a gesture, label=code_record_gesture]
 void Model::recordGesture(Frame & currentFrame) {
@@ -126,52 +130,50 @@ void Model::recordGesture(Frame & currentFrame) {
 		firstFrame.setFrame(currentFrame);
 		initialized = true;
 	}
-
-	if (!startedMoving) {
-		if (! currentFrame.equals(firstFrame)) {
-		
-			startedMoving = true;
-			framesBuffer.clear();
-		}
-		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY) {
-			addRecordedGesture();
-		}
-		else {
-			return;
-		}
-	}
 	
 	//Add the frame to the buffer
 	framesBuffer.push_back(currentFrame);
 
-	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size() - NOT_MOVING_FRAME_DELAY))) {
+	if (!startedMoving) {
+		if (! currentFrame.equals(firstFrame)) {
+			//The user moved, recording of the gesture is started.
+			startedMoving = true;
+			framesBuffer.clear();
+		}
+		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY) {
+			//The user did not move while recording, so this is considered to be a posture.
+			addRecordedGesture();
+		}
+		else {
+			//The user is not moving and not enough frames are stored in the buffer.
+			return;
+		}
+	}
+
+	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&
+	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size()-NOT_MOVING_FRAME_DELAY))) {
+		//The user stopped moving, the gesture is stored.
 		addRecordedGesture();
 	}
 }
 \end{lstlisting}
 
 
-\subsection{Predicting a gesture}
+\subsection{Predicting gestures}
 
-Code snippet \ref{code_gesture_executed} shows a method for predicting a gesture. This method is called recursively. Gestures are split up into a number of smaller parts, referred to in the code as \classname{NB\textunderscore OF\textunderscore LABEL\textunderscore DIVISIONS}. If this constant equals four, it means that a gesture is split up into four parts. For instance, if the base label of a gesture equals one, predictions for labels one, two, three and four all relate to one of the parts of the gesture.\\
+Code snippet \ref{code_gesture_executed} shows the method for predicting a gesture. This method is called recursively. Gestures are split up into a number of smaller parts, referred to in the code snippet as \classname{NB\textunderscore OF\textunderscore LABEL\textunderscore DIVISIONS}. This constant equals four, so it means that a gesture is split up into four parts and each part gets assigned a label. To explain how a gesture is split up, consider a recorded gesture that has a duration of 100 frames. The first 25 frames get assigned a label that equals 1, the next 25 frames get label 2 and so on. In other words, gestures are divided into a number of different classes.\\
 
-Continuing with this example, if during prediction a part of a gesture with label four is found, the recursive method \classname{isGestureExecuted} is called. It checks if shortly before label four is found, label three is predicted as well. If label three is predicted, the method is called recursively to check for label two. This goes on until the base label is reached. At this point, the recursion is ended and the gesture is recognized as being successfully executed. All parts of the gesture must be executed in the right order and fast enough. If the gesture is executed too slow, the buffer with predicted labels is cleared.\\
+Each recorded gesture has a \classname{vector} containing the four labels that refer to each part of the gesture. The labels are also stored in the correct order, representing the way the gesture is executed. The 100-frames gesture from the example has a \classname{vector} with following labels: 1, 2, 3 and 4. For a posture, this \classname{vector} contains, for instance, following labels: 5, 5, 5 and 5. The labels are the same, so this implies that the user did not move during recording, which is how a posture can be recorded.\\
 
-The method allows that one label is not predicted correctly. There are many reasons this can happen, such as noisy measurements, the user moving differently or not having trained the gesture sufficiently. In the case of the considered example, if labels one, three and four are predicted, and label two is missing, the gesture is still considered to be executed successfully. This can improve user experience while playing a game, as a gesture has less of a chance of being not recognized wrongfully.\\
+Gestures are recognized when all four labels are predicted in the correct order. To predict which class is most similar to a given frame, an SVM model is required. The LibSVM library \cite{LibSVM} is used to create an SVM model. The model returns a label that corresponds to the class the current position of the user is most similar to. This occurs 30 times per seconds, thus at the same rate the Kinect camera can process new data.\\
 
 \begin{lstlisting}[caption=method to verify if a gesture with given label is executed, label=code_gesture_executed]
-bool Model::isGestureExecuted(std::shared_ptr<Gesture> gesture, int posInBuffer, int recursiveCounter)
-{
-	int labelOrderPosition = NB_OF_LABEL_DIVISIONS - recursiveCounter;
-	int labelToCheck = gesture->getLabelOrder().at(labelOrderPosition);
-
-	for (int i = posInBuffer; i >= 0; i--)
-	{
-		if (labelsBuffer.at(i) == labelToCheck)
-		{
-			if (labelOrderPosition <= 0)
+bool Model::isGestureExecuted(std::shared_ptr<Gesture> gesture, int posInBuffer, int recursiveCounter) {
+	for (int i = posInBuffer; i >= 0; i--) {
+		if (labelsBuffer.at(i) == gesture->getLabelOrder().at(labelOrderPosition))	{
+			if (NB_OF_LABEL_DIVISIONS - recursiveCounter <= 0)
 				return true;
-			return isGestureExecuted(gesture, i - 1, recursiveCounter + 1);
+			return isGestureExecuted(gesture, i--, recursiveCounter++);
 		}
 	}
 	return false;
