@@ -17,6 +17,8 @@ The focus of the application is reflected by the structure of the code. The clas
 \end{center}
 \end{figure}
 
+\newpage
+
 The Kinect camera has the ability to identify and measure the position relative to the camera of 25 points of a person, for instance: left elbow, right elbow, head, center of the spine, left wrist,\ldots All of these points are referred to as \classname{Joint}s and can be accessed using the libraries that come as part of the Kinect SDK installation. Each \classname{Joint} has an $x$, $y$ and $z$ coordinate, so it is unambiguously defined in space.\\
 
 When the Kinect measures all of the \classname{Joint}s at one specific point in time, these 25 \classname{Joint}s together form one frame. This can be seen as a single picture of a person taken by the camera. Analogous to a movie, which is nothing more than a quick succession of pictures, an instance of \classname{Gesture} collects all \classname{Frame}s, which all together, contain information about how the person moved over a period of time.\\
@@ -38,6 +40,8 @@ It is important that none of these three processes block the continuous flow of 
 
 The Kinect can only provide new data as fast as 30 times per second. If no new data is available at the moment the main loop requests the data, for instance when the main loop is executed faster than 30 times per second, the program skips this process and continues with the other two processes.\\
 
+\newpage
+
 To control the flow of the program without reverting to blocking loops, software flags are used. These flags keep track of the current state of the program. By evaluating the state of the flags, it is possible to indicate if the program is predicting a gesture, recording a gesture or animating specific graphical elements of the GUI.
 
 
@@ -49,7 +53,7 @@ The Windows presentation foundation (WPF) is used to create buttons and input fi
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=14cm]{figures/1_full_screen_with_user.png}
+		\includegraphics[width=16cm]{figures/1_full_screen_with_user.png}
 		\caption{\emph{The full screen of the user interface}}
 		\label{real implementation}
 	\end{center}
@@ -115,7 +119,7 @@ It is possible to split up the implementation of gesture recognition into two pa
 
 \subsection{Recording gestures}
 
-Code snippet \ref{code_record_gesture} shows the code for recording a gesture. Recording starts when the user starts moving. In order to know when the user moves, the first frame is stored in the variable \classname{firstFrame}. The variable can then be used to compare the first frame to the current frame. If the two frames are not equal, the user has moved. Two frames are considered equal when all of the joints of both frames in all three dimensions have a difference of less than 10 centimeters. In other words, if the person moved more than that, the frames are not equal. The threshold of 10 centimeters is chosen due to limitations of the Kinect camera, where small variations in measurements are possible due to noise. Additionally, it is hard for a person to stay perfectly still, so the choice of the threshold can eliminate recognizing small tremblings as the user having moved.\\
+Code snippet \ref{code_record_gesture} shows the code for recording a gesture. Recording starts when the user starts moving. In order to know when the user moves, the first frame is stored in the variable \classname{firstFrame}. The variable can then be used to compare the first frame to the current frame. If the two frames are not equal, the user has moved. Two frames are considered equal when all of the joints of both frames in all three dimensions have a difference of less than 10 centimeter. In other words, if the person moves more than that, the frames are not equal. The threshold of 10 centimeter is chosen due to limitations of the Kinect camera, where small variations in measurements are possible due to noise. Additionally, it is hard for a person to stay perfectly still, so the choice of the threshold can eliminate recognizing small tremblings as the user having moved.\\
 
 When actual recording is initialized, the frames measured by the Kinect camera are stored in a buffer at a rate of 30 frames per second. The user now has two options.\\
 
@@ -126,13 +130,10 @@ The second option is to start moving after recording has started. The user can p
 \begin{lstlisting}[caption=method to record a gesture, label=code_record_gesture]
 void Model::recordGesture(Frame & currentFrame) {
 	if (!initialized) {
-		//Set the first frame on the first call
-		firstFrame.setFrame(currentFrame);
+		firstFrame.setFrame(currentFrame); //Set the first frame on the first call
 		initialized = true;
 	}
-	
-	//Add the frame to the buffer
-	framesBuffer.push_back(currentFrame);
+	framesBuffer.push_back(currentFrame); //Add the frame to the buffer
 
 	if (!startedMoving) {
 		if (! currentFrame.equals(firstFrame)) {
@@ -140,21 +141,15 @@ void Model::recordGesture(Frame & currentFrame) {
 			startedMoving = true;
 			framesBuffer.clear();
 		}
-		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY) {
-			//The user did not move while recording, so this is considered to be a posture.
-			addRecordedGesture();
-		}
-		else {
-			//The user is not moving and not enough frames are stored in the buffer.
+		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY)
+			addRecordedGesture(); //User did not move while recording; user recorded a posture.
+		else //User not moving and not enough frames stored in the buffer.
 			return;
-		}
 	}
 
 	if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY &&
-	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size()-NOT_MOVING_FRAME_DELAY))) {
-		//The user stopped moving, the gesture is stored.
-		addRecordedGesture();
-	}
+	framesBuffer.back().equals(framesBuffer.at(framesBuffer.size()-NOT_MOVING_FRAME_DELAY)))
+		addRecordedGesture(); //User stopped moving, the gesture is stored.
 }
 \end{lstlisting}
 
@@ -165,9 +160,9 @@ Code snippet \ref{code_gesture_executed} shows the method for predicting a gestu
 
 Each recorded gesture has a \classname{vector} containing the four labels that refer to each part of the gesture. The labels are also stored in the correct order, representing the way the gesture is executed. The 100-frames gesture from the example has a \classname{vector} with following labels: 1, 2, 3 and 4. For a posture, this \classname{vector} contains, for instance, following labels: 5, 5, 5 and 5. The labels are the same, so this implies that the user did not move during recording, which is how a posture can be recorded.\\
 
-Gestures are recognized when all four labels are predicted in the correct order. To predict which class is most similar to a given frame, an SVM model is required. The LibSVM library \cite{LibSVM} is used to create an SVM model. The model returns a label that corresponds to the class the current position of the user is most similar to. This occurs 30 times per seconds, thus at the same rate the Kinect camera can process new data.\\
+Gestures are recognized when all four labels are predicted in the correct order. To predict which class is most similar to a given frame, an SVM model is required. The LibSVM library \cite{LibSVM} is used to train an SVM model. The model returns a label that corresponds to the class the current position of the user is most similar to. This occurs 30 times per seconds, thus at the same rate the Kinect camera can process new data.\\
 
-\begin{lstlisting}[caption=method to verify if a gesture with given label is executed, label=code_gesture_executed]
+\begin{lstlisting}[caption=method to verify if given gesture is executed, label=code_gesture_executed]
 bool Model::isGestureExecuted(std::shared_ptr<Gesture> gesture, int posInBuffer, int recursiveCounter) {
 	for (int i = posInBuffer; i >= 0; i--) {
 		if (labelsBuffer.at(i) == gesture->getLabelOrder().at(labelOrderPosition))	{

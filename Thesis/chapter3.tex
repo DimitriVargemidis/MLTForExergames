@@ -17,7 +17,7 @@ When playing a computer game the conventional way, a person can interact with th
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=10cm]{Concept1.png}
+\includegraphics[width=11cm]{Concept1.png}
 \caption{\emph{Overview of the interaction between a person and a computer game under conventional use}}
 \label{fig: overview_basic_interaction}
 \end{center}
@@ -27,7 +27,7 @@ The OmniPlay application can be seen as an additional element between a person a
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=14cm]{Concept2.png}
+\includegraphics[width=16cm]{Concept2.png}
 \caption{\emph{Overview of interaction between a person and a computer game using the developed application}}
 \label{fig: overview_application_interaction}
 \end{center}
@@ -35,7 +35,7 @@ The OmniPlay application can be seen as an additional element between a person a
 
 More in detail, the physical therapist comes up with gestures that fit the needs of a patient. He uses the Kinect camera to interact with the application via a GUI. Next, the therapist uses the application to record what gestures need to be done by the patient. Using all of the recorded gestures, an SVM model is created, which is used to predict which gesture is performed by the patient while playing a game.\\
 
-The therapist assigns a virtual keyboard button to each of the gestures. This means that when the patient mimics one of the therapist's gestures, a virtual keyboard button is pressed, as explained before. To start playing a game, the therapist can choose any game that uses keyboard input or let the patient choose his preferred game. This can be any type of computer game and includes, but is not limited to: browser games, games that need to be downloaded and installed, pre-installed games that come with the operating system,\ldots If the OmniPlay is running in the background while a computer game is opened, performing a gesture virtually presses the button that is linked to the gesture. By doing this, the patient can interact with the game.\\
+The therapist assigns a virtual keyboard button to each of the gestures. This means that when the patient mimics one of the therapist's gestures, a virtual keyboard button is pressed, as explained before. To start playing a game, the therapist can choose any game that uses keyboard input or let the patient choose his preferred game. This can be any type of computer game and includes, but is not limited to: browser games, games that need to be downloaded and installed, pre-installed games that come with the operating system,\ldots If OmniPlay is running in the background while a computer game is opened, performing a gesture virtually presses the button that is linked to the gesture. By doing this, the patient can interact with the game.\\
 
 By mapping gestures to virtual keyboard buttons, a vast amount of existing games can be played using gesture-based input. It is however limited to button presses. Pointing with the cursor like when using a mouse is not supported by the OmniPlay application. The reason is that every gesture performed is seen as one single action. The gesture of pointing to a specific spot on the screen could overlap with one of the gestures the therapist wants to use. This results in undesirable behavior and negatively impacts the gaming experience for the patient.
 
@@ -78,7 +78,7 @@ To figure out what steps the therapist needs to perform to use the program, a hi
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=14cm]{figures/HTA_plan.png}
+		\includegraphics[width=12cm]{figures/HTA_plan.png}
 		\caption{\emph{The simplified HTA plan}}
 		\label{HTA}
 	\end{center}
@@ -130,7 +130,9 @@ A real image of the person is the most identifiable for the user, because it is 
  
  
 The most important issue is that the image is taken from the front, so the image of the screen is facing away. Unless the UI elements are drawn on top of the user's image, it is hard to imagine for the user that he is grabbing a handle or pushing a button on the UI. Placing the Kinect camera behind the user to solve this problem is technically not possible because an important part of the Kinect's person recognition is based on recognizing the facial features. This would also require a much space to operate because a distance of at least 1 meter from the screen in front of the user and at least 1.5 meter from the Kinect at the back needs to be maintained. When the UI elements are drawn behind the user, he will also obscure any elements directly behind him. Another issue that became apparent during the user tests was that most people are not comfortable with an image of themselves being displayed on the screen, which detracts from the user's experience. The physical therapist we interviewed, who works in a school for disabled children, also noted that this might cause legal problems with parents who do not want unauthorized footage of their child being stored. A final technical issue is that displaying the real image of the user is very resource intensive and in this implementation it would sometimes cause the program to lag.\\
- 
+
+\newpage
+
 A semi-transparent shadow can solve the legal issue and the discomfort experienced by users. It also solves the problem of the image facing away from the UI, because there are almost no features that indicate which way the image is facing, making it look like the shadow is facing towards the UI. By making the image semi-transparent, any UI element behind the user can still be seen. A disadvantage is that it is harder to identify subtle differences between similar recordings. It is also still very resource intensive. Trying to optimize this is beyond the scope of this thesis.\\
  
 A puppet that copies the movements of the user has similar benefits to the shadow and can be transparent or non-transparent. It is far less resource intensive, but makes it even harder to distinguish similar recordings from each other.\\
@@ -147,21 +149,19 @@ In this thesis, three prototypes are discussed, ranging from obvious UIs using m
 
 The first prototype (see figure \ref{first prototype}) mostly uses the mime pattern and metaphors. The orange color is used to indicate a possibility for an action. On the right the door on the side says exit and would swing open when the user grabs the orange handle an pulls to the left. On the top of the screen, a collection of recordings can be seen pinned to a scrollbar with orange thumbnails. The arrows on the sides imply that the recordings can be moved. The user would grab the orange indicator bar to browse the recordings. To delete a recording the thumbnail of that specific recording can be grabbed and dragged to the recycle bin to release it there. The user can display the recording by dragging it to the projector on the left side of the screen which would display the recording on the projector screen where the large "1" is displayed. In the middle, a camera with its lens pointed towards the user is displayed, by moving his hand forward on the ``opnemen'' button the user could start a recording.\\
 
-The second prototype in the list combines mime pattern elements with standard WIMP elements to streamline the process (see figure \ref{standard third prototype}). On the right of the screen is a lever that is activated by grabbing the orange part of the lever and pulling it downwards, causing the user to leave this screen. The record button is a push button that the user activates by moving his hand forward over it. This action activates the record screen (see figure \ref{record third prototype}). The window shows what is going to be recorded. The red one indicates where the program will count down from three until the recording starts, allowing the user some time to get to his starting position. All other UI elements are grayed out to indicate that they are not available to interact with.\\
-
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_1_1_standard.png}
+		\includegraphics[width=11.5cm, height=6.5cm]{figures/prototype_1_1_standard.png}
 		\caption{\emph{The first prototype screen using metaphors}}
 		\label{first prototype}
 	\end{center}
 \end{figure}
 
-Once the recording is finished, the program returns to the screen in figure \ref{standard third prototype}. On the left is a scrollbar that contains elements, which represent previous recordings of which they show static representations. On the right of it, there is an orange scroll wheel with which the user can scroll through the scrollbar by simply hovering his hand over it. When the user stops scrolling, the elements are locked into a position (see figure \ref{standard third prototype}). The user can slide the top element into the ``TRASH'' or ``PLAY'' area by hovering over it in that direction to play or delete the element.\\
+The second prototype in the list combines mime pattern elements with standard WIMP elements to streamline the process (see figure \ref{standard third prototype}). On the right of the screen is a lever that is activated by grabbing the orange part of the lever and pulling it downwards, causing the user to leave this screen. The record button is a push button that the user activates by moving his hand forward over it. This action activates the record screen (see figure \ref{record third prototype}). The window shows what is going to be recorded. The red one indicates where the program will count down from three until the recording starts, allowing the user some time to get to his starting position. All other UI elements are grayed out to indicate that they are not available to interact with. Once the recording is finished, the program returns to the screen in figure \ref{standard third prototype}. On the left is a scrollbar that contains elements, which represent previous recordings of which they show static representations. On the right of it, there is an orange scroll wheel with which the user can scroll through the scrollbar by simply hovering his hand over it. When the user stops scrolling, the elements are locked into a position (see figure \ref{standard third prototype}). The user can slide the top element into the ``TRASH'' or ``PLAY'' area by hovering over it in that direction to play or delete the element.\\
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_5_3_standard.png}
+		\includegraphics[width=11.5cm, height=6.5cm]{figures/prototype_5_3_standard.png}
 		\caption{\emph{The standard screen of the second prototype focusing on WIMP elements}}
 		\label{standard third prototype}
 	\end{center}
@@ -169,17 +169,17 @@ Once the recording is finished, the program returns to the screen in figure \ref
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/prototype_6_3_record.png}
+		\includegraphics[width=11.2cm, height=5.5cm]{figures/prototype_6_3_record.png}
 		\caption{\emph{The record screen of the second prototype}}
 		\label{record third prototype}
 	\end{center}
 \end{figure}
 
-The third prototype uses the hints pattern where the user has to close his hand over the element with which he wants to interact. This opens a typical WIMP element, called a context menu, with which the user can interact. The user can only see images of his hands. It starts off with a small tutorial screen (see figure \ref{first tutorial last prototype}). When the user closes his hand within the orange box, the context menu opens (see figure \ref{second tutorial last prototype}). When the user slides his closed fist towards any of the elements, it indicates that the option is chosen (see figure \ref{third tutorial last prototype}). Throughout the prototype the user can interact with the chosen recording as seen in figure \ref{example last prototype}. In this instance, he can choose between playing the recording, deleting it or canceling the current menu.\\
+The third prototype uses the hints pattern. The user has to close his hand over the element with which he wants to interact. This opens a WIMP element, called a context menu, with which the user can interact. The user can only see images of his hands. It starts off with a small tutorial screen (figure \ref{first tutorial last prototype}). When the user closes his hand within the orange box, the context menu opens (figure \ref{second tutorial last prototype}). When the user slides his closed fist towards any of the elements, it indicates that the option is chosen (figure \ref{third tutorial last prototype}). Throughout the prototype the user can interact with the chosen recording as seen in figure \ref{example last prototype}. In this instance, he can choose between playing the recording, deleting it or canceling the current menu.
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12cm, height=6.5cm]{figures/prototype_7_6_tutorial_1.png}
+		\includegraphics[width=9.5cm, height=5cm]{figures/prototype_7_6_tutorial_1.png}
 		\caption{\emph{The first tutorial screen of the third prototype}}
 		\label{first tutorial last prototype}
 	\end{center}
@@ -187,7 +187,7 @@ The third prototype uses the hints pattern where the user has to close his hand 
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12cm, height=6.5cm]{figures/prototype_8_6_tutorial_2.png}
+		\includegraphics[width=9.5cm, height=5cm]{figures/prototype_8_6_tutorial_2.png}
 		\caption{\emph{The second tutorial screen of the third prototype}}
 		\label{second tutorial last prototype}
 	\end{center}
@@ -195,7 +195,7 @@ The third prototype uses the hints pattern where the user has to close his hand 
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12cm, height=6.5cm]{figures/prototype_9_6_tutorial_3.png}
+		\includegraphics[width=9.5cm, height=5cm]{figures/prototype_9_6_tutorial_3.png}
 		\caption{\emph{The third tutorial screen of the third prototype}}
 		\label{third tutorial last prototype}
 	\end{center}
@@ -203,7 +203,7 @@ The third prototype uses the hints pattern where the user has to close his hand 
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12cm, height=6.5cm]{figures/prototype_10_6_example.png}
+		\includegraphics[width=9cm, height=5cm]{figures/prototype_10_6_example.png}
 		\caption{\emph{An example of how the user can interact with an element of the third prototype}}
 		\label{example last prototype}
 	\end{center}
@@ -234,7 +234,7 @@ Though we had previously established that the shadow was the most natural way of
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/1_screen_with_user.png}
+		\includegraphics[width=10cm, height=5.5cm]{figures/1_screen_with_user.png}
 		\caption{\emph{The regular view of the end design of the UI}}
 		\label{regular view end design}
 	\end{center}
@@ -248,8 +248,8 @@ In figure \ref{rope handle reaction} a can be seen that when the user hovers his
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=6cm, height=8cm]{figures/2_hover_over_rope.png}
-		\includegraphics[width=6cm, height=8cm]{figures/3_grab_rope.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/2_hover_over_rope.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/3_grab_rope.png}
 		\caption{\emph{Reaction of the rope handle: a) when hovered over, b) when grabbed}}
 		\label{rope handle reaction}
 	\end{center}
@@ -259,7 +259,7 @@ The rope activates the record screen seen in figure \ref{first recording screen}
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/4_record_getready.png}
+		\includegraphics[width=10cm, height=5.5cm]{figures/4_record_getready.png}
 		\caption{\emph{First view of the recording screen}}
 		\label{first recording screen}
 	\end{center}
@@ -267,28 +267,30 @@ The rope activates the record screen seen in figure \ref{first recording screen}
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/6_record_start.png}
+		\includegraphics[width=10cm, height=5.5cm]{figures/6_record_start.png}
 		\caption{\emph{View when the program starts recording, between this and the first view there is a countdown from 3, after the recording is started the user must stand still for a certain amount of time to stop, after which the text in the window will read "Done!"}}
 		\label{last recording screen}
 	\end{center}
 \end{figure}
 
-As described before, the scrollbar contains elements that are each linked to a recording of the current gesture. In these boxes a small preview can be seen of the start and end position of the linked recording in the same color scheme as during recording. The numbering of the boxes goes from the first recording as one counting up to the last recording. These numbers are not the same as the IDs of the gesture class as seen further on during the discussion of the implementation of the back end. The order of the numbers is still the same though. When the user hovers one of his hands over the recorded element within the orange selection box the effects as seen in \ref{replay of element six} are triggered. The specific recorded element is replayed within the previously grayed out window on the left. The blue bar on the bottom of the window indicates the progress in playing the recording. As long as the user hovers over the element in the scrollbar, the recording is repeated with half a second delays between repeats. This was a deliberate choice to make sure the user is fully aware of which recording is playing in the window because he should notice that the recording is only playing when he touches it. For the same reasons the number of the recording is also displayed on the left of the screen where it does not obstruct the user in reviewing his recording but is there when the user is uncertain of which recording is playing. Additionally both the orange selection box in the scrollbar and the edges of the display screen are colored green, the color previously linked with hover over information. The redundancy in linking the replay with the recording comes from the fact that the screen is so far from the actual element it is connected to. The scrollbar is on the right because right handed users are more common, so it is easier for them to operate the scrollbar. The delete action is already on the right of it and can hardly be moved to somewhere where it is still as easy to operate. Following both the proximity and similarity law of the Pragnanz law's would make the most sense but placing the screen on the right of the delete button would still have the delete button between it and the recorded element and would place the user's puppet too far from the center of the screen, out of the focus of the user.\\
+As described before, the scrollbar contains elements that are each linked to a recording of the current gesture. In these boxes a small preview can be seen of the start and end position of the linked recording in the same color scheme as during recording. The numbering of the boxes goes from the first recording as one counting up to the last recording. These numbers are not the same as the IDs of the gesture class as seen further on during the discussion of the implementation of the back end. The order of the numbers is still the same though. When the user hovers one of his hands over the recorded element within the orange selection box the effects as seen in \ref{replay of element six} are triggered.\\
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=12.5cm, height=7cm]{figures/11_replay_recording.png}
+		\includegraphics[width=10cm, height=5.5cm]{figures/11_replay_recording.png}
 		\caption{\emph{The recorded element six is replayed to the user by hovering over it with any hand.}}
 		\label{replay of element six}
 	\end{center}
 \end{figure}
 
+The specific recorded element is replayed within the previously grayed out window on the left. The blue bar on the bottom of the window indicates the progress in playing the recording. As long as the user hovers over the element in the scrollbar, the recording is repeated with half a second delays between repeats. This was a deliberate choice to make sure the user is fully aware of which recording is playing in the window because he should notice that the recording is only playing when he touches it. For the same reasons the number of the recording is also displayed on the left of the screen where it does not obstruct the user in reviewing his recording but is there when the user is uncertain of which recording is playing. Additionally both the orange selection box in the scrollbar and the edges of the display screen are colored green, the color previously linked with hover over information. The redundancy in linking the replay with the recording comes from the fact that the screen is so far from the actual element it is connected to. The scrollbar is on the right because right handed users are more common, so it is easier for them to operate the scrollbar. The delete action is already on the right of it and can hardly be moved to somewhere where it is still as easy to operate. Following both the proximity and similarity law of the Pragnanz law's would make the most sense but placing the screen on the right of the delete button would still have the delete button between it and the recorded element and would place the user's puppet too far from the center of the screen, out of the focus of the user.\\
+
 To activate the scroll function on the scrollbar, the user has to hover his hand within the boundaries of the black bordered box but not within the orange selection box, the black borders of the scrollbar turn green to indicate that the user is hovering over the scrollbar, this is shown in figure \ref{scroll functionality} a. Scrolling only starts when the user has moved a small distance up or down to avoid to scrollbar being immediately stuck to the user which would be annoying. Once scrolling is started it continues as long as the user keeps moving in the same direction, this also counts when going through the selection box area and even when going outside of the scrollbar's borders. This makes sure that the user is not surprised by a sudden stop of the scrolling action when accidentally going inside of the selection box or outside of the scrollbar. The whole reason why the user cannot initiate a scroll within the selection box is because the element that is placed there has to be able to be hovered over to display it, as explained earlier, and it has to be able to be moved to the side for deletion. Accidental activation of the scroll function is minimized by this measure. Though there is more to this, informal tests showed that users who are unfamiliar with the UI often try to scroll down or upward starting from the selection box, the large delay in reaction confuses them. To counter this the activation area of the scroll function is expanded into the orange area for about 15 percent of the selection box height on both the top and the bottom. Once activated the elements stay on a fixed distance from each other but all elements are moved with the same dynamics as used in the record rope, they perform the same vertical relative movement as the hand that is hovering over it. During scrolling all recorded elements are locked to any interactions and the element that will land in the selection box is indicated by a light blue coloring of the white background. The example of scrolling can be seen in figure \ref{scroll functionality} b. When the user stops scrolling the recorded elements are locked into positions as seen in \ref{scroll functionality} a. Only the element in the selection box can be interacted with.\\
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=6cm, height=8cm]{figures/9_hover_scrollbar.png}
-		\includegraphics[width=6cm, height=8cm]{figures/10_scroll_scrollbar.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/9_hover_scrollbar.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/10_scroll_scrollbar.png}
 		\caption{\emph{Reaction of the scrollbar: a) when hovered over, b) when scrolling is activated}}
 		\label{scroll functionality}
 	\end{center}
@@ -298,8 +300,8 @@ The delete sequence of the recorded element in the selection box can be started 
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width=6cm, height=8cm]{figures/12_delete_progress.png}
-		\includegraphics[width=6cm, height=8cm]{figures/13_delete_complete.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/12_delete_progress.png}
+		\includegraphics[width=4.5cm, height=6cm]{figures/13_delete_complete.png}
 		\caption{\emph{The delete sequence: a) user in the process of deleting, the red progress bar indicates how far until deletion the user has to go, b) the endpoint of the action is reached, the item turns red, fades out and is deleted}}
 		\label{delete functionality}
 	\end{center}
@@ -319,7 +321,7 @@ A model can be trained with a given data set and labels to classify each gesture
 
 It is possible to record the same gesture more than once and include all of these recordings in the data set. All recorded frames of the same gesture receive the same labels to indicate that they are basically the same gesture. While these gestures may appear to be identical, they contain slight variations due to noise during the measurement of a gesture or a slightly varying execution of the gesture by the user.\\
 
-After performing all required gestures, a SVM model is created. Given a single frame of a gesture, this model can predict which of the recorded gestures the frame belongs to. SVM does this by finding the class of frames that are the most similar to the given frame and returns the label of that class as a result. This also implies the necessity of having multiple trainings recorded for each gesture. Errors in a single training due to noisy measurements of the Kinect camera can lead to wrong predictions. Having multiple trainings minimizes the influence noise has on the prediction and keeps into account that the user executes all gestures with slight variations. As a result, the model can predict more accurately which gesture is performed.\\
+After performing all required gestures, an SVM model is created. Given a single frame of a gesture, this model can predict which of the recorded gestures the frame belongs to. SVM does this by finding the class of frames that are the most similar to the given frame and returns the label of that class as a result. This also implies the necessity of having multiple trainings recorded for each gesture. Errors in a single training due to noisy measurements of the Kinect camera can lead to wrong predictions. Having multiple trainings minimizes the influence noise has on the prediction and keeps into account that the user executes all gestures with slight variations. As a result, the model can predict more accurately which gesture is performed.\\
 
 However, there are some things to keep in mind when applying this strategy. Firstly, inputting multiple repeats of the same gesture helps creating a better model, which improves predicting the gesture after a model is created. The downside is that it takes more time for the therapist to record all of these gestures. Secondly, when trying to predict a gesture, the generated SVM model always returns the label of the most similar gesture, even if they are not related at all.\\
 
