@@ -298,6 +298,8 @@ To activate the scroll function on the scrollbar, the user has to hover his hand
 
 The delete sequence of the recorded element in the selection box can be started by hovering over the middle of it. After this the element will follow the relative horizontal movement of the interacting hand between start point and end point with the same dynamics as the scrollbar and the rope. As seen in figure \ref{delete functionality} a, The "DEL" box is filled up with a red progress bar to indicate how far the user still has to move until the item is deleted. When the end point is reached the recorded element turns red and fades away within a halve second to clearly indicate that this recording is deleted. Once the endpoint is reached the action is irreversible and for the duration of the fading the scrollbar and all the elements are locked for any further interaction. An example of this is shown in figure \ref{delete functionality} b. The reason why this action is only started from the middle is to increase the difference between initiating the delete sequence and replaying the recording and also heighten the threshold to start such a serious action as deleting an item. After deleting an element the other recorded elements are renumbered.\\
 
+An important requirement in HCI design is that it should be possible to undo actions. Due to the technical complexity of an undo function and the limited time for this thesis, such a function is not included.\\
+
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=4.5cm, height=6cm]{figures/12_delete_progress.png}
@@ -318,6 +320,8 @@ In order to provide enough flexibility concerning the type of gestures to be rec
 \subsection{Support vector machines}
 
 A model can be trained with a given data set and labels to classify each gesture. The data set contains all of the recordings of each gesture. A gesture consists of multiple recorded frames. Each frame is classified by using a label. This makes it possible to specify which frames belongs to a certain gesture. Each frame consists of 25 data points, called joints, which are measured by the Kinect camera. A single point is defined in 3D space, meaning that one frame is defined by 75 coordinates. In other words, one frame has 75 features and, as such, one frame can be seen as a single point in a 75-dimensional space.\\
+
+\newpage
 
 It is possible to record the same gesture more than once and include all of these recordings in the data set. All recorded frames of the same gesture receive the same labels to indicate that they are basically the same gesture. While these gestures may appear to be identical, they contain slight variations due to noise during the measurement of a gesture or a slightly varying execution of the gesture by the user.\\
 
