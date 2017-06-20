@@ -195,7 +195,7 @@ void Model::resizeLabelsBuffer()
 	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
 }
 
-bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter, int badCounter)
+bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter)
 {
 	int labelOrderPosition = SVMInterface::NB_OF_LABEL_DIVISIONS - recursiveCounter;
 	int labelToCheck = gesture->getLabelOrder().at(labelOrderPosition);
@@ -208,11 +208,8 @@ bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffe
 			{
 				return true;
 			}
-			return isGestureExecuted(gesture, i - 1, recursiveCounter + 1, 0);
+			return isGestureExecuted(gesture, i - 1, recursiveCounter + 1);
 		}
-	}
-	if (badCounter <= 0) {
-		return isGestureExecuted(gesture, posInBuffer, recursiveCounter + 1, 1);
 	}
 
 	return false;
@@ -269,7 +266,7 @@ void Model::predictAndExecute(int label)
 	{
 		for (std::shared_ptr<Gesture> gesture : keyValue.second.first->getGestures())
 		{
-			if (isGestureExecuted(gesture, labelsBuffer.size() - 1, 1, 0))
+			if (isGestureExecuted(gesture, labelsBuffer.size() - 1, 1))
 			{
 				executedLabel = keyValue.first;
 			}
@@ -283,7 +280,9 @@ void Model::predictAndExecute(int label)
 
 		Console::print("Predicted label: ");
 		Console::printsl(predictedLabel);
+
 		labelsBuffer.clear();
+		labelsBuffer.push_back(10);
 
 		if (previousPredictedLabel < 0)
 		{

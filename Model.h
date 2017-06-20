@@ -86,7 +86,7 @@ public:
 
 	void				addToLabelsBuffer(int label);
 	void				resizeLabelsBuffer();
-	bool				isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter, int badCounter);
+	bool				isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter);
 	void				predictAndExecute(int label);
 
 	std::shared_ptr<GestureClass>		getGestureClassByID(const int & ID);
