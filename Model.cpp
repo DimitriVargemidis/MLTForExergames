@@ -282,7 +282,7 @@ void Model::predictAndExecute(int label)
 		Console::printsl(predictedLabel);
 
 		labelsBuffer.clear();
-		labelsBuffer.push_back(10);
+		labelsBuffer.push_back(30);
 
 		if (previousPredictedLabel < 0)
 		{
