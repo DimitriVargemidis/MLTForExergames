@@ -282,9 +282,9 @@ void Model::predictAndExecute(int label)
 		Console::printsl(predictedLabel);
 
 		labelsBuffer.clear();
-		labelsBuffer.push_back(activeProject->getProjectMap().find(1)->second.first->getGestures().front()->getLabelOrder().front());
-		Console::print("Added label: ");
-		Console::print(activeProject->getProjectMap().find(1)->second.first->getGestures().front()->getLabelOrder().front());
+		labelsBuffer.push_back(activeProject->getProjectMap().find(10)->second.first->getGestures().front()->getLabelOrder().front());
+		printf("Added label: ");
+		printf("%d",activeProject->getProjectMap().find(10)->second.first->getGestures().front()->getLabelOrder().front());
 
 		if (previousPredictedLabel < 0)
 		{
