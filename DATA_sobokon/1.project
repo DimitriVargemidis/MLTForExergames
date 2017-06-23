@@ -4,4 +4,8 @@ gestclass 10 1
 gestclass 20 2
 action 20 39 0
 gestclass 30 3
-action 30 37 0
+action 30 38 0
+gestclass 40 4
+action 40 40 0
+gestclass 50 5
+action 50 37 0
