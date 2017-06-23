@@ -191,5 +191,4 @@ void SVMInterface::prepareLabels(std::map<int, std::pair<std::shared_ptr<Gesture
 			}
 		}
 	}
-
 }
