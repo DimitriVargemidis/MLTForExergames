@@ -15,9 +15,12 @@ public:
 	Main();
 	~Main();
 
+	//Initialize the Kinect sensor.
 	void mainCanInitializeKinectSensor();
+	//Update the visuals and sensor values read.
 	void Update();
 
+	//Contains the main loop of the application.
 	int Run(HINSTANCE hInstance, int nCmdShow);
 
 private:

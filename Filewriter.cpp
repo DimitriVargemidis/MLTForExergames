@@ -6,6 +6,7 @@
 #include "Filewriter.h"
 
 
+//Save the given project to a file.
 void Filewriter::save(std::shared_ptr<Project> & project)
 {
 	std::ostringstream sstream;
@@ -60,6 +61,7 @@ void Filewriter::save(std::shared_ptr<Project> & project)
 	}
 }
 
+//Save the given gesture class to a file.
 void Filewriter::save(std::shared_ptr<GestureClass> & gestureClass)
 {
 	std::ostringstream sstream;
@@ -86,6 +88,7 @@ void Filewriter::save(std::shared_ptr<GestureClass> & gestureClass)
 	}
 }
 
+//Save the given gesture to a file.
 void Filewriter::save(Gesture & gesture)
 {
 	std::ostringstream sstream;
@@ -115,6 +118,7 @@ void Filewriter::save(Gesture & gesture)
 	}
 }
 
+//Save the given svm_model to a file.
 void Filewriter::save(svm_model & svmModel, int projectID)
 {
 	std::ostringstream sstream;
@@ -129,6 +133,7 @@ void Filewriter::save(svm_model & svmModel, int projectID)
 	svm_save_model(fname, &svmModel);
 }
 
+//Write the given data to a file with a given name.
 void Filewriter::write(std::string & fileName, std::string & data)
 {
 	std::ostringstream fNameStream;
@@ -137,6 +142,7 @@ void Filewriter::write(std::string & fileName, std::string & data)
 	file << data << std::endl;
 }
 
+//Overwrite the file with a given name and write the given data to the file.
 void Filewriter::overwrite(std::string & fileName, std::string & data, bool endWithNewline)
 {
 	std::ostringstream fNameStream;

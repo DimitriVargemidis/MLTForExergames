@@ -18,6 +18,7 @@ std::vector<Frame> & Gesture::getFrames()
 	return frames;
 }
 
+//Add the given frame to this gesture.
 void Gesture::addFrame(Frame & frameToAdd)
 {
 	//Error check: something went wrong with the joints of this frame
@@ -34,16 +35,19 @@ void Gesture::addFrame(Frame & frameToAdd)
 	frames.push_back(frameToAdd);
 }
 
+//Clear all frames of this gesture.
 void Gesture::clearFrames()
 {
 	frames.clear();
 }
 
+//Return the number of frames this gesture has.
 const int Gesture::getNumberOfFrames() const
 {
 	return frames.size();
 }
 
+//Returns true if this gesture object is a posture, thus contains less than POSTURE_THRESHOLD frames.
 const bool Gesture::isPosture() const
 {
 	return frames.size() < POSTURE_THRESHOLD;
@@ -69,11 +73,13 @@ void Gesture::setName(std::string & nameToSet)
 	name = nameToSet;
 }
 
+//Set the vector with labels that specify this gesture.
 void Gesture::setLabelOrder(std::vector<int> labelOrderToSet)
 {
 	labelOrder = labelOrderToSet;
 }
 
+//Add a label to the label order vector.
 void Gesture::addLabel(int labelToAdd)
 {
 	labelOrder.push_back(labelToAdd);

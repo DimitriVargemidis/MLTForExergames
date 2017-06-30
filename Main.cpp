@@ -30,6 +30,7 @@ int APIENTRY wWinMain(
 	_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
+	//Display a debugging console.
 	Console::useConsole();
 	
 	//Create data directory if it does not exist.
@@ -74,6 +75,7 @@ void Main::mainCanInitializeKinectSensor()
 	Main::InitializeDefaultSensor();
 }
 
+//Initialize the Kinect sensor.
 HRESULT Main::InitializeDefaultSensor()
 {
 	HRESULT hr;
@@ -119,6 +121,9 @@ HRESULT Main::InitializeDefaultSensor()
 	return hr;
 }
 
+//==================================
+//Contains the main application loop
+//==================================
 int Main::Run(HINSTANCE hInstance, int nCmdShow)
 {
 	ui = std::make_shared<UI>();
@@ -126,8 +131,6 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 
 	UI_global = ui;
 	model_global = model;
-
-	printf("start \n");
 
 	std::shared_ptr<Main> shared_ptr_this(this);
 
@@ -151,6 +154,7 @@ int Main::Run(HINSTANCE hInstance, int nCmdShow)
 	return 0;
 }
 
+//Update the visuals and sensor values read.
 void Main::Update()
 {
 	if (!m_pBodyFrameReader)

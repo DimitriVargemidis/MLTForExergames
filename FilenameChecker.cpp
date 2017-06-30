@@ -6,6 +6,8 @@
 #include "FilenameChecker.h"
 
 
+//Return the highest ID (used as name) of all files with given extension. This is used
+//when starting the program to initialize automatic increments for ID generation.
 int FilenameChecker::getHighestIDStored(std::string extension)
 {
 	std::vector<std::string> filenames = getAllFileNamesWithoutExtension(extension);
@@ -23,6 +25,7 @@ int FilenameChecker::getHighestIDStored(std::string extension)
 	return maximumInt;
 }
 
+//Get all file names that have the given extension.
 std::vector<std::string> FilenameChecker::getAllFileNames(std::string extension)
 {
 	std::vector<std::string> names;
@@ -54,6 +57,7 @@ std::vector<std::string> FilenameChecker::getAllFileNames(std::string extension)
 	return names;
 }
 
+//Get all file names (without extension) that have the given extension.
 std::vector<std::string> FilenameChecker::getAllFileNamesWithoutExtension(std::string & extension)
 {
 	std::vector<std::string> filenames = getAllFileNames(extension);
@@ -64,6 +68,7 @@ std::vector<std::string> FilenameChecker::getAllFileNamesWithoutExtension(std::s
 	return filenames;
 }
 
+//Convert the given string to a WString. Cumbersome thing to do, but must be done. Thanks, Microsoft!
 std::wstring FilenameChecker::stringToWstring(const std::string& s)
 {
 	int len;
