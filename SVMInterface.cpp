@@ -4,7 +4,9 @@
 #include "Action.h"
 #include "SVMInterface.h"
 
-
+//Train the SVM model with a given set of gesture classes.
+//Input: all gesture classes.
+//Output: an SVM model that can be used to predict a posture
 svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap) {
 	//Set parameters
 	svm_parameter param;
@@ -44,30 +46,6 @@ svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureC
 	svm_node ** x = new svm_node*[problemSize];
 	int rowCount{0};
 
-	/*
-	for (const auto & keyValue : projectMap)
-	{
-		for (const std::shared_ptr<Gesture> g : keyValue.second.first->getGestures())
-		{
-			double fraction = 0;
-			int counter = 0;
-			int labelOffset = 0;
-			for (const Frame & f : g->getFrames())
-			{
-				if (!g->isPosture())
-				{
-					fraction = counter / ((double)g->getFrames().size());
-					labelOffset = (int)(fraction / THRESHOLD_FRACTION);
-					counter++;
-				}
-				labels[rowCount] = keyValue.first + labelOffset;
-				x[rowCount] = f.toArray();
-				rowCount++;
-			}
-		}
-	}
-	*/
-
 	prepareLabels(projectMap);
 	for (const auto & keyValue : projectMap)
 	{
@@ -92,6 +70,9 @@ svm_model * SVMInterface::train(std::map<int, std::pair<std::shared_ptr<GestureC
 	return model;
 }
 
+//Predict which label belongs to the given frame.
+//Input: the SVM model that is computed with train(...) and the frame of which should be know what label fits the best to it.
+//Output: the label of a posture (more or less equal to a frame) that is the most similar to the given frame.
 int SVMInterface::test(svm_model & model, Frame & frame)
 {
 	svm_node * testnode = frame.toArray();
@@ -103,6 +84,11 @@ int SVMInterface::test(svm_model & model, Frame & frame)
 	return resultLabel;
 }
 
+//This function is used within the train(...) function. No need to call this yourself. This function checks which labels
+//overlap for frames that are equal and than makes sure the labels are equal if the frame is equal. The SVM model is
+//created after this function is called, so the labels may not correspond to what you may expect depending on the
+//given projectMap argument of train(projectMap).
+//This function can be slightly optimized by eliminating unnecessary frame/label comparisons.
 void SVMInterface::prepareLabels(std::map<int, std::pair<std::shared_ptr<GestureClass>, std::vector<Action>>> & projectMap)
 {
 	//Assign a label to each frame

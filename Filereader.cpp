@@ -11,6 +11,7 @@
 #include "Filereader.h"
 
 
+//Converts the given string to a vector of doubles.
 std::vector<double> Filereader::convertStringToDoubles(std::string & stringToConvert, const std::string & identifier)
 {
 	//Erase the identifier; +1 is for removing whitespace after the identifier
@@ -26,6 +27,7 @@ std::vector<double> Filereader::convertStringToDoubles(std::string & stringToCon
 	return data;
 }
 
+//Load a project from a file with given filename.
 std::shared_ptr<Project> Filereader::readProjectFromFile(std::string & fileName, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
 {
 	std::shared_ptr<Project> project = std::make_shared<Project>();
@@ -93,6 +95,7 @@ std::shared_ptr<Project> Filereader::readProjectFromFile(std::string & fileName,
 	return project;
 }
 
+//Load a gesture class from a file with given filename.
 std::shared_ptr<GestureClass> Filereader::readGestureClassFromFile(std::string & fileName)
 {
 	std::shared_ptr<GestureClass> gestureClass = std::make_shared<GestureClass>();
@@ -129,6 +132,7 @@ std::shared_ptr<GestureClass> Filereader::readGestureClassFromFile(std::string &
 	return gestureClass;
 }
 
+//Load a gesture from a file with given filename.
 std::shared_ptr<Gesture> Filereader::readGestureFromFile(std::string & fileName)
 {
 	std::shared_ptr<Gesture> gesture =  std::make_shared<Gesture>();
@@ -178,6 +182,7 @@ std::shared_ptr<Gesture> Filereader::readGestureFromFile(std::string & fileName)
 	return gesture;
 }
 
+//Load all saved projects.
 void Filereader::loadAllProjects(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
 {
 	std::vector<std::string> files = FilenameChecker::getAllFileNames(Filewriter::PROJECT_EXTENSION);
@@ -188,6 +193,7 @@ void Filereader::loadAllProjects(std::vector<std::shared_ptr<Project>> * project
 	}
 }
 
+//Load all saved gesture classes.
 void Filereader::loadAllGestureClasses(std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
 {
 	std::vector<std::string> files = FilenameChecker::getAllFileNames(Filewriter::GESTURECLASS_EXTENSION);
@@ -198,6 +204,7 @@ void Filereader::loadAllGestureClasses(std::vector<std::shared_ptr<GestureClass>
 	}
 }
 
+//Load all saved data. This is both all projects and all gesture classes.
 void Filereader::loadAllData(std::vector<std::shared_ptr<Project>> * projects, std::vector<std::shared_ptr<GestureClass>> * gestureClasses)
 {
 	loadAllGestureClasses(gestureClasses);

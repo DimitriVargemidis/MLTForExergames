@@ -14,6 +14,7 @@ GestureClass::GestureClass(const std::shared_ptr<Gesture> gesture) : gestureClas
 	addGesture(gesture);
 }
 
+//Add a gesture to this gesture class.
 void GestureClass::addGesture(const std::shared_ptr<Gesture> gesture) {
 	gestures.push_back(gesture);
 }
@@ -46,11 +47,11 @@ void GestureClass::DeleteGestureWithID(int ID)
 {
 	for (int i = 0; i < gestures.size(); i++)
 	{
-			if (gestures[i]->getGestureID() == ID)
-			{
-				gestures.erase(gestures.begin() + i);
-				return;
-			}
+		if (gestures[i]->getGestureID() == ID)
+		{
+			gestures.erase(gestures.begin() + i);
+			return;
+		}
 	}
 }
 
@@ -63,7 +64,6 @@ std::shared_ptr<Gesture>   GestureClass::getGestureWithID(const int ID)
 			return gestures[i];
 		}
 	}
-	//return the last if nothing is found
 	return nullptr;
 }
 

@@ -43,6 +43,7 @@ void Frame::setFrame(Frame frame)
 	joints = frame.getJoints();
 }
 
+//Converts the frame to a relative base using the center joint as a relative point.
 std::vector<Joint> Frame::convertToRelativeToJoint(_JointType center, std::vector<Joint> & joints)
 {
 	std::vector<Joint> transformedJoints(joints.size());
@@ -81,7 +82,6 @@ std::vector<Joint> Frame::convertToNearAbsToJoint(_JointType center, std::vector
 		CameraSpacePoint still = joints[j].Position;
 	
 		still.X = Xcenter;
-		//still.Y = Ycenter;
 		still.Y = 0;
 		still.Z = 2.6;
 
@@ -147,6 +147,9 @@ void Frame::setLeftHand(HandState left)
 	leftHand = left;
 }
 
+//Convert this frame to an svm_node for easy use when training an SVM model.
+//Relies on use of LibSVM (see online). This requires use of older C++ structures,
+//so inefficient stuff needs to be done!
 svm_node * Frame::toArray() const
 {
 	svm_node * rawArray{ new svm_node[FRAME_DIMENSIONS + 1] };

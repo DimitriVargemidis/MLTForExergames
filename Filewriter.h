@@ -26,12 +26,18 @@ namespace Filewriter
 	const std::string SUBDIRECTORY_STRING{ "DATA/" };
 	const std::string SUBDIRECTORY_NAME_STRING{ "DATA" };
 
+	//Save the given project to a file.
 	void save(std::shared_ptr<Project> & project);
+	//Save the given gesture class to a file.
 	void save(std::shared_ptr<GestureClass> & gestureClass);
+	//Save the given gesture to a file.
 	void save(Gesture & gesture);
+	//Save the given svm_model to a file.
 	void save(svm_model & svmModel, int projectID);
 
+	//Write the given data to a file with a given name.
 	void write(std::string & fileName, std::string & data);
+	//Overwrite the file with a given name and write the given data to the file.
 	void overwrite(std::string & fileName, std::string & data, bool endWithNewline = false);
 }
 

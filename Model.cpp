@@ -21,7 +21,6 @@ void Model::updateCountDown()
 	{
 		countDownInitiated = true;
 		countDownRef = Clock::now();
-		//printf("Get ready to record\n");
 		countDown = 4;
 		updateUI = true;
 	}
@@ -32,54 +31,39 @@ void Model::updateCountDown()
 
 		if (time >= 1000 && countDown > 3)
 		{
-			//printf("3 after %ld \n", time);
 			--countDown;
-			updateUI = true;				//the UI will update it's state based on the countDown parameter
+			updateUI = true;		//The UI will update its state based on the countDown parameter
 		}
 		else if (time >= 2000 && countDown > 2)
 		{
-			//printf("2 after %ld \n", time);
 			--countDown;
-			updateUI = true;				//the UI will update it's state based on the countDown parameter
+			updateUI = true;		//The UI will update its state based on the countDown parameter
 		}
 		else if (time >= 3000 && countDown > 1)
 		{
-			//printf("1 after %ld \n", time);
 			--countDown;
-			updateUI = true;				//the UI will update it's state based on the countDown parameter
+			updateUI = true;		//The UI will update its state based on the countDown parameter
 		}
 		else if ((time >= 4000 && countDown > 0))
 		{
-
-			//printf("GO after %ld \n", time);
 			--countDown;
 			framesBuffer.clear();
 			recording = true;
-			//refresh = false;
-			updateUI = true;				//the UI will update it's state based on the countDown parameter
-											//countDownInitiated = false;
-
+			updateUI = true;		//The UI will update its state based on the countDown parameter
 		}
 		else if (recording == false && countDown == 0)
 		{
-			//printf(" recording is done \n");
 			--countDown;
-
 			countDownRef = Clock::now();
-
-			updateUI = true;				//the UI will update it's state based on the countDown parameter
+			updateUI = true;		//The UI will update its state based on the countDown parameter
 		}
 		else if (time >= 500 && countDown == -1)
 		{
-			//printf(" delete screen \n");
 			--countDown;
-
 			refresh = false;
 			countDownInitiated = false;
 			updateUI = true;
 		}
-
-
 	}
 }
 
@@ -107,15 +91,16 @@ std::shared_ptr<Project> Model::getProject()
 	return activeProject;
 }
 
+//Train an SVM model using all gesture classes stored in the currently active project.
+//After this function is called, all project data is saved into a folder called DATA.
 void Model::train()
 {
 	activeProject->setSVMModel(*(SVMInterface::train(activeProject->getProjectMap())));
-	Console::print("SVM trained");
 	Filewriter::save(activeProject);
-	Console::printsl(" -- Project saved");
 	activeProject->setLongestGestureSize();
 }
 
+//Use the trained SVM model to predict the label of the given frame.
 int Model::test(Frame & frame)
 {
 	return SVMInterface::test(activeProject->getSVMModel(), frame);
@@ -156,11 +141,13 @@ bool Model::getRecording()
 	return recording;
 }
 
+//Add an action to the currently active project and gesture class of that project.
 void Model::addActionToActive(WORD keycode, bool hold)
 {
 	activeProject->addAction(activeGestureClassLabel, keycode, hold);
 }
 
+//Add a gesture to the currently active project and to the gesture class with the given label/ID.
 void Model::addGesture(int label, std::shared_ptr<Gesture> gesture)
 {
 	if (activeProject->containsLabel(label))
@@ -175,11 +162,13 @@ void Model::addGesture(int label, std::shared_ptr<Gesture> gesture)
 	updateUI = true;
 }
 
+//Get a subset of frames from the framesBuffer, depending on the given offset.
 std::vector<Frame> Model::getRelevantFramesFromBuffer(int offset)
 {
 	return std::vector<Frame>(framesBuffer.begin(), framesBuffer.end() - offset);
 }
 
+//Add a new prediction (label) to the buffer.
 void Model::addToLabelsBuffer(int label)
 {
 	labelsBuffer.push_back(label);
@@ -190,11 +179,13 @@ void Model::addToLabelsBuffer(int label)
 	}
 }
 
+//Resize the labels buffer when it is full. This depends on the recorded gesture with the longest duration.
 void Model::resizeLabelsBuffer()
 {
 	labelsBuffer = std::vector<int>(labelsBuffer.end() - activeProject->getLongestGestureSize(), labelsBuffer.end());
 }
 
+//Recursive function that checks if a gesture is executed. This is the most important part of the gesture recognition algorithms.
 bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffer, int recursiveCounter)
 {
 	int labelOrderPosition = SVMInterface::NB_OF_LABEL_DIVISIONS - recursiveCounter;
@@ -215,52 +206,9 @@ bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffe
 	return false;
 }
 
+//Checks for all gesture classes if they are recognized. Executes linked actions to the recognized gesture class.
 void Model::predictAndExecute(int label)
 {
-	/*
-	//Find out what base label the given label belongs to.
-	int baseLabel = -1;
-	if (activeProject->containsLabel(label))
-	{
-		baseLabel = label;
-	}
-	else
-	{
-		for (int i = SVMInterface::NB_OF_LABEL_DIVISIONS; i > 0; i--)
-		{
-			if (activeProject->containsLabel(label - i))
-			{
-				baseLabel = label - i;
-				break;
-			}
-		}
-	}
-
-	if (isGestureExecuted(label, labelsBuffer.size() - 1, 1, 0))
-	{
-		previousPredictedLabel = predictedLabel;
-		predictedLabel = baseLabel;
-	
-		Console::print("Predicted label: ");
-		Console::printsl(predictedLabel);
-		labelsBuffer.clear();
-
-		if (previousPredictedLabel < 0)
-		{
-			activeProject->activate(predictedLabel);
-		}
-		else if (previousPredictedLabel != predictedLabel)
-		{
-			activeProject->deactivate(previousPredictedLabel);
-			activeProject->activate(predictedLabel);
-		}
-		else if (previousPredictedLabel == predictedLabel)
-		{
-			activeProject->activate(predictedLabel);
-		}
-	}
-	*/
-
 	int executedLabel = -1;
 	for (const auto & keyValue : activeProject->getProjectMap())
 	{
@@ -282,11 +230,13 @@ void Model::predictAndExecute(int label)
 		Console::printsl(predictedLabel);
 
 		if (activeProject->getGestureClass(predictedLabel)->getGestures().front()->isPosture()) {
+			//Remove the last three labels for postures, necessary when a mixture of gestures and postures is used.
 			labelsBuffer.pop_back();
 			labelsBuffer.pop_back();
 			labelsBuffer.pop_back();
 		}
 		else {
+			//Clear the entire buffer if a gesture is recognized.
 			labelsBuffer.clear();
 		}
 		
@@ -316,9 +266,6 @@ std::shared_ptr<GestureClass> Model::getGestureClassByID(const int & ID)
 				return gestureClasses[i];
 		}
 	}
-
-	//give the last gestureClass back
-	//return gestureClasses[gestureClasses.size()-1];
 	return nullptr;
 }
 
@@ -328,11 +275,14 @@ void Model::displayFrames()
 	{
 		view->drawFrames(relFrames, absFrames);
 	}
-
 	relFrames.clear();
 	absFrames.clear();
 }
 
+//===========================================================================================================================
+//Forms part of the main loop of the program. This loop can NOT be blocking, otherwise the UI will not refresh and the sensor
+//will not collect new data!
+//===========================================================================================================================
 void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 {
 	//Go through all the bodies that are being seen now. If a body is tracked, its frame is made and added to the frames vector
@@ -404,23 +354,20 @@ void Model::processBody(INT64 nTime, int nBodyCount, IBody ** ppBodies)
 	displayFrames();
 }
 
+//Used for recording gestures with the given frame being the newest frame retrieved from the sensor.
 void Model::recordGesture(Frame & frame)
 {
 	if (!initialized)
 	{
 		frameNeutral.setFrame(frame);
 		initialized = true;
-		Console::print("Initialized recording");
 	}
-	
-	//relFrames.push_back(frame);
 	framesBuffer.push_back(frame);
 
 	if (!startedMoving)
 	{
 		if (! frame.equals(frameNeutral))
 		{
-			Console::print("Motion detected -- start recording frames");
 			startedMoving = true;
 			if (framesBuffer.size() > 20)
 			{
@@ -434,7 +381,6 @@ void Model::recordGesture(Frame & frame)
 		}
 		else if (framesBuffer.size() > NOT_MOVING_FRAME_DELAY)
 		{
-			Console::print("Standing still -- posture recorded");
 			addRecordedGesture();
 		}
 		else
@@ -450,8 +396,6 @@ void Model::recordGesture(Frame & frame)
 		addRecordedGesture();
 	}
 }
-
-	
 
 bool Model::getCountDownInit()
 {
@@ -473,6 +417,7 @@ bool Model::getUpdateUI()
 	return updateUI;
 }
 
+//This function is called when recording of a gesture is done.
 void Model::addRecordedGesture()
 {
 	std::shared_ptr<Gesture> gesture = std::make_shared<Gesture>( getRelevantFramesFromBuffer(NOT_MOVING_FRAME_DELAY-20) );
@@ -481,5 +426,4 @@ void Model::addRecordedGesture()
 	initialized = false;
 	startedMoving = false;
 	framesBuffer.clear();
-	Console::print("Recording stopped");
 }
