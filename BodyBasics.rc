@@ -36,15 +36,11 @@ IDI_APP                 ICON                    "app.ico"
 // IMAGE
 //
 
-IMAGE_D                 IMAGE                   "Images\\D.png"
-
 ROPE                    IMAGE                   "Images\\recordRopeStd.png"
 
 ROPEHOVER               IMAGE                   "Images\\recordRopeHover.png"
 
 ROPEHANDACTIVE          IMAGE                   "Images\\recordRopeHandActive.png"
-
-IMAGE_OPEN              IMAGE                   "Images\\open.png"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,19 +58,19 @@ BEGIN
     CONTROL         "",IDC_VIDEOVIEW,"Static",SS_WHITEFRAME,0,2,458,252
     LTEXT           "",IDC_STATUS,0,263,585,11,SS_SUNKEN
     PUSHBUTTON      "RESET",IDC_measure_RESET,460,191,46,15
-    EDITTEXT        IDC_EDIT_LABEL,459,2,74,15,ES_AUTOHSCROLL
-    PUSHBUTTON      "start predicting",IDC_START_PREDICT,459,115,75,15,BS_CENTER
-    RTEXT           "prediction:",IDC_LBL_PREDICTION,459,147,75,15
-    LTEXT           "NOT READY",IDC_PREDICT_READY,535,115,50,15
-    LTEXT           "NONE",IDC_PREDICTION,535,148,34,13
+    EDITTEXT        IDC_EDIT_LABEL,459,2,38,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "start",IDC_START_PREDICT,459,115,39,15,BS_CENTER
+    RTEXT           "prediction:",IDC_LBL_PREDICTION,459,147,41,15
+    LTEXT           "NOT READY",IDC_PREDICT_READY,500,115,50,15
+    LTEXT           "NONE",IDC_PREDICTION,500,148,34,13
     RTEXT           "measure count:",IDC_LBL_MEAS_COUNT,476,176,57,15
     LTEXT           "NONE",IDC_MEAS_COUNT,533,177,28,15
-    PUSHBUTTON      "Measure Gesture",IDC_measure_4,459,100,75,15
-    PUSHBUTTON      "stop predicting",IDC_STOP_PREDICT,459,130,75,15,BS_CENTER
-    PUSHBUTTON      "Select",IDC_SELECT,459,18,75,15
-    LTEXT           "NONE",IDC_ACTIVE_LABEL,535,18,28,15
-    PUSHBUTTON      "Add Key",IDC_ADD_KEY,459,34,75,15
-    LTEXT           "Add key info",IDC_ADD_KEY_INFO,535,34,48,15
+    PUSHBUTTON      "Measure Gesture",IDC_measure_4,459,100,58,15
+    PUSHBUTTON      "stop",IDC_STOP_PREDICT,459,130,41,15,BS_CENTER
+    PUSHBUTTON      "Select",IDC_SELECT,459,18,39,15
+    LTEXT           "NONE",IDC_ACTIVE_LABEL,500,18,28,15
+    PUSHBUTTON      "Add Key",IDC_ADD_KEY,459,34,39,15
+    LTEXT           "Add key info",IDC_ADD_KEY_INFO,500,34,48,15
     PUSHBUTTON      "REL / ABS",IDC_REL_ABS,459,160,75,15,BS_CENTER
     RTEXT           "LEFT:",IDC_LBL_MEAS_COUNT2,460,248,28,9
     CTEXT           "X",IDC_MEAS_COUNT2,491,227,28,8
@@ -87,9 +83,9 @@ BEGIN
     CTEXT           "X",IDC_LEFT_X,491,248,28,8
     CTEXT           "Y",IDC_LEFT_Y,523,248,28,8
     CTEXT           "Z",IDC_LEFT_Z,555,248,28,8
-    PUSHBUTTON      "Cancel Add Key",IDC_CANC_ADD_KEY2,459,50,75,15
-    PUSHBUTTON      "Single/Hold",IDC_SINGLE_CONT,459,66,75,15
-    LTEXT           "SINGLE PRESS",IDC_SINGLE_CONT_INFO,535,66,48,15
+    PUSHBUTTON      "Cancel Add Key",IDC_CANC_ADD_KEY2,459,50,54,15
+    PUSHBUTTON      "Single/Hold",IDC_SINGLE_CONT,459,66,41,15
+    LTEXT           "SINGLE PRESS",IDC_SINGLE_CONT_INFO,500,66,48,15
 END
 
 

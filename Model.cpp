@@ -204,7 +204,7 @@ bool Model::isGestureExecuted(std::shared_ptr<Gesture> & gesture, int posInBuffe
 	{
 		if (labelsBuffer.at(i) == labelToCheck)
 		{
-			if (labelOrderPosition <= 0)
+			if (labelOrderPosition <= 1)
 			{
 				return true;
 			}
