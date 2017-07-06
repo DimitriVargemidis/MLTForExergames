@@ -281,8 +281,14 @@ void Model::predictAndExecute(int label)
 		Console::print("Predicted label: ");
 		Console::printsl(predictedLabel);
 
-		labelsBuffer.clear();
-	//	labelsBuffer.push_back(30);
+		if (activeProject->getGestureClass(predictedLabel)->getGestures().front()->isPosture()) {
+			labelsBuffer.pop_back();
+			labelsBuffer.pop_back();
+			labelsBuffer.pop_back();
+		}
+		else {
+			labelsBuffer.clear();
+		}
 		
 		if (previousPredictedLabel < 0)
 		{
