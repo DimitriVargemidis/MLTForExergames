@@ -1,6 +1,5 @@
-//This class is based on the code from the Microsoft library examples called BodyBasics-D2D
-//Code is adapted and expanded to meet requirements
 #pragma once
+//author: Christiaan Vanbergen 
 
 #pragma comment(lib, "dwrite")
 
@@ -10,6 +9,10 @@
 #include <dwrite.h>
 #include "resource.h"
 
+//This class is based on the code from the Microsoft library examples called BodyBasics-D2D
+//Code is adapted and expanded to meet requirements
+
+//author: Christiaan Vanbergen 
 class D2D_Graphics
 {
 public:
@@ -51,6 +54,7 @@ public:
 	//"pJointPoints": joint positions converted to screen space
 	//"joint0": one joint of the bone to draw
 	//"joint1": other joint of the bone to draw
+	//"boneThickness": the thickness in pixel with which bones are drawn
 	void					DrawBone(const std::vector<Joint> pJoints, const std::vector<D2D1_POINT_2F> pJointPoints, JointType joint0, JointType joint1, float boneThickness);
 
 	//Release D2Dfactory
@@ -63,16 +67,20 @@ public:
 	void					drawRectangle(float left,float top, float right, float bottom, D2D1::ColorF color);
 	void					drawText(std::wstring text, D2D1_POINT_2F center, float width = 100, float height = 50, D2D1::ColorF color = D2D1::ColorF::AliceBlue, float fontSize = 50, DWRITE_TEXT_ALIGNMENT alignment = DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT paragraph = DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
+	//used to create a ID2D1Bitmap object from a source IMAGE
 	ID2D1Bitmap	*			createBitmap(std::wstring filename, int srcWidth, int srcHeight);
+
 	void					drawBitmap(RGBQUAD * image, int srcWidth, int srcHeight, D2D1_POINT_2F center, float width, float height);
 	void					drawBitmap(ID2D1Bitmap * bitmap, D2D1_POINT_2F center, float width, float height);
 
+	//scale the joints of a skeleton based on a multiplier or on start-width/height and end-width/height of a rectangle, the absolute coordinates of such a skeleton can also be altered.
 	void					scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, float multiplier);
 	void					scaleSkeleton(std::vector<D2D1_POINT_2F> & jointPoints, const float startWidth, const float startHeight, const float endWidth, const float endHeight, const float absXpos = -1, const float absYpos = -1);
 
 
 private:
 
+	//draws different parts of the body
 	void					drawTorso(const std::vector<D2D1_POINT_2F> pJointPoints, const float c_BoneThickness);
 	void					drawHead(const std::vector<D2D1_POINT_2F> pJointPoints, const float c_BoneThickness);
 

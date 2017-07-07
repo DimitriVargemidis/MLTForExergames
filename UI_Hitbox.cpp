@@ -1,4 +1,4 @@
-
+//author: Christiaan Vanbergen 
 #include "Model.h"
 #include "UI.h"
 
@@ -25,7 +25,7 @@ void UI_Hitbox::action(ActionTrigger action, const D2D1_POINT_2F & coord)
 	switch (action)
 	{
 	case ActionTrigger::HoverOn:
-		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
+		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); 
 		break;
 	case ActionTrigger::HoverOff:
 		get_UI_Objects()[0]->changeColor(D2D1::ColorF::White);
@@ -36,24 +36,24 @@ void UI_Hitbox::action(ActionTrigger action, const D2D1_POINT_2F & coord)
 
 		activateFunction();
 
-		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Blue); //TO DO make callback
+		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Blue); 
 		break;
 	case ActionTrigger::ActiveHandOff:
-	
+
 		deactivateFunction();
 
-		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
+		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); 
 		break;
 	case ActionTrigger::ActiveHandHold:
 		break;
 	case ActionTrigger::ActiveHandOutsideOn:
-		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
+		get_UI_Objects()[0]->changeColor(D2D1::ColorF::Red); 
 		break;
 	case ActionTrigger::ActiveHandOutsideOff:
-		//UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
+		
 		break;
 	case ActionTrigger::ActiveHandOutsideHold:
-		//UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
+		
 		break;
 	}
 

@@ -1,3 +1,5 @@
+//author: Christiaan Vanbergen 
+
 #include <strsafe.h>
 #include <Windows.h>
 #include <Winuser.h>
@@ -17,12 +19,9 @@ D2D_Graphics			graphics;
 HWND                    m_hWnd;
 
 UI::UI() :
-m_pCoordinateMapper(NULL)//,
-//m_hWnd(NULL)
-//graphics {}
+m_pCoordinateMapper(NULL)
 {
-	//const static std::shared_ptr<D2D_Graphics> graphicStaticPtr(&graphics);
-	//const static std::shared_ptr<UI> UI_static_ptr(this);
+
 	
 }
 
@@ -200,15 +199,6 @@ void UI::setModel(std::shared_ptr<Model> m)
 {
 	model = m;
 	Screen->setModel(model);
-	/*
-	
-
-	for (int i = 0; i < UI_Hitboxes.size(); i++)
-	{
-		UI_Hitboxes[i]->setModel(m);
-	}
-	updateHitboxes();
-	*/
 }
 
 void UI::createScreen()
@@ -358,36 +348,8 @@ LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 void UI::processKeyInput(MSG msg)
 {
 
-	//test code to check how long a human presses a button
 	if (msg.message == 0x00000100)
 	{
-		//DEBUG CODE
-		/*
-		int button = static_cast<int>(msg.wParam);
-		wchar_t buffer[256];
-
-		/* code for time measuring
-		if (time != 0)
-		{
-			long diff = static_cast<long>(msg.time) - time;
-		
-			wchar_t buffer[256];
-			wsprintfW(buffer, L"%ld", diff);
-			OutputDebugStringW(L"auto release after ");
-			OutputDebugStringW(buffer);
-			wsprintfW(buffer, L"%d", button);
-			OutputDebugStringW(L" milliseconds and pressed button ");
-			OutputDebugStringW(buffer);
-			OutputDebugStringW(L" \n");
-		}
-		
-
-		time = static_cast<long>(msg.time);
-		OutputDebugStringW(L" button pressed it was ");
-		wsprintfW(buffer, L"%d", button);
-		OutputDebugStringW(buffer);
-		OutputDebugStringW(L" \n");
-		*/
 
 		int button = static_cast<int>(msg.wParam);
 		wchar_t buffer[256];
@@ -396,8 +358,6 @@ void UI::processKeyInput(MSG msg)
 		OutputDebugStringW(buffer);
 		OutputDebugStringW(L" \n");
 
-		//model->addActionToActive(msg.wParam, true); //standard holding for now
-		
 		model->addActionToActive(msg.wParam, holdPress); 
 
 	}
@@ -418,92 +378,11 @@ void UI::processKeyInput(MSG msg)
 	
 	if (msg.message == 0x00000101)
 	{
-		//DEBUG CODE
-		/* 
-		long diff = static_cast<long>(msg.time) - time;
-		int button = static_cast<int>(msg.wParam);
-
-		wchar_t buffer[256];
-		wsprintfW(buffer, L"%ld", diff);
-		OutputDebugStringW(L"time between press and release ");
-		OutputDebugStringW(buffer);
-		wsprintfW(buffer, L"%d", button);
-		OutputDebugStringW(L" milliseconds it was button ");
-		OutputDebugStringW(buffer);
-		OutputDebugStringW(L" \n");
-		time = 0;
-		*/
+		
 
 	}
 }
 
-/*
-/// <summary>
-/// Show the joint coordinates on the screen
-/// </summary>
-/// <param name="skel">skeleton of which the joints will be shown</param>
-void UI::ShowJointCoordinates(const std::vector<Joint> & joints, int tab)
-{
-	if (tab == 0)
-	{
-
-		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
-	
-		if (joints[9].Position.X*100.0 < -10000)
-		{
-
-		}
-
-		if (joints[9].Position.X*100.0 > -10000 && joints[9].Position.Y*100.0 > -10000 && joints[9].Position.Z*100.0 > -10000 && joints[10].Position.X*100.0 > -10000 && joints[10].Position.Y*100.0 > -10000 && joints[10].Position.Z*100.0 > -10000 && joints[11].Position.X*100.0 > -10000 && joints[11].Position.Y*100.0 > -10000 && joints[11].Position.Z*100.0 > -10000) //sometimes empty jointarrays are given, this if will make sure these are not displayed
-		{
-
-			//right shoulder
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_X, (UINT32)(joints[9].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_Y, (UINT32)((joints[9].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_Z, (UINT32)((joints[9].Position.Z - 1.8)*100.0), TRUE);
-
-			//right elbow
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_X, (UINT32)(joints[10].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_Y, (UINT32)((joints[10].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_Z, (UINT32)((joints[10].Position.Z - 1.8)*100.0), TRUE);
-
-			//right wrist
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_X, (UINT32)(joints[11].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_Y, (UINT32)((joints[11].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_Z, (UINT32)((joints[11].Position.Z - 1.8)*100.0), TRUE);
-
-		}
-	}
-	else if (tab == 1)
-	{
-		//code for recalculating the coordinates of the joint to be relative to your center point (is done somewhere else)
-	
-
-		if (joints[9].Position.X*100.0 < -10000)
-		{
-		}
-
-		if (joints[9].Position.X*100.0 > -10000 && joints[9].Position.Y*100.0 > -10000 && joints[9].Position.Z*100.0 > -10000 && joints[10].Position.X*100.0 > -10000 && joints[10].Position.Y*100.0 > -10000 && joints[10].Position.Z*100.0 > -10000 && joints[11].Position.X*100.0 > -10000 && joints[11].Position.Y*100.0 > -10000 && joints[11].Position.Z*100.0 > -10000) //sometimes empty jointarrays are given, this if will make sure these are not displayed
-		{
-			//right shoulder
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_X2, (UINT32)(joints[9].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_Y2, (UINT32)((joints[9].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT1_Z2, (UINT32)((joints[9].Position.Z - 1.8)*100.0), TRUE);
-
-			//right elbow
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_X2, (UINT32)(joints[10].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_Y2, (UINT32)((joints[10].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT2_Z2, (UINT32)((joints[10].Position.Z - 1.8)*100.0), TRUE);
-
-			//right wrist
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_X2, (UINT32)(joints[11].Position.X*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_Y2, (UINT32)((joints[11].Position.Y - 0.3)*100.0), TRUE);
-			SetDlgItemInt(m_hWnd, IDC_JOINT3_Z2, (UINT32)((joints[11].Position.Z - 1.8)*100.0), TRUE);
-		}
-	}
-}
-
-*/
 
 /// <summary>
 /// Set the status bar message
@@ -532,51 +411,6 @@ void UI::setPredictedLabel(int label)
 }
 
 
-
-/*
-void UI::fillScrolbar(int ID)
-{
-	std::shared_ptr<UI> shared_ptr_this(this);
-	std::shared_ptr<GestureClass> ActiveGestureClass = model->getGestureClassByID(ID);
-	std::vector<Gesture> gestures = ActiveGestureClass->getGestures();
-
-		std::shared_ptr<UI_Object> background = std::make_shared<UI_Object>(550 + 250, 350, 150, 500, D2D1::ColorF::Red);
-		//UI_Objects.push_back(testObject5);
-		std::shared_ptr<UI_Object> selectedBox = std::make_shared<UI_Object>(550 + 250, 250, 150, 100, D2D1::ColorF::Blue);
-		//UI_Objects.push_back(selectedBox);
-		
-		//scrollbar->add_UI_Object(background);
-		//scrollbar->add_UI_Object(selectedBox);
-		
-
-
-		int gestureID;
-
-	//for (int i = gestures.size()-1; i >= 0; i--)
-	for (int i =0 ; i < gestures.size(); i++)
-	{
-		gestureID = gestures[i].getGestureID();
-
-
-		std::shared_ptr<UI_Object> testObject7 = std::make_shared<UI_Object>(400 + 250, 350, 150, 150, D2D1::ColorF::White);
-		std::shared_ptr<UI_Object> text1 = std::make_shared<UI_TextObject>(400 + 250 - 30, 350, 75, 150, D2D1::ColorF::Black, std::to_wstring(i+1), 20);
-		//std::shared_ptr<UI_Object> text = std::make_shared<UI_TextObject>(400 + 250+30, 350, 75, 150, D2D1::ColorF::Black,(std::to_wstring(gestureID)),20);
-		std::shared_ptr<Abstr_UI_Hitbox> testHitbox7(new UI_HitboxHoverSlideButton(400 + 250, 350, 150, 150, 0, 100, 0, 0, 0.5, UI_CallbackFunctions::deleteGesture, gestures[i].getGestureID()));
-
-		testHitbox7->add_UI_Object(testObject7);
-		//testHitbox7->add_UI_Object(text);
-		testHitbox7->add_UI_Object(text1);
-		testHitbox7->addInputJoint(JointType_HandLeft);
-		testHitbox7->addInputJoint(JointType_HandRight);
-		testHitbox7->setUI(shared_ptr_this);
-
-		//scrollbar->add_UI_Element(testHitbox7);
-	}
-
-	//UI_Hitboxes.push_back(scrollbar);
-
-}
-*/
 
 void UI::setRightHandBusy(const bool & busy)
 {
@@ -621,12 +455,6 @@ void UI::drawHandState(HandState handState, const D2D1_POINT_2F & handPosition)
 void UI::updateHitboxes()
 {
 	Screen->updateHitboxes();
-	/*
-	for (const auto & hitbox : UI_Hitboxes)
-	{
-		hitbox->updateData();
-	}
-	*/
 		
 }
 

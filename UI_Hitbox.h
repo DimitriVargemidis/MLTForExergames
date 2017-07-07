@@ -1,20 +1,15 @@
 #pragma once
+//author: Christiaan Vanbergen 
 
-//#include <d2d1.h>
-//#include <vector>
-//#include <memory>
-//#include <Kinect.h>
-
-//#include "ActionTrigger.h"
-
-//#include "UI_Object.h"
-
-//class Model;
 
 #include "Abstr_UI_Hitbox.h"
 
 class UI;
 
+//A child class of Abstr_UI_Hitbox that defines simple behavior of activating when the hand goes into handActiveState (default: hand closes) over the hitbox
+//and deactivates when the hand goes out of 
+
+//author: Christiaan Vanbergen 
 class UI_Hitbox : public Abstr_UI_Hitbox
 {
 public:

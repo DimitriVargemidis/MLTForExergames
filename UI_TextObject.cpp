@@ -1,4 +1,5 @@
 #include "UI_TextObject.h"
+//author: Christiaan Vanbergen 
 
 extern D2D_Graphics graphics;
 

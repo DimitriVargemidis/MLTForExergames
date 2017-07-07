@@ -1,3 +1,4 @@
+//author: Christiaan Vanbergen 
 
 #include "Model.h"
 
@@ -70,12 +71,9 @@ bool Abstr_UI_Hitbox::checkInputJointType(JointType type)
 	return false;
 }
 
-void Abstr_UI_Hitbox::setHover(bool a)
-{
-	hover = a;
 
-}
 
+//used by the attemptInteraction function
 void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const HandState & hand, const D2D1_POINT_2F & jointPoint)
 {
 
@@ -102,11 +100,11 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 
 		if (hand == Activehandstate) //is the hand in the state that activates the hitbox
 		{
-			if(!hover)
+			if(!hover)				//if hand is not hovering over the hitbox
 			{ 
 				activeHandBeforeHover = true;
 			}
-			else if (!activeHand)
+			else if (!activeHand)	//is the hitbox not already handactivated
 			{
 				action(ActionTrigger::HoverOn, jointPoint);
 			}
@@ -116,11 +114,9 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 				if (!activeHand) //is the hitbox not already handactivated
 				{
 					InertiaCounter = 0;
-					//ActiveHandOnAction();
 					action(ActionTrigger::ActiveHandOn, jointPoint);
-
 					activeHand = true;
-					//printf("active = true /n");
+
 				}
 				else
 				{
@@ -135,20 +131,15 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 
 			if (activeHand) //is the hitbox handactive already
 			{
-				if (InertiaCounter > InertiaLimit)
+				if (InertiaCounter > InertiaLimit) 
 				{
-					//ActiveHandOffAction();
 					action(ActionTrigger::ActiveHandOff, jointPoint);
-
 					activeHand = false;
-			//		printf("active = false /n");
 				}
 				InertiaCounter++;
-			//	printf("! ");
 			}
-			else if (hover)
+			else if (hover) //is there already a valid joint hover over the hitbox?
 			{
-				//HoverOnAction();
 				action(ActionTrigger::HoverHold, jointPoint);
 			}
 			else
@@ -159,35 +150,31 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 		}
 
 	}
-	else
+	else //if there is no joint hover over the hitbox at the moment
 	{
 		activeHandBeforeHover = false;
 		try
 		{
-			if (activeHand == true)
+			if (activeHand == true) //was there a joint in handactive state before leaving the hitbox
 			{
-				//ActiveHandOffAction();
 				action(ActionTrigger::ActiveHandOutsideOn, jointPoint);
 				activeHandOutside = true;
 				InertiaCounter = 0;
 
 				activeHand = false;
-			//	printf("Active outside ON? \n");
 			}
 			
-			//else if (hover)
-			if(hover)
+			if(hover) //was there a joint in handactive state before leaving the hitbox
 			{
 				action(ActionTrigger::HoverOff, jointPoint);
 			}
 
-			if (activeHandOutside)
+			if (activeHandOutside) //is the joint that was previously inside the hitbox still in handActiveState outside of the hitbox?
 			{
 				if (hand == Activehandstate)
 				{
 					InertiaCounter = 0;
 					action(ActionTrigger::ActiveHandOutsideHold, jointPoint);
-				//	printf("Active outside HOLD? \n");
 				}
 				else
 				{
@@ -195,13 +182,10 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 					{
 						action(ActionTrigger::ActiveHandOutsideOff, jointPoint);
 						activeHandOutside = false;
-						//printf("Active outside OFF? \n");
 					}
 					InertiaCounter++;
-					//printf("! ");
 				}
 			}
-			//HoverOffAction();
 
 		}
 		catch (const std::out_of_range& oor)
@@ -215,6 +199,12 @@ void Abstr_UI_Hitbox::setHover(const bool &  a, const JointType & joint, const H
 		keepHoverState = false;
 	else
 		hover = a;
+}
+
+void Abstr_UI_Hitbox::setHover(bool a)
+{
+	hover = a;
+
 }
 
 bool Abstr_UI_Hitbox::getHover()
@@ -299,47 +289,6 @@ void Abstr_UI_Hitbox::ActiveHandOffAction()
 void Abstr_UI_Hitbox::ActiveHandHoldAction()
 {
 }
-/*
-void Abstr_UI_Hitbox::action(ActionTrigger action, const D2D1_POINT_2F & coord)
-{
-	switch (action)
-	{
-	case ActionTrigger::HoverOn:
-		UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
-		break;
-	case ActionTrigger::HoverOff:
-		UI_objects[0]->changeColor(D2D1::ColorF::White);
-		break;
-	case ActionTrigger::HoverHold:
-		break;
-	case ActionTrigger::ActiveHandOn:
-
-		activateFunction();
-
-		UI_objects[0]->changeColor(D2D1::ColorF::Blue); //TO DO make callback
-		break;
-	case ActionTrigger::ActiveHandOff:
-
-		deactivateFunction();
-
-		UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
-		break;
-	case ActionTrigger::ActiveHandHold:
-		break;
-	case ActionTrigger::ActiveHandOutsideOn:
-		UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
-		break;
-	case ActionTrigger::ActiveHandOutsideOff:
-		//UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
-		break;
-	case ActionTrigger::ActiveHandOutsideHold:
-		//UI_objects[0]->changeColor(D2D1::ColorF::Red); //TO DO make callback
-		break;
-	}
-
-
-}
-*/
 
 bool Abstr_UI_Hitbox::isRightHandActive()
 {
@@ -364,7 +313,6 @@ bool Abstr_UI_Hitbox::isLeftHandActive()
 void Abstr_UI_Hitbox::setCenterCoordActionArea(D2D1_POINT_2F center)
 {
 	centerCoordActionArea = center;
-	//printf("element center set \n");
 }
 
 D2D1_POINT_2F Abstr_UI_Hitbox::getCenterCoordActionArea()
@@ -533,6 +481,7 @@ float Abstr_UI_Hitbox::getXoffset()
 
 void Abstr_UI_Hitbox::draw()
 {
+	//if the fading is activated each frame the fade counter is increased and the alpha of each UI_object within this hitbox is decreased accordingly
 	float fade;
 	if (fading)
 	{
@@ -566,13 +515,13 @@ void Abstr_UI_Hitbox::draw()
 
 void Abstr_UI_Hitbox::attemptInteraction(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)
 {
-	if (checkInputJointType(type) && !totalLock)
+	if (checkInputJointType(type) && !totalLock) //check if the jointtype is able to interact with the hitbox and if total lock is not on
 	{
-		if (checkCoordInside(jointPoint))
+		if (checkCoordInside(jointPoint))		//check if the coordinate of the joint is inside of the hitbox
 		{
-			//if (!(UI_Hitboxes[i].getHover()))
-			//{
+	
 			//NOW only works for right and left hand !
+			//is the joint of type righthand or lefthand? is that hand not already busy interacting with another hitbox? 
 			if (type == JointType_HandRight && !(UI_ptr->getRightHandBusy()))
 			{
 				setHover(true, type, rightHand, jointPoint);
@@ -586,16 +535,10 @@ void Abstr_UI_Hitbox::attemptInteraction(D2D1_POINT_2F jointPoint, JointType typ
 				UI_ptr->setLeftHandBusy(isLeftHandActive());
 			}
 
-			//UI_Hitboxes[i].setHoverJoint(type);
-			//printf("activate");
-			//}
-
 		}
-		else// if(UI_Hitboxes[i]->getHover())
+		else
 		{
-			//if (UI_Hitboxes[i].getHover() && UI_Hitboxes[i].getHoverJoint() == type)
-			//{
-			//UI_Hitboxes[i]->setHover(false,type,leftHand, jointPoint);
+	
 			if (type == JointType_HandRight)
 			{
 				setHover(false, type, rightHand, jointPoint);
@@ -607,8 +550,7 @@ void Abstr_UI_Hitbox::attemptInteraction(D2D1_POINT_2F jointPoint, JointType typ
 				setHover(false, type, leftHand, jointPoint);
 				UI_ptr->setLeftHandBusy(isLeftHandActive());
 			}
-			//printf("DEactivate!!!");
-			//}
+			
 		}
 
 	}
@@ -647,6 +589,7 @@ void Abstr_UI_Hitbox::add_UI_Object(std::shared_ptr<UI_Object> object)
 	UI_objects.push_back(object);
 }
 
+//not used
 void Abstr_UI_Hitbox::remove_UI_Object(std::shared_ptr<UI_Object> object)
 {
 	//TO DO define this function

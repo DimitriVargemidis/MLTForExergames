@@ -40,14 +40,14 @@ int Keypress::pressKey(const WORD keycode)
 	ip.ki.time = 0;
 	ip.ki.dwExtraInfo = 0;
 
-	// Press the "space" key
+	// Press the key with code "keycode"
 	ip.ki.wVk = keycode; 
 	ip.ki.dwFlags = 0; // 0 for key press
 	SendInput(1, &ip, sizeof(INPUT));
 
 	Sleep(50);
 
-	// Release the "space" key
+	// Release the key with code "keycode"
 	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
 	SendInput(1, &ip, sizeof(INPUT));
 
@@ -71,7 +71,7 @@ int Keypress::keyDown(const WORD keycode)
 	ip.ki.time = 0;
 	ip.ki.dwExtraInfo = 0;
 
-	// Press the "space" key
+	// Press the key with code "keycode"
 	ip.ki.wVk = keycode; 
 	ip.ki.dwFlags = 0; // 0 for key press
 	SendInput(1, &ip, sizeof(INPUT));
@@ -96,7 +96,7 @@ int Keypress::keyUp(const WORD keycode)
 	ip.ki.time = 0;
 	ip.ki.dwExtraInfo = 0;
 
-	// Press the "space" key
+	// Release the key with code "keycode"
 	ip.ki.wVk = keycode; 
 
 	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release

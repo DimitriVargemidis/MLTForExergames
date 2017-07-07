@@ -1,4 +1,5 @@
 #include "UI.h"
+//author: Christiaan Vanbergen 
 
 #include "Abstr_UI_HitboxSlideButton.h"
 
@@ -29,146 +30,93 @@ Abstr_UI_HitboxSlideButton::~Abstr_UI_HitboxSlideButton()
 {
 }
 
-void Abstr_UI_HitboxSlideButton::HoverOnAction()
-{
-}
-
-void Abstr_UI_HitboxSlideButton::HoverOffAction()
-{
-}
-
-void Abstr_UI_HitboxSlideButton::HoverHoldAction()
-{
-}
-
-void Abstr_UI_HitboxSlideButton::ActiveHandOnAction()
-{
-}
-
-void Abstr_UI_HitboxSlideButton::ActiveHandOffAction()
-{
-}
-
-void Abstr_UI_HitboxSlideButton::ActiveHandHoldAction()
-{
-}
 
 void Abstr_UI_HitboxSlideButton::MoveHitbox(const D2D1_POINT_2F & coord)
 {
+	//the initiates the coordinates of the new position that the hitbox is going to take
 	D2D1_POINT_2F newPos = getCenterCoordActionArea();
 
-	//printf("hello \n");
+	//calculates the relative distance between the new coordinates and the coordinates of the previous frame
 	float moveLeft = (lastPoint.x - coord.x);
 	float moveRight = (coord.x - lastPoint.x);
 	float moveDown = (coord.y - lastPoint.y);
 	float moveUp = (lastPoint.y - coord.y);
-	//printf("MoveLeft = %f MoveRight = %f moveDown = %f moveUp = %f \n", moveLeft, moveRight, moveDown, moveUp);
-
-	//printf("x is %f and y is %f \n", newPos.x, newPos.y);
-
+	
+	//calculates the relative distance between the origin of the hitbox and the next position of the center of the hitbox if the action is completed
 	float moveLeftFromOrigin = (getOriginalPos().x - (newPos.x - moveLeft));
 	float moveRightFromOrigin = ((newPos.x + moveRight) - (getOriginalPos()).x);
 	float moveDownFromOrigin = ((newPos.y + moveDown) - (getOriginalPos()).y);
 	float moveUpFromOrigin = ((getOriginalPos()).y - (newPos.y - moveUp));
 
-	//if (moveLeft > 0  && endLeft != 0)
+	//for every direction there are check whether the move is positive and not further than the limit
 	if (moveLeft > 0)
 	{
-		//if (((getOriginalPos()).x - (newPos.x - moveLeft)) < endLeft)
-		if ((moveLeftFromOrigin) < endLeft)
+		if ((moveLeftFromOrigin) < endLeft)// not further than the limit?
 		{
-			//newPos.x = newPos.x - moveLeft;
-			//printf("abstr_UI_HitboxSlideButton 80 :MOVE LEFT from origin: %f \n", moveLeftFromOrigin);
-			moveLeftAction(newPos, moveLeft);
+			moveLeftAction(newPos, moveLeft); //move the center of the hitbox
 		}
-		else if (endLeft != 0)
+		else if (endLeft != 0) //further than the limit and there is a limit higher than 0?
 		{
-			//newPos.x = originalPos.x - endLeft;
-			//printf("abstr_UI_HitboxSlideButton 84 \n");
-			moveLeftAction((getOriginalPos()), endLeft);
+			moveLeftAction((getOriginalPos()), endLeft); // mover to the end position of the action
 		}
-
-		//	printf("move left to x = %f  \n", newPos.x);
 	}
-	//if (moveRight > 0 && endRight != 0)
+
 	if (moveRight > 0 )
 	{
-		//if (((newPos.x + moveRight) - (getOriginalPos()).x) < endRight)
 		if ((moveRightFromOrigin) < endRight)
-			//newPos.x = newPos.x + moveRight;
 			moveRightAction(newPos, moveRight);
 		else if (endRight != 0)
 		{
-			//newPos.x = originalPos.x + endRight;
 			moveRightAction((getOriginalPos()), endRight);
 		}
-
-		//	printf("move right to x = %f  \n", newPos.x);
 	}
-	//if (moveDown > 0 && endDown!= 0
+
 	if (moveDown > 0)
 	{
 		if ((moveDownFromOrigin) < endDown)
-			//newPos.y = newPos.y + moveDown;
 			moveDownAction(newPos, moveDown);
 		else if (endDown != 0)
 		{
-			//newPos.y = originalPos.y + endDown;
 			moveDownAction((getOriginalPos()), endDown);
 		}
-		//	printf("move down to y = %f  \n", newPos.y);
 	}
-	//if (moveUp > 0 && endUp != 0)
+
 	if (moveUp > 0)
 	{
 		if ((moveUpFromOrigin) < endUp)
-			//newPos.y = newPos.y - moveUp;
 			moveUpAction(newPos, moveUp);
 		else if (endUp != 0)
 		{
 			moveUpAction((getOriginalPos()), endUp);
-			//newPos.y = originalPos.y - endUp;
 		}
-		//	printf("move up to y = %f  \n", newPos.y);
 	}
-
-
-	//printf("changed x is %f and y is %f \n", newPos.x, newPos.y);
-
-
-	//setCenterCoordActionArea(newPos);
-	//	lastPoint = newPos;
 }
 
 float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 {
 	std::vector<std::shared_ptr<UI_Object>> & UI_Objects = get_UI_Objects();
-	float Xmoved;				//how much has been moved in the X direction relative to the original position
-	float Ymoved;				//how much has been moved in the Y direction relative to the original position
-	float NbrActivationPoint;	//how much distance to activation
-	volatile float percentage = 0.0f;			//the percentage of distance to activation that has been travelled (volatile becuase the compiler kept optimizing it out while it is needed)
+	float Xmoved;						//how much has been moved in the X direction relative to the original position
+	float Ymoved;						//how much has been moved in the Y direction relative to the original position
+	float NbrActivationPoint;			//how much distance to activation
+	volatile float percentage = 0.0f;	//the percentage of distance to activation that has been travelled (volatile becuase the compiler kept optimizing it out while it is needed)
 	float percent = 0.0f;
 
-	if (!getFunctionActivation())
+	if (!getFunctionActivation()) //is the function already activated?
 	{
 		D2D1_POINT_2F center = getCenterCoordActionArea();
 
+		//checks for every direction if the percentage of the end distance that has been moved exceeds the preset value need to activate
 		if (endLeft > 0)
 		{
-			//UI_Objects[0]->changeColor(D2D1::ColorF(0.5 + , 0, 0));
 			Xmoved = (getOriginalPos()).x - center.x;
-			NbrActivationPoint = endLeft*ActivationPoint;
+			NbrActivationPoint = endLeft*ActivationPoint; //calculates the actual distance that need to be traveled
 
 			percentage = Xmoved / NbrActivationPoint;
 
 			if (NbrActivationPoint < Xmoved)
 			{
-				activateFunction();
-				//setFunctionActivation(true);
-				//activateFunctionCallback(get_ID_ModelObject(),0, getModel(), getUI());
-				
+				activateFunction();				
 			}
-			//	printf("move left to x = %f  \n", newPos.x);
 		}
 		if (endRight > 0)
 		{
@@ -176,19 +124,14 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			NbrActivationPoint = endRight*ActivationPoint;
 
 			percent = Xmoved / NbrActivationPoint;
-			//printf("percent %f", percent);
+
 			if (percentage < percent)
 				percentage = percent;
 
 			if (NbrActivationPoint < Xmoved)
 			{
 				activateFunction();
-				//setFunctionActivation(true);
-				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
-				
 			}
-
-			//	printf("move right to x = %f  \n", newPos.x);
 		}
 		if (endDown > 0)
 		{
@@ -196,7 +139,7 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			NbrActivationPoint = endDown*ActivationPoint;
 
 			percent = Ymoved / NbrActivationPoint;
-			//printf("percent %f", percent);
+
 			if (percentage < percent)
 				percentage = percent;
 
@@ -204,11 +147,7 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			if (NbrActivationPoint < Ymoved)
 			{
 				activateFunction();
-				//setFunctionActivation(true);
-				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
-			
 			}
-			//	printf("move down to y = %f  \n", newPos.y);
 		}
 		if (endUp > 0)
 		{
@@ -216,28 +155,18 @@ float Abstr_UI_HitboxSlideButton::checkActivationCriteria()
 			NbrActivationPoint = endUp*ActivationPoint;
 
 			percent = Ymoved / NbrActivationPoint;
-			//printf("percent %f", percent);
+
 			if (percentage < percent)
 				percentage = percent;
 
 			if (NbrActivationPoint < Ymoved)
 			{
 				activateFunction();
-				//setFunctionActivation(true);
-				//activateFunctionCallback(get_ID_ModelObject(), 0, getModel(), getUI());
-
 			}
-			//	printf("move up to y = %f  \n", newPos.y);
 		}
 
 		
 	}
-	/*
-	if (percentage > 0.2)
-	{
-		printf("Abstr_UI_HitboxSlideButton 231: percentage is %f\n" , percentage);
-	}
-	*/
 	
 	return percentage;
 

@@ -1,7 +1,11 @@
 #pragma once
+//author: Christiaan Vanbergen
 
 #include "UI_Object.h"
 
+// This is a child class of UI_Object to draw text within a rectangle defined by the parent
+
+ 
 class UI_TextObject: public UI_Object
 {
 public:
@@ -18,7 +22,7 @@ private:
 	std::wstring text;
 
 	float textSize;
-	DWRITE_TEXT_ALIGNMENT textAlignment;
+	DWRITE_TEXT_ALIGNMENT textAlignment;	
 	DWRITE_PARAGRAPH_ALIGNMENT paragraph;
 };
 

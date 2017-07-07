@@ -1,3 +1,4 @@
+//author: Christiaan Vanbergen 
 #include "Model.h"
 #include "UI.h"
 

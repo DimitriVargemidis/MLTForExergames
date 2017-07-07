@@ -1,4 +1,4 @@
-
+//author: Christiaan Vanbergen 
 #include <string>
 
 #include "UI.h"
@@ -29,14 +29,14 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 {
 	std::vector<std::shared_ptr<UI_Object>> & UI_Objects = get_UI_Objects();
 	D2D1_POINT_2F imagePos;
-	volatile float percentage = 0.0f;		//the percentage untill activation
+	volatile float percentage = 0.0f;		//the percentage until activation
 
 	switch (act)
 	{
 	case ActionTrigger::HoverOn:
-		setLastPoint(coord);
-		//(get_UI_Objects())[0]->changeColor(D2D1::ColorF::Green); 
-		UI_Objects[0]->changeColor(D2D1::ColorF::Black);
+		setLastPoint(coord);		//set this coordinate as the last coordinate where the hand was
+		
+		UI_Objects[0]->changeColor(D2D1::ColorF::Black);			
 		(get_UI_Objects())[0]->setObjectState(ObjectState::hover);
 
 		getUI()->getScreen()->getScrollbar()->getSelectionBox()->changeColor(D2D1::ColorF::Green);
@@ -47,8 +47,8 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 		break;
 	case ActionTrigger::HoverOff:
 		
-		setCenterCoordActionArea(getOriginalPos());
-		setWidth(orginalWidth);
+		setCenterCoordActionArea(getOriginalPos());	//go back to the begin position
+		setWidth(orginalWidth);						//go back to the start width
 
 		deactivateFunction();
 
@@ -59,9 +59,11 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 		getUI()->getScreen()->getScrollbar()->getSelectionBox()->changeColor(D2D1::ColorF(255.0 / 255.0, 102.0 / 255.0, 0));
 		getUI()->getScreen()->getPlayVisual()->get_UI_Objects()[0]->changeBorderColor(D2D1::ColorF::LightGray);
 
+		//replay the gesture that is associated with this hitbox
 		getUI()->getScreen()->getScrollbar()->getActionIndicator()->setHorFillPercen(0.0F);
 	    getUI()->getScreen()->StopPlayGesture();
 
+		//add Xoffset to the new position of all UI_Objects in this hitbox
 		imagePos = getOriginalPos();
 		imagePos.x += Xoffset;
 
@@ -72,9 +74,6 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 
 		moveOn = false;
 
-		//getUI()->getScreen()->StopPlayGesture();
-
-		//printf("OFF\n");
 		break;
 	case ActionTrigger::HoverHold:
 	
@@ -92,18 +91,8 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 				percentage = 1.0F;
 			else if (percentage < 0.0f)
 				percentage = 0.0f;
-			//printf("percent = %f \n", percentage);
-
-			
-
-			//UI_Objects[0]->changeColor(D2D1::ColorF(percentage, 0, 0));
-			//UI_Objects[1]->changeColor(D2D1::ColorF(1.0, 1.0- percentage, 1.0 - percentage));
-
-			//UI_Objects[0]->setAlpha(1.0f - percentage);
-			//UI_Objects[1]->setAlpha(1.0f - percentage);
 		
 			getUI()->getScreen()->getScrollbar()->getActionIndicator()->setHorFillPercen(percentage);
-		//	UI_Objects[3]->setText(std::to_wstring(percentage));
 			
 			if (percentage < 0.1)
 			{
@@ -123,29 +112,16 @@ void UI_HitboxHoverSlideButton::action(ActionTrigger act, const D2D1_POINT_2F & 
 
 			}
 		}
-	
-	
-		
-		setLastPoint(coord);
 
-		//printf("HOLD ");
+		setLastPoint(coord);
 		break;
 	case ActionTrigger::ActiveHandOn:	
 		(get_UI_Objects())[0]->setObjectState(ObjectState::handActive);
-		/*
-		if (getActiveHandBeforeHover())
-			action(ActionTrigger::HoverOn, coord);
-		else	*/
 			action(ActionTrigger::HoverHold, coord);
 
 		break;
 	case ActionTrigger::ActiveHandOff:
-
-		//if (getHover())
 			action(ActionTrigger::HoverHold, coord);
-		//else
-		//	action(ActionTrigger::HoverOn, coord);
-
 		break;
 
 	case ActionTrigger::ActiveHandHold:

@@ -1,5 +1,5 @@
+//author: Christiaan Vanbergen 
 
-//#include "D2D_Graphics.h"
 
 #include "UI_BitmapObject.h"
 

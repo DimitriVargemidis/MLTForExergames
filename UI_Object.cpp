@@ -1,5 +1,5 @@
 #include "UI_Object.h"
-
+//author: Christiaan Vanbergen 
 
 extern D2D_Graphics			graphics;
 

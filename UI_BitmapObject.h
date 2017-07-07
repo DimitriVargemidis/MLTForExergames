@@ -1,13 +1,18 @@
 #pragma once
+//author: Christiaan Vanbergen 
 
 #include "UI_Object.h"
 
+//the different states that decide what bitmap is drawn
 enum ObjectState {
 	standard,
 	hover,
 	handActive
 };
 
+//This class is a child of UI_Object and draws different bitmaps within the rectangle defined by the parent dependent on the ObjectState
+
+//author: Christiaan Vanbergen 
 class UI_BitmapObject: public UI_Object
 {
 public:
@@ -29,9 +34,9 @@ public:
 	void draw() override;
 
 private:
-	ID2D1Bitmap* stdBitmap;
-	ID2D1Bitmap* hoverBitmap;
-	ID2D1Bitmap* handActiveBitmap;
+	ID2D1Bitmap* stdBitmap;			//bitmap drawn in the ObjectState.standard
+	ID2D1Bitmap* hoverBitmap;		//bitmap drawn in the ObjectState.hover
+	ID2D1Bitmap* handActiveBitmap;	//bitmap drawn in the ObjectState.handActive
 
 	ObjectState state = standard;
 

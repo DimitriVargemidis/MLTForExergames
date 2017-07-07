@@ -1,4 +1,5 @@
 #pragma once
+//author: Christiaan Vanbergen 
 
 #include <iostream>
 #include <chrono>
@@ -10,6 +11,9 @@ typedef std::chrono::high_resolution_clock Clock;
 
 class UI;
 
+//A child class of Abstr_UI_HitboxSlideButton that defines behavior for a scrollbar that contains multiple hitboxes that can be scrolled freely in vertical direction.
+
+//author: Christiaan Vanbergen 
 class UI_HitboxScrolBar:public Abstr_UI_HitboxSlideButton
 {
 public:
@@ -18,6 +22,7 @@ public:
 						std::function<void(int, int, std::shared_ptr<Model>, std::shared_ptr<UI>)> callback = UI_CallbackFunctions::testCallback, int ID_Model = -1);
 	~UI_HitboxScrolBar();
 
+	//redefine parent methods
 	virtual void setModel(std::shared_ptr<Model> m) override;
 
 	virtual void moveLeftAction(D2D1_POINT_2F ref, float move) override;
@@ -94,14 +99,14 @@ private:
 	//NOT IMPLEMENTED!!
 	//idea of building in a delay time before a opposite scroll is performe 
 	std::chrono::steady_clock::time_point TimeLastMoveDown = Clock::now();			//The time when the last move down was, to set delay between move up and down
-	std::chrono::steady_clock::time_point TimeLastMoveUp= Clock::now();		//The time when the last move up was, to set delay between move up and down
+	std::chrono::steady_clock::time_point TimeLastMoveUp= Clock::now();				//The time when the last move up was, to set delay between move up and down
 	long long delayTimeAfterMoveLimit = 500;
 	
 	
-	std::shared_ptr<UI_Object> topFiller = nullptr;
-	std::shared_ptr<UI_Object>  bottomFiller = nullptr;
-	std::shared_ptr<UI_Object> actionIndicator = nullptr;
-	std::shared_ptr<UI_TextObject> actionText = nullptr;
+	std::shared_ptr<UI_Object> topFiller = nullptr;			//UI_Object to cover the top elements
+	std::shared_ptr<UI_Object>  bottomFiller = nullptr;		//UI_Object to cover the bottom elements
+	std::shared_ptr<UI_Object> actionIndicator = nullptr;	//red filling of the delete area
+	std::shared_ptr<UI_TextObject> actionText = nullptr;	//delete text on the side
 
 
 };

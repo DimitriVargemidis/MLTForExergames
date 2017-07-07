@@ -1,4 +1,5 @@
 #include "ImageLoader.h"
+//author: Christiaan Vanbergen 
 
 #include "UI.h"
 
@@ -7,6 +8,7 @@
 extern HWND  m_hWnd;
 extern D2D_Graphics graphics;
 float Xoffset = 100.0;
+
 
 Abstr_Screen::Abstr_Screen()
 {

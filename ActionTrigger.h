@@ -1,5 +1,6 @@
 #pragma once
 
+//author: Christiaan Vanbergen 
 enum class ActionTrigger
 {
 	HoverOn,

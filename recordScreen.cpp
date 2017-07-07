@@ -1,3 +1,4 @@
+//author: Christiaan Vanbergen 
 #include <string>
 #include <vector>
 
@@ -155,7 +156,6 @@ void recordScreen::createScrolbar()
 
 	//add scrollbar layout
 	scrollbar->add_UI_Object(background);
-	//scrollbar->add_UI_Object(selectedBox);
 	scrollbar->setSelectionBox(selectedBox);
 	scrollbar->setActionText(text);
 	scrollbar->setActionIndicator(indicator);
@@ -205,15 +205,7 @@ void recordScreen::drawTopUI()
 			else
 			{
 				drawScaledFrame((AutoPlayGesture->getFrames()).back(), getHeight(), getHeight(), playWidth*0.8, playHeight*0.8, playCenterpoint.x, playCenterpoint.y - 25);
-				/*
-				auto t2 = Clock::now();
-				long time = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - playGestureTimer).count();
-				if (time >= 1000)
-				{
-					//StopPlayGesture();
-					playGestureIndex = 0;
-				}
-				*/
+			
 			}
 		}
 	}

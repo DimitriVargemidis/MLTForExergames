@@ -1,6 +1,11 @@
 #pragma once
+//author: Christiaan Vanbergen 
 
 #include "Abstr_Screen.h"
+
+//this class is a child of Abstr_Screen that defines the UI_hitboxes and UI_object for a screen where gesture can be recorded and managed
+
+
 class recordScreen :
 	public Abstr_Screen
 {
@@ -9,10 +14,11 @@ public:
 	recordScreen(int ID);
 	~recordScreen();
 
-	virtual void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes) override;
+	//defines functions from the parent
+	virtual void	drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes) override;
 
-	virtual void activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)override;
-	virtual void updateHitboxes() override;
+	virtual void	activateHitboxes(D2D1_POINT_2F jointPoint, JointType type, HandState leftHand, HandState rightHand)override;
+	virtual void	updateHitboxes() override;
 
 	virtual void	createScreen(int width, int height) override;
 	virtual void	createScrolbar() override;
@@ -66,9 +72,9 @@ private:
 	
 	bool							playGesture = false;	//boolean whether or not the recording should be displayed
 	std::shared_ptr<UI_Hitbox>		playVisual;				//the image of the box in which the recording is played
-	float							playWidth	= 400;
-	float							playHeight  = 400;
-	D2D1_POINT_2F					playCenterpoint = D2D1::Point2F(300, 300);
+	float							playWidth	= 400;		//the witdh of the play screen
+	float							playHeight  = 400;		//the height of the play screen
+	D2D1_POINT_2F					playCenterpoint = D2D1::Point2F(300, 300);	
 	
 	std::chrono::time_point<std::chrono::steady_clock> playGestureTimer;	//timer decide when to restart the replaying of the same recording
 

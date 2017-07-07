@@ -1,4 +1,5 @@
 #pragma once
+//author: Christiaan Vanbergen 
 
 #include <vector>
 #include <Kinect.h>
@@ -22,20 +23,13 @@ typedef std::chrono::high_resolution_clock Clock;
 
 #include "D2D_Graphics.h"
 
-//class BodyBasics;
 class Main;
-//class D2D_Graphics;
 class Frame;
 
 
 // This class is both UI and Controller because the way the events in the UI are processed make them hard to seperate
 // see main window creation and callback method MessageRouter
-/*
-#ifndef GRAPHICS 
-#define GRAPHICS
-	D2D_Graphics			graphics;
-#endif
-	*/
+
 
 class UI
 {
@@ -45,8 +39,6 @@ class UI
 public:
 	UI();
 	~UI();
-
-	//UI(Main * main);
 
 	/// <summary>
 	/// Creates the main window and begins processing
@@ -78,22 +70,17 @@ public:
 	//both absolute and relative frames are given to the ui the ui will decide which one will be drawn where
 	void drawFrames(std::vector<Frame> & relframes, std::vector<Frame> & absframes); //duplicate
 	void drawHandState(HandState handState, const D2D1_POINT_2F& handPosition);
-
+	
+	//update the information of all hitboxes on the screen
 	void updateHitboxes(); 
-
+	//obsolete
 	void changeButtonColor(int state);
 
 	void setMain(std::shared_ptr<Main> m);
 	void setModel(std::shared_ptr<Model> m); 
 
+	//create recordScreen class object
 	void createScreen(); 
-
-	/// <summary>
-	/// Draws one bone of a body (joint to joint)
-	/// </summary>
-	/// <param name="joints">joint data array</param>
-	/// <param name="tab">is 0 if current body data needs to be set, is 1 if saved body data needs to be set</param>
-//	void ShowJointCoordinates(const std::vector<Joint> & joints, int tab);
 
 	/// <summary>
 	/// Set the status bar message
@@ -123,23 +110,19 @@ private:
 	INT64                   m_nNextStatusTime;
 
 	HWND*					hWndApp;
-	//HWND                    m_hWnd;
-	//D2D_Graphics			graphics;
 	std::shared_ptr<Main> 	main;
 	std::shared_ptr<Model> 	model;
 
 	//to Abstr_Screen
 	std::vector<std::shared_ptr<Abstr_UI_Hitbox>>		UI_Hitboxes;	//list of UI control elements
-	//std::shared_ptr<UI_HitboxLockScrolBar> scrollbarHitbox = nullptr;	//A seperate pointer to a scrollbar for easy access
-	//std::vector<std::shared_ptr<UI_Object>> 	UI_Objects;		//UI elements to be drawn
 
-	std::shared_ptr<Abstr_Screen>	Screen;		//UI elements to be drawn
+	std::shared_ptr<Abstr_Screen>	Screen;			//UI elements to be drawn
 
-	bool					waitForKey;		//parameter is true when the interface is waiting for a key
+	bool					waitForKey;				//parameter is true when the interface is waiting for a key
 	bool					holdPress = false;		//parameter is true when the next added key will (during prediction) be held aslong as no other gesture is recognized
 	bool					drawAbsCoord = true;
 
-	long					time; //test parameter to see how long a button is pressed by a human
+	long					time;					//test parameter to see how long a button is pressed by a human
 
 	//variables for the drawing of the frame
 	RECT rct;
@@ -167,6 +150,8 @@ private:
 	/// <returns>result of message processing</returns>
 	LRESULT CALLBACK UI::DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+	//process when the user presses a key
+	//used for assigning keys to gestureclass
 	void processKeyInput(MSG msg);
 
 
